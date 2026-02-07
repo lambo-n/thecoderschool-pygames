@@ -12,6 +12,7 @@ dt = 0
 # init position 2d vectors
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 coin_pos = pygame.Vector2(200, 200)
+cop_pos = pygame.Vector2(1600, 800)
 
 # initialize game logic variables
 coinsCollected = 0
@@ -22,6 +23,9 @@ coinImage = pygame.transform.scale(coinImage, (64, 64))
 
 robberImage = pygame.image.load("assets/digdug.png").convert_alpha()
 robberImage = pygame.transform.scale(robberImage, (64, 64))
+
+copImage = pygame.image.load("assets/cops.png").convert_alpha()
+copImage = pygame.transform.scale(copImage, (64, 64))
 
 # text font
 font = pygame.font.SysFont(None, 40)
@@ -37,8 +41,8 @@ while running:
     screen.fill((0, 0, 0))
     
     # number of coins collected display
-    text_surface = font.render(str(coinsCollected), True, (255, 255, 255))
-    screen.blit(text_surface, (50, 50))
+    textScore = font.render(str(coinsCollected), True, (255, 255, 255))
+    screen.blit(textScore, (50, 50))
     
     # robber player sprite
     robberRect = robberImage.get_rect(center=player_pos)
@@ -47,6 +51,10 @@ while running:
     # coin sprite 
     coinRect = coinImage.get_rect(center=coin_pos)
     screen.blit(coinImage, coinRect)
+    
+    # cop sprite
+    copRect = coinImage.get_rect(center=cop_pos)
+    screen.blit(copImage, copRect)
    
     # collision check between player and coin
     if robberRect.colliderect(coinRect):
@@ -54,6 +62,10 @@ while running:
         coin_pos.y = random.randint(0, 720)
         print("coin collected")        
         coinsCollected += 1    
+        
+    # collision check between player and cop
+    if robberRect.collidepoint(cop_pos):
+        running = False
     
     # input key handler
     keys = pygame.key.get_pressed()
@@ -65,6 +77,20 @@ while running:
         player_pos.x -= 300 * dt
     if keys[pygame.K_RIGHT]:
         player_pos.x += 300 * dt
+        
+        
+
+    # cop chases the robber
+    direction = player_pos - cop_pos
+    if direction.length() > 0:
+        direction = direction.normalize()
+        cop_speed = 200
+        cop_pos += direction * cop_speed * dt
+        
+        
+    
+        
+        
 
     # flip() the display to put your work on screen
     pygame.display.flip()
@@ -74,4 +100,6 @@ while running:
     # independent physics.
     dt = clock.tick(60) / 1000
 
+
+pygame.time.wait(3000)
 pygame.quit()
