@@ -24,8 +24,11 @@ coinImage = pygame.transform.scale(coinImage, (64, 64))
 robberImage = pygame.image.load("assets/digdug.png").convert_alpha()
 robberImage = pygame.transform.scale(robberImage, (64, 64))
 
-copImage = pygame.image.load("assets/cops.png").convert_alpha()
+copImage = pygame.image.load("assets/cops.png").convert_alpha   ()
 copImage = pygame.transform.scale(copImage, (64, 64))
+
+gameOverImage = pygame.image.load("assets/cave.jpeg").convert_alpha()
+gameOverImage = pygame.transform.scale(gameOverImage, (1920, 1080))
 
 # text font
 font = pygame.font.SysFont(None, 40)
@@ -66,6 +69,7 @@ while running:
     # collision check between player and cop
     if robberRect.collidepoint(cop_pos):
         running = False
+        screen.blit(gameOverImage, (0, 0))
     
     # input key handler
     keys = pygame.key.get_pressed()
@@ -99,6 +103,8 @@ while running:
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
+
+
 
 
 pygame.time.wait(3000)
