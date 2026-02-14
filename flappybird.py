@@ -3,25 +3,27 @@ import pygame
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1920, 1080))
+screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-pipes_pos = pygame.Vector2(screen.get_width() - 100, screen.get_height() - 200)
+
+bottomPipe_pos = pygame.Vector2(screen.get_width() - 100, screen.get_height() - 100)
+topPipe_pos = bottomPipe_pos - pygame.Vector2(0, 520)
 
 gravity = 0
 space_pressed = False
 
 flappyBirdImage = pygame.image.load("assets/flappybird.png").convert_alpha()
-flappyBirdImage = pygame.transform.scale(flappyBirdImage, (100, 100))
+flappyBirdImage = pygame.transform.scale(flappyBirdImage, (50, 50))
 
 bottomPipeImage = pygame.image.load("assets/pipes.png").convert_alpha()
-bottomPipeImage = pygame.transform.scale(bottomPipeImage, (150, 300))
+bottomPipeImage = pygame.transform.scale(bottomPipeImage, (100, 200))
 
 topPipeImage = pygame.transform.flip(bottomPipeImage, False, True)
-topPipeImage = pygame.transform.scale(topPipeImage, (150, 300))
+topPipeImage = pygame.transform.scale(topPipeImage, (100, 200))
 
 while running:
     # poll for events
@@ -36,14 +38,31 @@ while running:
     flappyBirdRect = flappyBirdImage.get_rect(center=player_pos)
     screen.blit(flappyBirdImage, flappyBirdRect)
     
-    pipesRect = bottomPipeImage.get_rect(center=pipes_pos)
-    screen.blit(bottomPipeImage, pipesRect)
+    bottomPipeRect = bottomPipeImage.get_rect(center=bottomPipe_pos)
+    screen.blit(bottomPipeImage, bottomPipeRect)
     
-    gravity += 0.8
+    topPipeRect = topPipeImage.get_rect(center=topPipe_pos)
+    screen.blit(topPipeImage, topPipeRect)
+    
+    gravity += 1
     player_pos.y += gravity
+    
+    bottomPipe_pos.x -= 5
+    topPipe_pos = bottomPipe_pos - pygame.Vector2(0, 520)
+    
+    if bottomPipe_pos.x < -50:
+        bottomPipe_pos.x = screen.get_width() + 50
+    
+    if bottomPipeRect.collidepoint(player_pos) or topPipeRect.collidepoint(player_pos):
+        running = False
+    
+    if player_pos.y > screen.get_height() or player_pos.y < 0:
+        running = False
+
+
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_SPACE]:
+    if keys[pygame.K_SPACE]: 
         if not space_pressed:
             gravity = -20
             space_pressed = True
@@ -59,4 +78,5 @@ while running:
     # independent physics.
     dt = clock.tick(60) / 1000
 
+pygame.time.delay(2000)
 pygame.quit()
