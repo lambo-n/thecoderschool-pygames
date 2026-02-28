@@ -51,6 +51,9 @@ while running:
         gravity = 0
         canJump = True
 
+
+        
+
     keys = pygame.key.get_pressed()
     if keys[pygame.K_SPACE] and canJump:
         gravity = -600
