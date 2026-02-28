@@ -35,6 +35,11 @@ while running:
     # wall bounce
     if ball.top < 0 or ball.bottom > screen.get_height():
         ballSpeedY *= -1
+        
+    if ball.left < 0 or ball.right > screen.get_width():
+        ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+        
+    
 
     # paddle collisions
     if ball.colliderect(player1):
