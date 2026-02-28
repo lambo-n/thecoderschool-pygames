@@ -14,6 +14,10 @@ ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 ballSpeedX = 5
 ballSpeedY = 5
 
+player1Score = 0
+player2Score = 0
+
+font = pygame.font.SysFont(None, 30)
 
 while running:
     # poll for events
@@ -36,11 +40,18 @@ while running:
     if ball.top < 0 or ball.bottom > screen.get_height():
         ballSpeedY *= -1
         
-    if ball.left < 0 or ball.right > screen.get_width():
+    if ball.left < 0:
         ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+        player2Score += 1
         
-    
-
+    if ball.right > screen.get_width():
+        ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+        player1Score += 1
+        
+    text_surface = font.render(f"{player1Score} - {player2Score}", True, "white")
+    text_rect = text_surface.get_rect(center=(screen.get_width() / 2, 30))
+    screen.blit(text_surface, text_rect)    
+        
     # paddle collisions
     if ball.colliderect(player1):
         ballSpeedX = abs(ballSpeedX)
