@@ -35,6 +35,12 @@ player_velocities = [player1_velocity,
                      player4_velocity, 
                      player5_velocity]
 
+player_rects = [pygame.Rect(player1_pos.x, player1_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
+                pygame.Rect(player2_pos.x, player2_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
+                pygame.Rect(player3_pos.x, player3_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
+                pygame.Rect(player4_pos.x, player4_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
+                pygame.Rect(player5_pos.x, player5_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT)]
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -74,47 +80,43 @@ while running:
         
         
 
+    # Check which players are on the platform
+    on_ground = []
+    for i in range(len(player_positions)):
+        check_rect = pygame.Rect(player_positions[i].x, player_positions[i].y + 1, PLAYER_WIDTH, PLAYER_HEIGHT)
+        on_ground.append(check_rect.colliderect(platform0))
+
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player1_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player1_pos.y += 300 * dt
+    if keys[pygame.K_w] and on_ground[0]:
+        player_velocities[0] = -300
     if keys[pygame.K_a]:
         player1_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player1_pos.x += 300 * dt
-        
-    if keys[pygame.K_t]:
-        player2_pos.y -= 300 * dt
-    if keys[pygame.K_g]:
-        player2_pos.y += 300 * dt
+
+    if keys[pygame.K_t] and on_ground[1]:
+        player_velocities[1] = -300
     if keys[pygame.K_f]:
         player2_pos.x -= 300 * dt
     if keys[pygame.K_h]:
         player2_pos.x += 300 * dt
-        
-    if keys[pygame.K_i]:
-        player3_pos.y -= 300 * dt
-    if keys[pygame.K_k]:
-        player3_pos.y += 300 * dt
+
+    if keys[pygame.K_i] and on_ground[2]:
+        player_velocities[2] = -300
     if keys[pygame.K_j]:
         player3_pos.x -= 300 * dt
     if keys[pygame.K_l]:
         player3_pos.x += 300 * dt
-        
-    if keys[pygame.K_UP]:
-        player4_pos.y -= 300 * dt
-    if keys[pygame.K_DOWN]:
-        player4_pos.y += 300 * dt
+
+    if keys[pygame.K_UP] and on_ground[3]:
+        player_velocities[3] = -300
     if keys[pygame.K_LEFT]:
         player4_pos.x -= 300 * dt
     if keys[pygame.K_RIGHT]:
         player4_pos.x += 300 * dt
-        
-    if keys[pygame.K_LEFTBRACKET]:
-        player5_pos.y -= 300 * dt
-    if keys[pygame.K_QUOTE]:
-        player5_pos.y += 300 * dt
+
+    if keys[pygame.K_LEFTBRACKET] and on_ground[4]:
+        player_velocities[4] = -300
     if keys[pygame.K_SEMICOLON]:
         player5_pos.x -= 300 * dt
     if keys[pygame.K_RETURN]:
