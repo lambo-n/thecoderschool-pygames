@@ -8,9 +8,11 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-leftPaddle_pos = pygame.Vector2(25, screen.get_height() / 2)
-rightPaddle_pos = pygame.Vector2(screen.get_width() - 75, screen.get_height() / 2)
+leftPaddle_pos = pygame.Vector2(50, screen.get_height() / 2)
+rightPaddle_pos = pygame.Vector2(screen.get_width() - 25, screen.get_height() / 2)
+
 ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+ball_speed = pygame.Vector2(300, 300)
 
 leftPaddleImage = pygame.image.load("assets/pipes.png").convert_alpha()
 leftPaddleImage = pygame.transform.scale(leftPaddleImage, (50, 130))
@@ -18,6 +20,10 @@ leftPaddleImage = pygame.transform.scale(leftPaddleImage, (50, 130))
 rightPaddleImage = pygame.image.load("assets/pipes.png").convert_alpha()
 rightPaddleImage = pygame.transform.scale(rightPaddleImage, (50, 130))
 
+player1Score = 0
+player2Score = 0
+
+font = pygame.font.SysFont(None, 100)
 
 while running:
     # poll for events
@@ -29,10 +35,45 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    screen.blit(leftPaddleImage, leftPaddle_pos)
-    screen.blit(rightPaddleImage, rightPaddle_pos)
+    leftPaddleRect = leftPaddleImage.get_rect(center=leftPaddle_pos)
+    screen.blit(leftPaddleImage, leftPaddleRect)
     
-    pygame.draw.circle(screen, "white", ball_pos, 10)
+    rightPaddleRect = rightPaddleImage.get_rect(center=rightPaddle_pos)
+    screen.blit(rightPaddleImage, rightPaddleRect)
+    
+    text_surface = font.render(f"{player1Score} - {player2Score}", True, "white")
+    text_rect = text_surface.get_rect(center=(screen.get_width() / 2, 30))
+    screen.blit(text_surface, text_rect) 
+    
+    ball = pygame.draw.circle(screen, "white", ball_pos, 10)
+    
+      
+    ball_pos += ball_speed * dt
+    
+    if ball_pos.y > screen.get_height() or ball_pos.y < 0:
+        ball_speed.y *= -1
+        
+    if ball_pos.x > screen.get_width():
+        ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+        player1Score += 1
+        
+    if  ball_pos.x < 0:
+        ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+        player2Score += 1
+    
+    
+    if ball.colliderect(leftPaddleRect):
+        ball_speed.x = abs(ball_speed.x)
+        ball_pos.x = leftPaddle_pos.x + 50
+        offset = (ball_pos.y - (leftPaddle_pos.y + 65)) / 65
+        ball_speed.y = offset * 300
+
+    if ball.colliderect(rightPaddleRect):
+        ball_speed.x = -abs(ball_speed.x)
+        ball_pos.x = rightPaddle_pos.x - 10
+        offset = (ball_pos.y - (rightPaddle_pos.y + 65)) / 65
+        ball_speed.y = offset * 300
+  
     
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:

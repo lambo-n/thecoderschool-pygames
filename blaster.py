@@ -22,7 +22,9 @@ playerImage = pygame.transform.scale(playerImage, (80, 80))
 bulletList = []
 enemyList = []
 
-newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)), pygame.image.load("assets/digdug.png").convert_alpha())
+enemyImage = pygame.image.load("assets/digdug.png").convert_alpha()
+enemyImage = pygame.transform.scale(enemyImage, (50, 50))
+newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)), enemyImage)
 enemyList.append(newEnemy)
 
 gravity = 0

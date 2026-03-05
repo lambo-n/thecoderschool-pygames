@@ -51,7 +51,6 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             
             if gameState == "menu":
-                
                 mouse_pos = pygame.Vector2(event.pos)
                 startButtonRect = startButtonImage.get_rect(center=(screen.get_width() / 2, 550))
                 
@@ -61,6 +60,9 @@ while running:
                     bottomPipe_pos = pygame.Vector2(screen.get_width() - 100, screen.get_height() - 100)
                     topPipe_pos = bottomPipe_pos - pygame.Vector2(0, 520)
                     gravity = 0
+                    
+            elif gameState == "playing":
+                gravity = -20
             
     if gameState == "menu":
         screen.blit(menuImage, (0, 0))

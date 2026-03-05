@@ -13,5 +13,5 @@ class Enemy:
         self.pos.x += (dx / distance) * 100 * dt
         self.pos.y += (dy / distance) * 100 * dt
         
-    def draw(self, screen):
+    def draw(self, screen, ):
         screen.blit(self.image, self.pos)
