@@ -35,11 +35,12 @@ player_velocities = [player1_velocity,
                      player4_velocity, 
                      player5_velocity]
 
-player_rects = [pygame.Rect(player1_pos.x, player1_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
-                pygame.Rect(player2_pos.x, player2_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
-                pygame.Rect(player3_pos.x, player3_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
-                pygame.Rect(player4_pos.x, player4_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT),
-                pygame.Rect(player5_pos.x, player5_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT)]
+floorBase = pygame.Rect(0, screen.get_height() - 100, screen.get_width(), 10)
+testPlatform = pygame.Rect(300, 500, 200, 10)
+
+platforms = [floorBase, testPlatform]
+
+
 
 while running:
     # poll for events
@@ -51,12 +52,6 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
 
-    # pygame.draw.circle(screen, "red", player1_pos, 40)
-    # pygame.draw.circle(screen, "blue", player2_pos, 40)
-    # pygame.draw.circle(screen, "green", player3_pos, 40)
-    # pygame.draw.circle(screen, "yellow", player4_pos, 40)
-    # pygame.draw.circle(screen, "orange", player5_pos, 40)
-    
     pygame.draw.rect(screen, "red", (player1_pos.x, player1_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
     pygame.draw.rect(screen, "blue", (player2_pos.x, player2_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
     pygame.draw.rect(screen, "green", (player3_pos.x, player3_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -64,27 +59,28 @@ while running:
     pygame.draw.rect(screen, "orange", (player5_pos.x, player5_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
     
     
-    platform0 = pygame.draw.rect(screen, "black", (0, screen.get_height() - 100, screen.get_width(), 10))
-    
+    for platform in platforms:
+        pygame.draw.rect(screen, "black", platform)
     
     for i in range(len(player_velocities)):
         player_velocities[i] += 475 * dt
 
     for i in range(len(player_positions)):
-        player_positions[i].y += player_velocities[i] * dt
-        
-        player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
-        if player_rect.colliderect(platform0):
-            player_positions[i].y = platform0.y - PLAYER_HEIGHT
-            player_velocities[i] = 0
+        for platform in platforms:
+            player_positions[i].y += player_velocities[i] * dt
+            
+            player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
+            if player_rect.colliderect(platform):
+                player_positions[i].y = platform.y - PLAYER_HEIGHT
+                player_velocities[i] = 0
         
         
 
-    # Check which players are on the platform
+    # Check which players are on a platform
     on_ground = []
     for i in range(len(player_positions)):
         check_rect = pygame.Rect(player_positions[i].x, player_positions[i].y + 1, PLAYER_WIDTH, PLAYER_HEIGHT)
-        on_ground.append(check_rect.colliderect(platform0))
+        on_ground.append(any(check_rect.colliderect(platform) for platform in platforms))
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and on_ground[0]:
