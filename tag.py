@@ -36,9 +36,10 @@ player_velocities = [player1_velocity,
                      player5_velocity]
 
 floorBase = pygame.Rect(0, screen.get_height() - 100, screen.get_width(), 10)
-testPlatform = pygame.Rect(300, 500, 200, 10)
+platform1 = pygame.Rect(300, 500, 200, 10)
+platform2 = pygame.Rect(700, 400, 200, 10)
 
-platforms = [floorBase, testPlatform]
+platforms = [floorBase, platform1, platform2]
 
 
 
@@ -66,13 +67,15 @@ while running:
         player_velocities[i] += 475 * dt
 
     for i in range(len(player_positions)):
+        prev_bottom = player_positions[i].y + PLAYER_HEIGHT
+        player_positions[i].y += player_velocities[i] * dt
+
+        player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
         for platform in platforms:
-            player_positions[i].y += player_velocities[i] * dt
-            
-            player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
-            if player_rect.colliderect(platform):
+            if player_rect.colliderect(platform) and player_velocities[i] >= 0 and prev_bottom <= platform.y + 1:
                 player_positions[i].y = platform.y - PLAYER_HEIGHT
                 player_velocities[i] = 0
+                player_rect.y = player_positions[i].y
         
         
 
