@@ -2,6 +2,8 @@
 import pygame
 import math
 
+from bullet import Bullet
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -15,11 +17,20 @@ HEIGHT = screen.get_height()
 TANK_SPEED = 300
 ROTATION_SPEED = 200
 
+background = pygame.image.load("assets/flappyBackground.png")
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+
 tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
 tank1_angle = 0
 
 tank2_pos = pygame.Vector2(WIDTH - WIDTH / 4, HEIGHT - HEIGHT / 4)
 tank2_angle = 0
+
+bulletList = []
+
+SHOOT_COOLDOWN = 0.5  # seconds between shots
+tank1_last_shot = 0
+tank2_last_shot = 0
 
 while running:
     # poll for events
@@ -29,7 +40,7 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
+    screen.blit(background, (0, 0))
 
     # Draw tank 1 (red) - body circle + barrel line
     pygame.draw.circle(screen, "red", tank1_pos, 40)
@@ -42,9 +53,25 @@ while running:
     pygame.draw.line(screen, "black", tank2_pos, barrel2_end, 10)
     
 
+    for bullet in bulletList:
+        bullet.update(dt)
+        bullet.draw(screen)
+        
+        if bullet.pos.x < 0 or bullet.pos.x > WIDTH or bullet.pos.y < 0 or bullet.pos.y > HEIGHT:
+            bulletList.remove(bullet)
+            
+        # if bullet.pos.collidepoint(tank1_pos) and bullet in bulletList:
+        #     print("Tank 1 hit!")
+        #     bulletList.remove(bullet)
+            
+        # if bullet.pos.collidepoint(tank2_pos) and bullet in bulletList:
+        #     print("Tank 2 hit!")
+        #     bulletList.remove(bullet)
+            
+        
 
     keys = pygame.key.get_pressed()
-    # Tank 1: A/D rotate, W/S move forward/backward in barrel direction
+    # Tank 1: A/D rotate, W/S move forward/backward, E shoot
     if keys[pygame.K_a]:
         tank1_angle += ROTATION_SPEED * dt
     if keys[pygame.K_d]:
@@ -55,24 +82,30 @@ while running:
     if keys[pygame.K_s]:
         direction = pygame.Vector2(1, 0).rotate(-tank1_angle)
         tank1_pos -= direction * TANK_SPEED * dt
+        
+    current_time = pygame.time.get_ticks() / 1000
+    if keys[pygame.K_e] and current_time - tank1_last_shot >= SHOOT_COOLDOWN:
+        barrel1_dir = pygame.Vector2(60, 0).rotate(-tank1_angle)
+        newBullet = Bullet(tank1_pos + barrel1_dir, tank1_pos + barrel1_dir * 2)
+        bulletList.append(newBullet)
+        tank1_last_shot = current_time
 
-
-    if keys[pygame.K_e]:
-        pass
-
-    # Tank 2: Left/Right rotate, Up/Down move forward/backward in barrel direction
-    if keys[pygame.K_LEFT]:
+    # Tank 2: J/L rotate, I/K move forward/backward, O shoot
+    if keys[pygame.K_j]:
         tank2_angle += ROTATION_SPEED * dt
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_l]:
         tank2_angle -= ROTATION_SPEED * dt
-    if keys[pygame.K_UP]:
+    if keys[pygame.K_i]:
         direction = pygame.Vector2(1, 0).rotate(-tank2_angle)
         tank2_pos += direction * TANK_SPEED * dt
-    if keys[pygame.K_DOWN]:
+    if keys[pygame.K_k]:
         direction = pygame.Vector2(1, 0).rotate(-tank2_angle)
         tank2_pos -= direction * TANK_SPEED * dt
-    if keys[pygame.K_RCTRL]:
-        pass
+    if keys[pygame.K_o] and current_time - tank2_last_shot >= SHOOT_COOLDOWN:
+        barrel2_dir = pygame.Vector2(60, 0).rotate(-tank2_angle)
+        newBullet = Bullet(tank2_pos + barrel2_dir, tank2_pos + barrel2_dir * 2)
+        bulletList.append(newBullet)
+        tank2_last_shot = current_time
         
     
 
