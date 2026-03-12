@@ -115,11 +115,19 @@ while running:
                                 player_velocities[pi] = 0
                                 p_rect.y = player_positions[pi].y
 
-    # Check which players are on a platform
+    # Check which players are on a platform or on top of another player
     on_ground = []
     for i in range(len(player_positions)):
         check_rect = pygame.Rect(player_positions[i].x, player_positions[i].y + 1, PLAYER_WIDTH, PLAYER_HEIGHT)
-        on_ground.append(any(check_rect.colliderect(platform) for platform in platforms))
+        on_platform = any(check_rect.colliderect(platform) for platform in platforms)
+        on_player = any(
+            j != i and
+            abs((player_positions[i].y + PLAYER_HEIGHT) - player_positions[j].y) <= 2 and
+            player_positions[i].x + PLAYER_WIDTH > player_positions[j].x and
+            player_positions[i].x < player_positions[j].x + PLAYER_WIDTH
+            for j in range(len(player_positions))
+        )
+        on_ground.append(on_platform or on_player)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and on_ground[0]:
