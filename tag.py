@@ -11,11 +11,11 @@ dt = 0
 PLAYER_HEIGHT = 40
 PLAYER_WIDTH = 40
 
-player1_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player2_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player3_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player4_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player5_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player1_pos = pygame.Vector2(200, screen.get_height() / 2)
+player2_pos = pygame.Vector2(400, screen.get_height() / 2)
+player3_pos = pygame.Vector2(600, screen.get_height() / 2)
+player4_pos = pygame.Vector2(800, screen.get_height() / 2)
+player5_pos = pygame.Vector2(1000, screen.get_height() / 2)
 
 player_positions = [player1_pos, 
                     player2_pos, 
@@ -35,13 +35,11 @@ player_velocities = [player1_velocity,
                      player4_velocity, 
                      player5_velocity]
 
-floorBase = pygame.Rect(0, screen.get_height() - 100, screen.get_width(), 10)
+floorBase = pygame.Rect(0, screen.get_height() - 100, screen.get_width(), 100)
 platform1 = pygame.Rect(300, 500, 200, 10)
 platform2 = pygame.Rect(700, 400, 200, 10)
 
 platforms = [floorBase, platform1, platform2]
-
-
 
 while running:
     # poll for events
@@ -78,6 +76,44 @@ while running:
                 player_rect.y = player_positions[i].y
         
         
+
+    # Player-to-player collisions
+    for i in range(len(player_positions)):
+        player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
+        for j in range(i + 1, len(player_positions)):
+            other_rect = pygame.Rect(player_positions[j].x, player_positions[j].y, PLAYER_WIDTH, PLAYER_HEIGHT)
+            if player_rect.colliderect(other_rect):
+                # Calculate overlap on each axis
+                overlap_x = min(player_rect.right, other_rect.right) - max(player_rect.left, other_rect.left)
+                overlap_y = min(player_rect.bottom, other_rect.bottom) - max(player_rect.top, other_rect.top)
+
+                if overlap_x < overlap_y:
+                    # Horizontal push - each player gets pushed half the overlap
+                    if player_positions[i].x < player_positions[j].x:
+                        player_positions[i].x -= overlap_x / 2
+                        player_positions[j].x += overlap_x / 2
+                    else:
+                        player_positions[i].x += overlap_x / 2
+                        player_positions[j].x -= overlap_x / 2
+                else:
+                    # Vertical push
+                    if player_positions[i].y < player_positions[j].y:
+                        player_positions[i].y -= overlap_y / 2
+                        player_positions[j].y += overlap_y / 2
+                    else:
+                        player_positions[i].y += overlap_y / 2
+                        player_positions[j].y -= overlap_y / 2
+                    # Stop vertical velocity for both on vertical collision
+                    player_velocities[i] = 0
+                    player_velocities[j] = 0
+                    # Re-resolve platform collisions so players can't be pushed through platforms
+                    for pi in [i, j]:
+                        p_rect = pygame.Rect(player_positions[pi].x, player_positions[pi].y, PLAYER_WIDTH, PLAYER_HEIGHT)
+                        for platform in platforms:
+                            if p_rect.colliderect(platform):
+                                player_positions[pi].y = platform.y - PLAYER_HEIGHT
+                                player_velocities[pi] = 0
+                                p_rect.y = player_positions[pi].y
 
     # Check which players are on a platform
     on_ground = []
