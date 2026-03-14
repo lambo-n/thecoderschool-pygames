@@ -64,14 +64,14 @@ while running:
     
     if ball.colliderect(leftPaddleRect):
         ball_speed.x = abs(ball_speed.x)
-        ball_pos.x = leftPaddle_pos.x + 50
-        offset = (ball_pos.y - (leftPaddle_pos.y + 65)) / 65
+        ball_pos.x = leftPaddle_pos.x + 35
+        offset = (ball_pos.y - leftPaddle_pos.y) / 65
         ball_speed.y = offset * 300
 
     if ball.colliderect(rightPaddleRect):
         ball_speed.x = -abs(ball_speed.x)
-        ball_pos.x = rightPaddle_pos.x - 10
-        offset = (ball_pos.y - (rightPaddle_pos.y + 65)) / 65
+        ball_pos.x = rightPaddle_pos.x - 35
+        offset = (ball_pos.y - rightPaddle_pos.y) / 65
         ball_speed.y = offset * 300
   
     
