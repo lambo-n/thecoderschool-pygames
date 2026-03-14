@@ -48,7 +48,7 @@ while running:
         ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
         player1Score += 1
         
-    text_surface = font.render(f"{player1Score} - {player2Score}", True, "white")
+    text_surface = font.render(f"{player1Score} - {player2Score}", True, (255, 255, 255))
     text_rect = text_surface.get_rect(center=(screen.get_width() / 2, 30))
     screen.blit(text_surface, text_rect)    
         

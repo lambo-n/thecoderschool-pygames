@@ -17,10 +17,15 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 # xpos, ypos, xwidth, yheight
 platform1 = pygame.Rect(300, 500, 200, 10)
-platform2 = pygame.Rect(700, 400, 200, 10)
+platform2 = pygame.Rect(750, 350, 200, 10)
+platform3 = pygame.Rect(750, 150, 200, 10)
+pportal1 = pygame.Rect(1000, 150, 200, 10)
 platformG = pygame.Rect(0, 600, WIDTH, 20)
 
-platformList = [platform1, platform2, platformG]
+platformList = [platform1, platform2, platform3, pportal1, platformG]
+
+cubeImage = pygame.image.load("assets/digdug.png").convert_alpha()
+cubeImage = pygame.transform.scale(cubeImage, (40, 40))
 
 
 while running:
@@ -68,7 +73,7 @@ while running:
 
     for platform in platformList:
         pygame.draw.rect(screen, "black", platform)
-    pygame.draw.rect(screen, "red", player_rect)
+    screen.blit(cubeImage, player_rect)
     
 
     keys = pygame.key.get_pressed()

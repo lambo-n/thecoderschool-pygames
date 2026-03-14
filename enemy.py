@@ -6,7 +6,7 @@ class Enemy:
         
         if enemyType == "normal":
             self.health = 100
-            self.speed = 500
+            self.speed = 100
             self.strength = 1
             self.image = pygame.image.load("assets/digdug.png").convert_alpha()
             
