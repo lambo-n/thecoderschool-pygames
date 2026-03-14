@@ -22,15 +22,15 @@ playerImage = pygame.transform.scale(playerImage, (80, 80))
 bulletList = []
 enemyList = []
 
-enemyImage = pygame.image.load("assets/digdug.png").convert_alpha()
-enemyImage = pygame.transform.scale(enemyImage, (50, 50))
-newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)), enemyImage)
+newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)) , "normal")
 enemyList.append(newEnemy)
 
+health = 100
 gravity = 0
 canJump = False
 
-while running:
+font = pygame.font.SysFont(None, 40)
+while running == True:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -53,7 +53,8 @@ while running:
         gravity = 0
         canJump = True
 
-
+    textHealth = font.render(str(health), True, (0, 0, 255))
+    screen.blit(textHealth, (50, 600))
         
 
     keys = pygame.key.get_pressed()
@@ -65,19 +66,40 @@ while running:
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
         
+    screen.blit(playerImage, player_pos)
+        
     for bullet in bulletList[:]:
         bullet.update(dt)
         bullet.draw(screen)
         if not (0 <= bullet.pos.x <= WIDTH and 0 <= bullet.pos.y <= HEIGHT):
             bulletList.remove(bullet)
             
+        for enemy in enemyList[:]:
+            enemyRect = enemy.get_rect()
+            
+            if enemyRect.collidepoint(bullet.pos) and bullet:
+                enemy.health -= 5
+                bulletList.remove(bullet)
+                
+            if enemy.health <= 0 and enemy:
+                enemyList.remove(enemy)
+                
+            
+            
     for enemy in enemyList[:]:
+        enemyRect = enemy.get_rect()
+        
+        if enemyRect.collidepoint(player_pos):
+            health -= enemy.strength
+            
         enemy.update(player_pos, dt)
         enemy.draw(screen)
         
+        
+    if health <= 0:
+        running = False
     
-    screen.blit(playerImage, player_pos)
-
+  
     # flip() the display to put your work on screen
     pygame.display.flip()
 

@@ -10,7 +10,18 @@ dt = 0
 gravity = 0
 canJump = False
 
+WIDTH = screen.get_width()
+HEIGHT = screen.get_height()
+
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
+# xpos, ypos, xwidth, yheight
+platform1 = pygame.Rect(300, 500, 200, 10)
+platform2 = pygame.Rect(700, 400, 200, 10)
+platformG = pygame.Rect(0, 600, WIDTH, 20)
+
+platformList = [platform1, platform2, platformG]
+
 
 while running:
     # poll for events
@@ -25,25 +36,45 @@ while running:
     screen.fill("white")
 
 
-    if player_pos.y < 600:
-        gravity += 1000 * dt
-        canJump = False
-    else:
-        gravity = 0
-        canJump = True
-
+    gravity += 1000 * dt
     player_pos.y += gravity * dt
 
     player_rect = pygame.Rect(player_pos.x, player_pos.y, 40, 40)
+    
+    # Platform collisions
+    for platform in platformList:
+        if player_rect.colliderect(platform):
+            # Landing on top
+            if gravity >= 0 and player_rect.bottom - platform.top <= 20:
+                player_rect.bottom = platform.top
+                player_pos.y = player_rect.y
+                gravity = 0
+                canJump = True
+            # Hitting the bottom
+            elif gravity < 0 and platform.bottom - player_rect.top <= 20:
+                player_rect.top = platform.bottom
+                player_pos.y = player_rect.y
+                gravity = -gravity * 0.3
+            # Side collision
+            else:
+                if player_rect.centerx < platform.centerx:
+                    player_rect.right = platform.left
+                else:
+                    player_rect.left = platform.right
+                player_pos.x = player_rect.x
+
     player_rect.clamp_ip(screen.get_rect())
+    player_pos.x = player_rect.x
+
+    for platform in platformList:
+        pygame.draw.rect(screen, "black", platform)
     pygame.draw.rect(screen, "red", player_rect)
-    
-    
     
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and canJump:
-        gravity -= 1000 * dt
+        player_pos.y -= 10
+        gravity = -600
         canJump = False
 
     if keys[pygame.K_a]:
