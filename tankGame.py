@@ -32,7 +32,10 @@ SHOOT_COOLDOWN = 0.5  # seconds between shots
 tank1_last_shot = 0
 tank2_last_shot = 0
 
-while running:
+tank1health = 3
+tank2health = 3
+
+while running == True:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
@@ -46,11 +49,15 @@ while running:
     pygame.draw.circle(screen, "red", tank1_pos, 40)
     barrel1_end = tank1_pos + pygame.Vector2(60, 0).rotate(-tank1_angle)
     pygame.draw.line(screen, "black", tank1_pos, barrel1_end, 10)
+    pygame.draw.rect(screen, "red", (tank1_pos.x-40, tank1_pos.y-55, 80, 10))
+    pygame.draw.rect(screen, "green", (tank1_pos.x-40, tank1_pos.y-55, 80/3 * tank1health, 10))
 
     # Draw tank 2 (blue) - body circle + barrel line
     pygame.draw.circle(screen, "blue", tank2_pos, 40)
     barrel2_end = tank2_pos + pygame.Vector2(60, 0).rotate(-tank2_angle)
     pygame.draw.line(screen, "black", tank2_pos, barrel2_end, 10)
+    pygame.draw.rect(screen, "red", (tank2_pos.x-40, tank2_pos.y-55, 80, 10))
+    pygame.draw.rect(screen, "green", (tank2_pos.x-40, tank2_pos.y-55, 80/3 * tank2health, 10))
     
 
     for bullet in bulletList:
@@ -60,14 +67,26 @@ while running:
         if bullet.pos.x < 0 or bullet.pos.x > WIDTH or bullet.pos.y < 0 or bullet.pos.y > HEIGHT:
             bulletList.remove(bullet)
             
-        # if bullet.pos.collidepoint(tank1_pos) and bullet in bulletList:
-        #     print("Tank 1 hit!")
-        #     bulletList.remove(bullet)
+        if bullet.collidepoint(tank1_pos) and bullet in bulletList:
+            print("Tank 1 hit!")
+            bulletList.remove(bullet)
+            tank1health -= 1
             
-        # if bullet.pos.collidepoint(tank2_pos) and bullet in bulletList:
-        #     print("Tank 2 hit!")
-        #     bulletList.remove(bullet)
+        if bullet.collidepoint(tank2_pos) and bullet in bulletList:
+            print("Tank 2 hit!")
+            bulletList.remove(bullet)
+            tank2health -= 1
             
+    if tank1health <= 0:
+        print("Tank 2 wins!")
+        running = False
+
+        
+    if tank2health <= 0:
+        print("Tank 1 wins!")
+        running = False
+
+        
         
 
     keys = pygame.key.get_pressed()
@@ -116,5 +135,7 @@ while running:
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
+
+# end loop
 
 pygame.quit()
