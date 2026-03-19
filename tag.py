@@ -7,6 +7,7 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+allowedJumps = 4
 
 PLAYER_HEIGHT = 20
 PLAYER_WIDTH = 20
@@ -32,28 +33,23 @@ player3_velocity = 0
 player4_velocity = 0
 player5_velocity = 0
 
-player_velocities = [player1_velocity, 
-                     player2_velocity, 
-                     player3_velocity, 
-                     player4_velocity, 
+player_velocities = [player1_velocity,
+                     player2_velocity,
+                     player3_velocity,
+                     player4_velocity,
                      player5_velocity]
 
+player_jump_counts = [allowedJumps, allowedJumps, allowedJumps, allowedJumps, allowedJumps]  # remaining jumps per player (max 2)
+
+
 floorBase = pygame.Rect(0, screen.get_height() - 100, screen.get_width(), 10)
-
 platform1 = pygame.Rect(400, 500, 200, 20)
-
 platform2 = pygame.Rect(700, 400, 200, 20)
-
 platform3 = pygame.Rect(0, 300, 400, 20)
-
 platform4 = pygame.Rect(100, 400, 200, 20)
-
 platform5 = pygame.Rect(700, 400, 20, 100)
-
 platform6 = pygame.Rect(0, 500, 100, 20)
-
 platform7 = pygame.Rect(100, 200, 200, 20)
-
 platform8 = pygame.Rect(800, 550, 100, 20)
 
 platforms = [floorBase, platform1, platform2, platform3, platform4, platform5, platform6, platform7, platform8]
@@ -64,16 +60,14 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            jump_bindings = [pygame.K_w, pygame.K_t, pygame.K_i, pygame.K_UP, pygame.K_LEFTBRACKET]
+            for idx, key in enumerate(jump_bindings):
+                if event.key == key and player_jump_counts[idx] > 0:
+                    player_velocities[idx] = -PLAYER_JUMP_HEIGHT
+                    player_jump_counts[idx] -= 1
 
-    # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
-
-    # pygame.draw.circle(screen, "red", player1_pos, 40)
-    # pygame.draw.circle(screen, "blue", player2_pos, 40)
-    # pygame.draw.circle(screen, "green", player3_pos, 40)
-    # pygame.draw.circle(screen, "yellow", player4_pos, 40)
-    # pygame.draw.circle(screen, "orange", player5_pos, 40)
-
     
     pygame.draw.rect(screen, "red", (player1_pos.x, player1_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
     pygame.draw.rect(screen, "blue", (player2_pos.x, player2_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
@@ -161,37 +155,35 @@ while running:
      
         on_ground.append(on_platform or on_player)
 
+    # Reset jump count when landing
+    for i in range(len(player_positions)):
+        if on_ground[i]:
+            player_jump_counts[i] = allowedJumps
+        elif player_jump_counts[i] == allowedJumps:
+            player_jump_counts[i] = allowedJumps - 1 
+            
+
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w] and on_ground[0]:
-        player_velocities[0] = -PLAYER_JUMP_HEIGHT
     if keys[pygame.K_a]:
         player1_pos.x -= PLAYER_MOVEMENT_SPEED * dt
     if keys[pygame.K_d]:
         player1_pos.x += PLAYER_MOVEMENT_SPEED * dt
-        
-    if keys[pygame.K_t] and on_ground[1]:
-        player_velocities[1] = -PLAYER_JUMP_HEIGHT
+
     if keys[pygame.K_f]:
         player2_pos.x -= PLAYER_MOVEMENT_SPEED * dt
     if keys[pygame.K_h]:
         player2_pos.x += PLAYER_MOVEMENT_SPEED * dt
-        
-    if keys[pygame.K_i] and on_ground[2]:
-        player_velocities[2] = -PLAYER_JUMP_HEIGHT
+
     if keys[pygame.K_j]:
         player3_pos.x -= PLAYER_MOVEMENT_SPEED * dt
     if keys[pygame.K_l]:
         player3_pos.x += PLAYER_MOVEMENT_SPEED * dt
-        
-    if keys[pygame.K_UP] and on_ground[3]:
-        player_velocities[3] = -PLAYER_JUMP_HEIGHT
+
     if keys[pygame.K_LEFT]:
         player4_pos.x -= PLAYER_MOVEMENT_SPEED * dt
     if keys[pygame.K_RIGHT]:
         player4_pos.x += PLAYER_MOVEMENT_SPEED * dt
-        
-    if keys[pygame.K_LEFTBRACKET] and on_ground[4]:
-        player_velocities[4] = -PLAYER_JUMP_HEIGHT
+
     if keys[pygame.K_SEMICOLON]:
         player5_pos.x -= PLAYER_MOVEMENT_SPEED * dt
     if keys[pygame.K_RETURN]:
