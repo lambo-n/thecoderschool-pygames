@@ -1,5 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
+import random
 
 # pygame setup
 pygame.init()
@@ -7,7 +8,8 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-allowedJumps = 4
+allowedJumps = 3
+taggedPlayer = random.randint(0, 4)
 
 PLAYER_HEIGHT = 20
 PLAYER_WIDTH = 20
@@ -108,6 +110,9 @@ while running:
         for j in range(i + 1, len(player_positions)):
             other_rect = pygame.Rect(player_positions[j].x, player_positions[j].y, PLAYER_WIDTH, PLAYER_HEIGHT)
             if player_rect.colliderect(other_rect):
+                if taggedPlayer == i:
+                    taggedPlayer = j
+                    print(taggedPlayer)
                 # Calculate overlap on each axis
                 overlap_x = min(player_rect.right, other_rect.right) - max(player_rect.left, other_rect.left)
                 overlap_y = min(player_rect.bottom, other_rect.bottom) - max(player_rect.top, other_rect.top)
