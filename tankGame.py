@@ -2,7 +2,7 @@
 import pygame
 import math
 
-from bullet import Bullet
+from blasterBullet import Bullet
 
 # pygame setup
 pygame.init()

@@ -8,7 +8,14 @@ class Enemy:
             self.health = 100
             self.speed = 100
             self.strength = 1
+            self.value = 2
             self.image = pygame.image.load("assets/digdug.png").convert_alpha()
+        if enemyType == "speed":
+            self.health = 50
+            self.speed = 150
+            self.strength = 0.5
+            self.value = 1
+            self.image = pygame.image.load("assets/cops.png").convert_alpha()
             
         self.image = pygame.transform.scale(self.image, (50, 50))
         

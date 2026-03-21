@@ -1,8 +1,8 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
-from bullet import *
-from enemy import *
+from blasterBullet import *
+from blasterEnemy import *
 
 # pygame setup
 pygame.init()
@@ -10,6 +10,15 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+money = 0
+wave = 0
+# 1, 2, 4, 7, 11, 16
+waveAmount = 0
+enemiesLeft = waveAmount
+
+             
+             
+
 
 WIDTH = screen.get_width()
 HEIGHT = screen.get_height()
@@ -22,11 +31,9 @@ playerImage = pygame.transform.scale(playerImage, (80, 80))
 bulletList = []
 enemyList = []
 
-newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)) , "normal")
-enemyList.append(newEnemy)
 
 health = 100
-gravity = 0
+
 canJump = False
 
 font = pygame.font.SysFont(None, 40)
@@ -44,14 +51,6 @@ while running == True:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")  
     
-    player_pos.y += gravity * dt
-    
-    if player_pos.y < HEIGHT - 160:
-        gravity += 1000 * dt
-        canJump = False
-    else:
-        gravity = 0
-        canJump = True
 
     textHealth = font.render(str(health), True, (0, 0, 255))
     screen.blit(textHealth, (50, 600))
@@ -65,8 +64,25 @@ while running == True:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
+    if keys[pygame.K_s]:
+        player_pos.y += 300 * dt
+    if keys[pygame.K_w]:
+        player_pos.y -= 300 * dt
         
     screen.blit(playerImage, player_pos)
+        
+    
+    if enemiesLeft <= 0:
+        waveAmount += wave
+        wave += 1   
+        enemiesLeft = waveAmount
+        
+        for i in range(waveAmount):
+            enemyType = random.choice(["normal", "speed"])
+            newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)) , enemyType)
+            enemyList.append(newEnemy)
+        
+        
         
     for bullet in bulletList[:]:
         bullet.update(dt)
@@ -82,6 +98,10 @@ while running == True:
                 bulletList.remove(bullet)
                 
             if enemy.health <= 0 and enemy:
+                money += enemy.value
+                enemiesLeft -= enemy.value
+                print(money)
+                print(enemiesLeft)
                 enemyList.remove(enemy)
                 
             
