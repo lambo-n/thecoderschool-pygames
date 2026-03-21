@@ -1,10 +1,16 @@
 import pygame
 
+# stationary platforms, player in top left
+# enemies are at the bottom shooting projectiles up
+# player can drop projectiles on enemies down below
+
+
+
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
-dt = 0
+dt = 1 / 60
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -23,12 +29,11 @@ JUMP_SPEED = -500
 GRAVITY = 1000
 
 while running:
+    dt = clock.tick(60) / 1000
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and on_ground:
-                velocity.y = JUMP_SPEED
+
 
     keys = pygame.key.get_pressed()
     velocity.x = 0
@@ -36,6 +41,8 @@ while running:
         velocity.x = -SPEED
     if keys[pygame.K_d]:
         velocity.x = SPEED
+    if keys[pygame.K_SPACE] and on_ground:
+        velocity.y = JUMP_SPEED
 
     velocity.y += GRAVITY * dt
 
@@ -72,6 +79,5 @@ while running:
     screen.blit(playerSprite, player_pos)
 
     pygame.display.flip()
-    dt = clock.tick(60) / 1000
 
 pygame.quit()
