@@ -15,8 +15,10 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 # xpos, ypos, xwidth, yheight
 platformGround = pygame.Rect(0, 600, 1280, 20)
 platform1 = pygame.Rect(400, 500, 200, 20)
+platform4 = pygame.Rect(100, 400, 150, 20)
+moving_dir = 1  # 1 = right, -1 = left
 
-platformList = [platformGround, platform1]
+platformList = [platformGround, platform1, platform4]
 
 while running:
     # poll for events
@@ -28,11 +30,25 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
 
+    # Move the moving platform left and right
+    prev_platform_left = platform4.left
+    platform4.x += moving_dir * 150 * dt
+    if platform4.right >= 1180 or platform4.left <= 50:
+        moving_dir *= -1
+
+    # Move player with platform if standing on it
+    player_rect_cur = pygame.Rect(int(player_pos.x) - 20, int(player_pos.y) - 20, 40, 40)
+    if (player_rect_cur.bottom == platform4.top and
+            player_rect_cur.right > platform4.left and
+            player_rect_cur.left < platform4.right):
+        player_pos.x += platform4.left - prev_platform_left
+
+
     for platform in platformList:
         pygame.draw.rect(screen, "white", platform)
     
     player_rect = pygame.Rect(player_pos.x - 20, player_pos.y - 20, 40, 40)
-    pygame.draw.rect(screen, "white", player_rect)
+    pygame.draw.rect(screen, "gold", player_rect)
     
     
     gravity += 1000 * dt
