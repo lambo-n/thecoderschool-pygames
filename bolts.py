@@ -1,7 +1,5 @@
-# Example file showing a circle moving on screen
 import pygame
 
-# pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
@@ -15,63 +13,65 @@ playerSprite = pygame.transform.scale(playerSprite, (80, 80))
 
 platformGround = pygame.Rect(0, 600, 1280, 100)
 platform1 = pygame.Rect(300, 500, 200, 10)
-platform2 = pygame.Rect(750, 350, 200, 10)  
-
+platform2 = pygame.Rect(750, 350, 200, 10)
 platformList = [platformGround, platform1, platform2]
 
+velocity = pygame.Vector2(0, 0)
+on_ground = False
+SPEED = 300
+JUMP_SPEED = -500
+GRAVITY = 1000
+
 while running:
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("purple")
-    player_rect = playerSprite.get_rect(topleft=player_pos)
-    screen.blit(playerSprite, player_pos)
-    
-    for platform in platformList:
-        pygame.draw.rect(screen, "white", platform)
-        
-        if player_rect.colliderect(platform):
-            # Landing on top
-            if gravity >= 0 and player_rect.bottom - platform.top <= 20:
-                player_rect.bottom = platform.top
-                player_pos.y = player_rect.y
-                gravity = 0
-                canJump = True
-            # Hitting the bottom
-            elif gravity < 0 and platform.bottom - player_rect.top <= 20:
-                player_rect.top = platform.bottom
-                player_pos.y = player_rect.y
-                gravity = -gravity * 0.3
-            # Side collision
-            else:
-                if player_rect.centerx < platform.centerx:
-                    player_rect.right = platform.left
-                else:
-                    player_rect.left = platform.right
-                player_pos.x = player_rect.x
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE and on_ground:
+                velocity.y = JUMP_SPEED
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
+    velocity.x = 0
     if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
+        velocity.x = -SPEED
     if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
-        
-    
+        velocity.x = SPEED
 
-    # flip() the display to put your work on screen
+    velocity.y += GRAVITY * dt
+
+    # Move X, resolve X collisions
+    player_pos.x += velocity.x * dt
+    player_rect = playerSprite.get_rect(topleft=player_pos)
+    for platform in platformList:
+        if player_rect.colliderect(platform):
+            if velocity.x > 0:
+                player_rect.right = platform.left
+            elif velocity.x < 0:
+                player_rect.left = platform.right
+            player_pos.x = player_rect.x
+            velocity.x = 0
+
+    # Move Y, resolve Y collisions
+    on_ground = False
+    player_pos.y += velocity.y * dt
+    player_rect = playerSprite.get_rect(topleft=player_pos)
+    for platform in platformList:
+        if player_rect.colliderect(platform):
+            if velocity.y > 0:
+                player_rect.bottom = platform.top
+                on_ground = True
+            elif velocity.y < 0:
+                player_rect.top = platform.bottom
+            player_pos.y = player_rect.y
+            velocity.y = 0
+
+    # Draw
+    screen.fill("purple")
+    for platform in platformList:
+        pygame.draw.rect(screen, "white", platform)
+    screen.blit(playerSprite, player_pos)
+
     pygame.display.flip()
-
-    # limits FPS to 60
-    # dt is delta time in seconds since last frame, used for framerate-
-    # independent physics.
     dt = clock.tick(60) / 1000
 
 pygame.quit()
