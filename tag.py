@@ -10,6 +10,10 @@ running = True
 dt = 0
 allowedJumps = 3
 taggedPlayer = random.randint(0, 4)
+print(taggedPlayer)
+
+WIDTH = screen.get_width()
+HEIGHT = screen.get_height()
 
 PLAYER_HEIGHT = 20
 PLAYER_WIDTH = 20
@@ -17,11 +21,11 @@ PLAYER_MOVEMENT_SPEED = 250
 PLAYER_JUMP_HEIGHT = 300
 PLAYER_GRAVITY = 550
 
-player1_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player2_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player3_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player4_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-player5_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player1_pos = pygame.Vector2(0, HEIGHT-100)
+player2_pos = pygame.Vector2(200, HEIGHT-100)
+player3_pos = pygame.Vector2(400, HEIGHT-100)
+player4_pos = pygame.Vector2(600, HEIGHT-100)
+player5_pos = pygame.Vector2(800, HEIGHT-100)
 
 player_positions = [player1_pos, 
                     player2_pos, 
@@ -44,9 +48,9 @@ player_velocities = [player1_velocity,
 player_jump_counts = [allowedJumps, allowedJumps, allowedJumps, allowedJumps, allowedJumps]  # remaining jumps per player (max 2)
 
 
-floorBase = pygame.Rect(0, screen.get_height() - 100, screen.get_width(), 10)
+floorBase = pygame.Rect(0, HEIGHT - 100, WIDTH, 10)
 platform1 = pygame.Rect(400, 500, 200, 20)
-platform2 = pygame.Rect(700, 400, 200, 20)
+platform2 = pygame.Rect(WIDTH / (1280/700), 400, 200, 20)
 platform3 = pygame.Rect(0, 300, 400, 20)
 platform4 = pygame.Rect(100, 400, 200, 20)
 platform5 = pygame.Rect(700, 400, 20, 100)
@@ -112,6 +116,9 @@ while running:
             if player_rect.colliderect(other_rect):
                 if taggedPlayer == i:
                     taggedPlayer = j
+                    print(taggedPlayer)
+                elif taggedPlayer == j:
+                    taggedPlayer = i
                     print(taggedPlayer)
                 # Calculate overlap on each axis
                 overlap_x = min(player_rect.right, other_rect.right) - max(player_rect.left, other_rect.left)
