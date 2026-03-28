@@ -18,7 +18,7 @@ TANK_SPEED = 300
 ROTATION_SPEED = 200
 RADIUS = 40
 
-background = pygame.image.load("assets/background.png")
+background = pygame.image.load("assets/flappyBackground.png")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
@@ -35,6 +35,34 @@ barrier2 = pygame.Rect(WIDTH//2 - 100 , HEIGHT// 2 - 10, 200 ,20)
 barrierList = [barrier1, barrier2]
 
 
+def push_circle_out_of_rect(pos, radius, rect):
+    """Push a circle out of a rect if overlapping. Returns new pos."""
+    closest_x = max(rect.left, min(pos.x, rect.right))
+    closest_y = max(rect.top, min(pos.y, rect.bottom))
+    dist = pos.distance_to((closest_x, closest_y))
+    if dist < radius:
+        if dist > 0:
+            nx = (pos.x - closest_x) / dist
+            ny = (pos.y - closest_y) / dist
+            return pygame.Vector2(closest_x + nx * radius, closest_y + ny * radius)
+        else:
+            # Center is inside rect, push to nearest edge
+            dx_left = pos.x - rect.left
+            dx_right = rect.right - pos.x
+            dy_top = pos.y - rect.top
+            dy_bottom = rect.bottom - pos.y
+            min_d = min(dx_left, dx_right, dy_top, dy_bottom)
+            if min_d == dx_left:
+                return pygame.Vector2(rect.left - radius, pos.y)
+            elif min_d == dx_right:
+                return pygame.Vector2(rect.right + radius, pos.y)
+            elif min_d == dy_top:
+                return pygame.Vector2(pos.x, rect.top - radius)
+            else:
+                return pygame.Vector2(pos.x, rect.bottom + radius)
+    return pos
+
+
 
 
 SHOOT_COOLDOWN = 0.5  # seconds between shots
@@ -46,10 +74,10 @@ tank1health = 3
 tank2health = 3
 
 gameState = "menu"
-tankmenu = pygame.image.load("assets/tankmenu.jpg").convert_alpha()
+tankmenu = pygame.image.load("assets/flappyMenu.png").convert_alpha()
 tankmenu = pygame.transform.scale(tankmenu, (1280, 600))
 
-tankStart = pygame.image.load("assets/tankStart.jpg").convert_alpha()
+tankStart = pygame.image.load("assets/flappyStart.png").convert_alpha()
 tankStart= pygame.transform.scale(tankStart, (600,100))
 
 
@@ -134,6 +162,26 @@ while running:
                 bullet.bounces += 1
 
 
+
+            if bullet in bulletList:
+                bullet_rect = pygame.Rect(bullet.pos.x - 10, bullet.pos.y - 10, 20, 20)
+                for barrier in barrierList:
+                    if bullet_rect.colliderect(barrier):
+                        if bullet.bounces >= 2:
+                            bulletList.remove(bullet)
+                            break
+                        # Determine which axis to reflect based on smaller overlap
+                        dx = min(abs(bullet_rect.right - barrier.left), abs(barrier.right - bullet_rect.left))
+                        dy = min(abs(bullet_rect.bottom - barrier.top), abs(barrier.bottom - bullet_rect.top))
+                        if dx < dy:
+                            bullet.direction.x *= -1
+                        else:
+                            bullet.direction.y *= -1
+                        bullet.bounces += 1
+                        break
+
+
+
             if bullet.collidepoint(tank1_pos) and bullet in bulletList:
                 print("Tank 1 hit!")
                 bulletList.remove(bullet)
@@ -159,6 +207,7 @@ while running:
             
         tank1_pos.x = pygame.math.clamp(tank1_pos.x , RADIUS,WIDTH - RADIUS)
         tank1_pos.y = pygame.math.clamp(tank1_pos.y , RADIUS,HEIGHT - RADIUS)
+        
 
 
         current_time = pygame.time.get_ticks() / 1000
@@ -187,6 +236,11 @@ while running:
             
         tank2_pos.x = pygame.math.clamp(tank2_pos.x , RADIUS,WIDTH - RADIUS)
         tank2_pos.y = pygame.math.clamp(tank2_pos.y , RADIUS,HEIGHT - RADIUS)
+        
+        for barrier in barrierList:
+            tank1_pos = push_circle_out_of_rect(tank1_pos, RADIUS, barrier)
+            tank2_pos = push_circle_out_of_rect(tank2_pos, RADIUS, barrier)
+            
 
     # flip() the display to put your work on screen
     pygame.display.flip()

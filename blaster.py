@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
-from blasterBullet import *
+from bullet import *
 from blasterEnemy import *
 
 # pygame setup
