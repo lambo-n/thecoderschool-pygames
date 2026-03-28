@@ -47,6 +47,9 @@ player_velocities = [player1_velocity,
 
 player_jump_counts = [allowedJumps, allowedJumps, allowedJumps, allowedJumps, allowedJumps]  # remaining jumps per player (max 2)
 
+TAG_COOLDOWN = 2.0  # seconds before a newly-tagged player can tag back
+tag_cooldowns = [0.0] * 5  # cooldown timer per player
+
 
 floorBase = pygame.Rect(0, HEIGHT - 100, WIDTH, 10)
 platform1 = pygame.Rect(400, 500, 200, 20)
@@ -59,6 +62,9 @@ platform7 = pygame.Rect(100, 200, 200, 20)
 platform8 = pygame.Rect(800, 550, 100, 20)
 
 platforms = [floorBase, platform1, platform2, platform3, platform4, platform5, platform6, platform7, platform8]
+
+downArrowImage = pygame.image.load("assets/downArrow.png").convert_alpha()
+downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 while running:
     # poll for events
@@ -80,7 +86,10 @@ while running:
     pygame.draw.rect(screen, "green", (player3_pos.x, player3_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
     pygame.draw.rect(screen, "yellow", (player4_pos.x, player4_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
     pygame.draw.rect(screen, "orange", (player5_pos.x, player5_pos.y, PLAYER_WIDTH, PLAYER_HEIGHT))
-    
+
+    tagged_pos = player_positions[taggedPlayer]
+    screen.blit(downArrowImage, (tagged_pos.x, tagged_pos.y - PLAYER_HEIGHT - 2))
+
     for platform in platforms:
         pygame.draw.rect(screen, "black", platform)
 
@@ -108,17 +117,26 @@ while running:
                     else: player_rect.left = platform.right
                 player_positions[i].x = player_rect.x
 
+    # Tick tag cooldowns
+    for i in range(len(tag_cooldowns)):
+        if tag_cooldowns[i] > 0:
+            tag_cooldowns[i] = max(0.0, tag_cooldowns[i] - dt)
+
     # Player-to-player collisions
     for i in range(len(player_positions)):
         player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
         for j in range(i + 1, len(player_positions)):
             other_rect = pygame.Rect(player_positions[j].x, player_positions[j].y, PLAYER_WIDTH, PLAYER_HEIGHT)
             if player_rect.colliderect(other_rect):
-                if taggedPlayer == i:
+                if taggedPlayer == i and tag_cooldowns[j] <= 0:
                     taggedPlayer = j
+                    tag_cooldowns[j] = TAG_COOLDOWN
+                    tag_cooldowns[i] = TAG_COOLDOWN
                     print(taggedPlayer)
-                elif taggedPlayer == j:
+                elif taggedPlayer == j and tag_cooldowns[i] <= 0:
                     taggedPlayer = i
+                    tag_cooldowns[i] = TAG_COOLDOWN
+                    tag_cooldowns[j] = TAG_COOLDOWN
                     print(taggedPlayer)
                 # Calculate overlap on each axis
                 overlap_x = min(player_rect.right, other_rect.right) - max(player_rect.left, other_rect.left)
@@ -200,10 +218,12 @@ while running:
         player5_pos.x -= PLAYER_MOVEMENT_SPEED * dt
     if keys[pygame.K_RETURN]:
         player5_pos.x += PLAYER_MOVEMENT_SPEED * dt
-        
 
-        
-    
+    for pos in player_positions:
+        pos.x = max(0, min(pos.x, WIDTH - PLAYER_WIDTH))
+        pos.y = max(0, min(pos.y, HEIGHT - PLAYER_HEIGHT))
+
+
 
     # flip() the display to put your work on screen
     pygame.display.flip()

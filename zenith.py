@@ -21,8 +21,17 @@ platform2 = pygame.Rect(750, 350, 200, 10)
 platform3 = pygame.Rect(750, 150, 200, 10)
 pportal1 = pygame.Rect(1000, 150, 200, 10)
 platformG = pygame.Rect(0, 600, WIDTH, 20)
+lvl1Platforms = [platform1, platform2, platform3, pportal1, platformG]
 
-platformList = [platform1, platform2, platform3, pportal1, platformG]
+platformb1 = pygame.Rect(200, 400, 200, 10)
+platformb2 = pygame.Rect(500, 300, 200, 10) 
+lvl2Platforms = [platformb1, platformb2, platformG]
+
+currentLevelList = lvl1Platforms
+
+endPortal = pygame.Rect(1000, 150, 200, 10)
+
+
 
 cubeImage = pygame.image.load("assets/digdug.png").convert_alpha()
 cubeImage = pygame.transform.scale(cubeImage, (40, 40))
@@ -47,7 +56,7 @@ while running:
     player_rect = pygame.Rect(player_pos.x, player_pos.y, 40, 40)
     
     # Platform collisions
-    for platform in platformList:
+    for platform in currentLevelList:
         if player_rect.colliderect(platform):
             # Landing on top
             if gravity >= 0 and player_rect.bottom - platform.top <= 20:
@@ -71,9 +80,15 @@ while running:
     player_rect.clamp_ip(screen.get_rect())
     player_pos.x = player_rect.x
 
-    for platform in platformList:
+    for platform in currentLevelList:
         pygame.draw.rect(screen, "black", platform)
     screen.blit(cubeImage, player_rect)
+    
+    if currentLevel == 1:
+        currentLevelPlatforms = lvl1Platforms
+    
+    if player_rect.colliderect(endPortal):
+        currentLevel += 1
     
 
     keys = pygame.key.get_pressed()

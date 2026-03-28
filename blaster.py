@@ -11,7 +11,7 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 money = 0
-wave = 0
+wave = 1
 # 1, 2, 4, 7, 11, 16
 waveAmount = 0
 enemiesLeft = waveAmount
@@ -72,15 +72,19 @@ while running == True:
     screen.blit(playerImage, player_pos)
         
     
-    if enemiesLeft <= 0:
-        waveAmount += wave
-        wave += 1   
+    if len(enemyList) == 0:
+        waveAmount = 1 + (wave - 1) * wave // 2
+        wave += 1
         enemiesLeft = waveAmount
-        
-        for i in range(waveAmount):
-            enemyType = random.choice(["normal", "speed"])
-            newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)) , enemyType)
+
+        enemyTypes = {"normal": 2, "speed": 1}
+        budget = waveAmount
+        while budget > 0:
+            affordable = [t for t, v in enemyTypes.items() if v <= budget]
+            enemyType = random.choice(affordable)
+            newEnemy = Enemy(pygame.Vector2(random.randint(0, WIDTH), random.randint(0, HEIGHT)), enemyType)
             enemyList.append(newEnemy)
+            budget -= enemyTypes[enemyType]
         
         
         
@@ -93,7 +97,7 @@ while running == True:
         for enemy in enemyList[:]:
             enemyRect = enemy.get_rect()
             
-            if enemyRect.collidepoint(bullet.pos) and bullet:
+            if enemyRect.collidepoint(bullet.pos) and bullet in bulletList:
                 enemy.health -= 5
                 bulletList.remove(bullet)
                 
