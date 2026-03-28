@@ -1,4 +1,5 @@
 import pygame
+from enemy import Enemy
 
 # stationary platforms, player in top left
 # enemies are at the bottom shooting projectiles up
@@ -7,25 +8,42 @@ import pygame
 
 
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((600, 900))
 clock = pygame.time.Clock()
 running = True
 dt = 1 / 60
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player_pos = pygame.Vector2(10, 10)
 
 playerSprite = pygame.image.load("assets/digdug.png").convert_alpha()
 playerSprite = pygame.transform.scale(playerSprite, (80, 80))
 
-platformGround = pygame.Rect(0, 600, 1280, 100)
-platform1 = pygame.Rect(300, 500, 200, 10)
-platform2 = pygame.Rect(750, 350, 200, 10)
-platformList = [platformGround, platform1, platform2]
+
+
+backgroundImage = pygame.image.load("assets/flappyBackground.png").convert()
+backgroundImage = pygame.transform.scale(backgroundImage, (900, 900))
+
+
+# posX, posY, widthX, heightY
+platformGround = pygame.Rect(0, 800, 1280, 100)
+
+platform1 = pygame.Rect(0, 100, 200, 25)
+platform2 = pygame.Rect(400, 100, 200, 25)
+platform3 = pygame.Rect(0, 250, 200, 25)
+platform4 = pygame.Rect(400, 250, 200, 25)
+platform5 = pygame.Rect(0, 400, 200, 25)
+platform6 = pygame.Rect(400, 400, 200, 25)
+platform7 = pygame.Rect(200, 600, 200, 25)
+
+platformList = [platformGround, platform1, platform2, platform3, platform4, platform5, platform6, platform7]
+
+enemy1 = Enemy((50, 800))
+enemyList = [enemy1]
 
 velocity = pygame.Vector2(0, 0)
 on_ground = False
 SPEED = 300
-JUMP_SPEED = -500
+JUMP_SPEED = -650
 GRAVITY = 1000
 
 while running:
@@ -73,9 +91,13 @@ while running:
             velocity.y = 0
 
     # Draw
-    screen.fill("purple")
+    screen.blit(backgroundImage, (0, 0))
     for platform in platformList:
-        pygame.draw.rect(screen, "white", platform)
+        pygame.draw.rect(screen, "black", platform)
+        
+    for enemy in enemyList:
+        enemy.draw(screen)
+        
     screen.blit(playerSprite, player_pos)
 
     pygame.display.flip()
