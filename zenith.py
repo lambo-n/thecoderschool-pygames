@@ -13,29 +13,34 @@ canJump = False
 WIDTH = screen.get_width()
 HEIGHT = screen.get_height()
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+player_pos = pygame.Vector2(48, 590)
 
 # xpos, ypos, xwidth, yheight
+# use variables for end portal position at lvl 5
+endPortal = pygame.Rect(1120, 150, 50, 10)
+
+
 platform1 = pygame.Rect(300, 500, 200, 10)
 platform2 = pygame.Rect(750, 350, 200, 10)
 platform3 = pygame.Rect(750, 150, 200, 10)
-pportal1 = pygame.Rect(1000, 150, 200, 10)
-platformG = pygame.Rect(0, 600, WIDTH, 20)
-lvl1Platforms = [platform1, platform2, platform3, pportal1, platformG]
+platformG = pygame.Rect(0, 630, 1280, 20)
+lvl1platforms = [platform1, platform2, platform3, platformG]
+lvl1movingplatforms = []
 
-platformb1 = pygame.Rect(200, 400, 200, 10)
-platformb2 = pygame.Rect(500, 300, 200, 10) 
-lvl2Platforms = [platformb1, platformb2, platformG]
+platformb1 = pygame.Rect(700, 250, 200, 10)
+platformb2 = pygame.Rect(700, 450, 200, 10)
+lvl2platforms = [platformb1, platformG, platformb2]
+lvl2movingplatforms = []
 
-currentLevelList = lvl1Platforms
+platformc1 = pygame.Rect(700, 550, 50, 10)
+lvl3platforms = [platformc1, platformG]
+lvl2movingplatforms = []
 
-endPortal = pygame.Rect(1000, 150, 200, 10)
+currentLvlList = lvl1platforms
+currentLvl = 1
 
-
-
-cubeImage = pygame.image.load("assets/digdug.png").convert_alpha()
-cubeImage = pygame.transform.scale(cubeImage, (40, 40))
-
+squareImage = pygame.image.load("CoolLookingThing.png")
+squareImage = pygame.transform.scale(squareImage, (40, 40))
 
 while running:
     # poll for events
@@ -44,7 +49,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             
-            
+    if currentLvl == 1:
+        currentLvlList = lvl1platforms
+    elif currentLvl == 2:
+        currentLvlList = lvl2platforms
+    elif currentLvl == 3:
+        currentLvlList = lvl3platforms
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
@@ -54,9 +64,11 @@ while running:
     player_pos.y += gravity * dt
 
     player_rect = pygame.Rect(player_pos.x, player_pos.y, 40, 40)
+
+
     
     # Platform collisions
-    for platform in currentLevelList:
+    for platform in currentLvlList:
         if player_rect.colliderect(platform):
             # Landing on top
             if gravity >= 0 and player_rect.bottom - platform.top <= 20:
@@ -80,16 +92,16 @@ while running:
     player_rect.clamp_ip(screen.get_rect())
     player_pos.x = player_rect.x
 
-    for platform in currentLevelList:
+    for platform in currentLvlList:
         pygame.draw.rect(screen, "black", platform)
-    screen.blit(cubeImage, player_rect)
-    
-    if currentLevel == 1:
-        currentLevelPlatforms = lvl1Platforms
-    
+    screen.blit(squareImage, player_rect)
+
+    pygame.draw.rect(screen, "green", endPortal)
+
     if player_rect.colliderect(endPortal):
-        currentLevel += 1
-    
+        player_pos = pygame.Vector2(48, 590)
+        currentLvl += 1
+
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and canJump:
