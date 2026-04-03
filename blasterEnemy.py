@@ -16,6 +16,12 @@ class Enemy:
             self.strength = 0.5
             self.value = 1
             self.image = pygame.image.load("assets/cops.png").convert_alpha()
+        if enemyType == "stronk":
+            self.health = 200
+            self.speed = 50
+            self.strength = 2
+            self.value = 3
+            self.image = pygame.image.load("assets/robotVillain.png").convert_alpha()
             
         self.image = pygame.transform.scale(self.image, (50, 50))
         
