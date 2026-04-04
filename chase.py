@@ -1,5 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
+from moving_platform import MovingPlatform
 
 # pygame setup
 pygame.init()
@@ -15,10 +16,9 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 # xpos, ypos, xwidth, yheight
 platformGround = pygame.Rect(0, 600, 1280, 20)
 platform1 = pygame.Rect(400, 500, 200, 20)
-platform4 = pygame.Rect(100, 400, 150, 20)
-moving_dir = 1  # 1 = right, -1 = left
+platform4 = MovingPlatform(100, 400, 150, 20, moving_dir=1, bound_min=50, bound_max=1180, axis='x')
 
-platformList = [platformGround, platform1, platform4]
+platformList = [platformGround, platform1, platform4.rect]
 
 while running:
     # poll for events
@@ -31,26 +31,23 @@ while running:
     screen.fill("black")
 
     # Move the moving platform left and right
-    prev_platform_left = platform4.left
-    platform4.x += moving_dir * 150 * dt
-    if platform4.right >= 1180 or platform4.left <= 50:
-        moving_dir *= -1
+    platform4.update(dt)
 
     # Move player with platform if standing on it
     player_rect_cur = pygame.Rect(int(player_pos.x) - 20, int(player_pos.y) - 20, 40, 40)
-    if (player_rect_cur.bottom == platform4.top and
-            player_rect_cur.right > platform4.left and
-            player_rect_cur.left < platform4.right):
-        player_pos.x += platform4.left - prev_platform_left
+    if (player_rect_cur.bottom == platform4.rect.top and
+            player_rect_cur.right > platform4.rect.left and
+            player_rect_cur.left < platform4.rect.right):
+        player_pos.x += platform4.rect.left - platform4.prev_x
 
 
     for platform in platformList:
         pygame.draw.rect(screen, "white", platform)
-    
+
     player_rect = pygame.Rect(player_pos.x - 20, player_pos.y - 20, 40, 40)
     pygame.draw.rect(screen, "gold", player_rect)
-    
-    
+
+
     gravity += 1000 * dt
     player_pos.y += gravity * dt
 
@@ -98,10 +95,6 @@ while running:
     player_rect.clamp_ip(screen.get_rect())
     player_pos.x = player_rect.centerx
     player_pos.y = player_rect.centery
-        
-        
-
-    
 
     # flip() the display to put your work on screen
     pygame.display.flip()

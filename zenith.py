@@ -1,5 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
+from moving_platform import MovingPlatform
 
 # pygame setup
 pygame.init()
@@ -28,18 +29,20 @@ lvl1platforms = [platform1, platform2, platform3, platformG]
 lvl1movingplatforms = []
 
 platformb1 = pygame.Rect(700, 250, 200, 10)
-platformb2 = pygame.Rect(700, 450, 200, 10)
+platformb2 = pygame.Rect(500, 450, 200, 10)
 lvl2platforms = [platformb1, platformG, platformb2]
 lvl2movingplatforms = []
 
-platformc1 = pygame.Rect(700, 550, 50, 10)
-lvl3platforms = [platformc1, platformG]
-lvl2movingplatforms = []
+platformc1 = MovingPlatform(700, 550, 50, 10, moving_dir=1, bound_min=400, bound_max=600)
+platformc2 = MovingPlatform(400, 350, 50, 10, moving_dir=-1, bound_min=150, bound_max=500)
+lvl3platforms = [platformc1.rect, platformc2.rect, platformG]
+lvl3movingplatforms = [platformc1, platformc2]
 
 currentLvlList = lvl1platforms
-currentLvl = 1
+currentLvlMovingList = lvl1movingplatforms
+currentLvl = 3
 
-squareImage = pygame.image.load("CoolLookingThing.png")
+squareImage = pygame.image.load("assets/digdug.png")
 squareImage = pygame.transform.scale(squareImage, (40, 40))
 
 while running:
@@ -51,10 +54,13 @@ while running:
             
     if currentLvl == 1:
         currentLvlList = lvl1platforms
+        currentLvlMovingList = lvl1movingplatforms
     elif currentLvl == 2:
         currentLvlList = lvl2platforms
+        currentLvlMovingList = lvl2movingplatforms
     elif currentLvl == 3:
         currentLvlList = lvl3platforms
+        currentLvlMovingList = lvl3movingplatforms
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
@@ -65,7 +71,7 @@ while running:
 
     player_rect = pygame.Rect(player_pos.x, player_pos.y, 40, 40)
 
-
+    
     
     # Platform collisions
     for platform in currentLvlList:
@@ -88,6 +94,10 @@ while running:
                 else:
                     player_rect.left = platform.right
                 player_pos.x = player_rect.x
+                
+    for movingPlatform in currentLvlMovingList:
+        movingPlatform.update(dt)
+        
 
     player_rect.clamp_ip(screen.get_rect())
     player_pos.x = player_rect.x
