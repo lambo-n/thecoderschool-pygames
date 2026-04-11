@@ -1,6 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 from moving_platform import MovingPlatform
+from chaseenemy import Enemy
 
 # pygame setup
 pygame.init()
@@ -10,8 +11,13 @@ running = True
 dt = 0
 gravity = 0
 canJump = False
+enemyTimer = 0
+enemySpawnTime = 2
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+
+batImage = pygame.image.load("assets/robotVillain.png").convert_alpha()
+batImage = pygame.transform.scale(batImage, (50, 50))
 
 # xpos, ypos, xwidth, yheight
 platformGround = pygame.Rect(0, 600, 1280, 20)
@@ -19,6 +25,10 @@ platform1 = pygame.Rect(400, 500, 200, 20)
 platform4 = MovingPlatform(100, 400, 150, 20, moving_dir=1, bound_min=50, bound_max=1180, axis='x')
 
 platformList = [platformGround, platform1, platform4.rect]
+
+testEnemy = Enemy()
+enemyList = [testEnemy]
+
 
 while running:
     # poll for events
@@ -47,6 +57,19 @@ while running:
     player_rect = pygame.Rect(player_pos.x - 20, player_pos.y - 20, 40, 40)
     pygame.draw.rect(screen, "gold", player_rect)
 
+    for enemy in enemyList:
+        enemy.update(dt)
+        screen.blit(batImage, (enemy.pos.x, enemy.pos.y))
+        
+        if enemy.pos.x < -50 or enemy.pos.x > 1300:
+            enemy.direction *= -1
+
+    if enemyTimer >= enemySpawnTime:
+        newEnemy = Enemy()
+        enemyList.append(newEnemy)
+        enemyTimer = 0
+        
+    enemyTimer += dt
 
     gravity += 1000 * dt
     player_pos.y += gravity * dt

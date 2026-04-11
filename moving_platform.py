@@ -16,9 +16,17 @@ class MovingPlatform:
         self.prev_y = self.rect.y
         if self.axis == 'y':
             self.rect.y += self.moving_dir * 150 * dt
-            if self.rect.top >= self.bound_max or self.rect.bottom <= self.bound_min:
+            if self.rect.top >= self.bound_max:
+                self.rect.y = self.bound_max - 1
+                self.moving_dir *= -1
+            elif  self.rect.bottom <= self.bound_min:
+                self.rect.y = self.bound_min
                 self.moving_dir *= -1
         else:
             self.rect.x += self.moving_dir * 150 * dt
-            if self.rect.right >= self.bound_max or self.rect.left <= self.bound_min:
+            if self.rect.right >= self.bound_max:
+                self.rect.x = self.bound_max - self.rect.width
+                self.moving_dir *= -1
+            elif self.rect.left <= self.bound_min:
+                self.rect.x = self.bound_min
                 self.moving_dir *= -1

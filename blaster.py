@@ -16,7 +16,11 @@ wave = 1
 waveAmount = 0
 enemiesLeft = waveAmount
 
-             
+speedUpgradeCost = 1
+damageUpgradeCost = 1
+healthUpgradeCost = 1
+
+
              
 
 
@@ -76,6 +80,25 @@ while running == True:
 
     if gameState == "shop":
         screen.fill((20, 20, 35))
+        
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         # Title
         title_surf = font_large.render("S H O P", True, (220, 200, 120))
