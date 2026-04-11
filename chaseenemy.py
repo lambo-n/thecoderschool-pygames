@@ -18,4 +18,6 @@ class Enemy:
         
     def update(self, dt):
         self.pos.x += 100 * dt * self.direction
-        
+
+    def get_rect(self):
+        return pygame.Rect(int(self.pos.x), int(self.pos.y), 50, 50)

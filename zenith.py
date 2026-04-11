@@ -33,17 +33,22 @@ platformb2 = pygame.Rect(500, 450, 200, 10)
 lvl2platforms = [platformb1, platformG, platformb2]
 lvl2movingplatforms = []
 
-platformc1 = MovingPlatform(700, 550, 50, 10, moving_dir=1, bound_min=400, bound_max=600)
+platformc1 = MovingPlatform(900, 550, 50, 10, moving_dir=1, bound_min=150, bound_max=600)
 platformc2 = MovingPlatform(400, 350, 50, 10, moving_dir=-1, bound_min=150, bound_max=500)
 lvl3platforms = [platformc1.rect, platformc2.rect, platformG]
 lvl3movingplatforms = [platformc1, platformc2]
 
 currentLvlList = lvl1platforms
 currentLvlMovingList = lvl1movingplatforms
-currentLvl = 3
+currentLvl = 4
 
 squareImage = pygame.image.load("assets/digdug.png")
 squareImage = pygame.transform.scale(squareImage, (40, 40))
+
+font = pygame.font.SysFont(None, 40)
+
+user_input = ""
+input_feedback = ""
 
 while running:
     # poll for events
@@ -51,6 +56,24 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if currentLvl == 4 and event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RETURN:
+                if user_input.strip() == "4":
+                    currentLvl = 5
+                    user_input = ""
+                    input_feedback = ""
+                    player_pos = pygame.Vector2(48, 590)
+                else:
+                    input_feedback = "Wrong! Try again."
+                    #CONTINUE
+                    user_input = ""
+            elif event.key == pygame.K_BACKSPACE:
+                user_input = user_input[:-1]
+            elif event.unicode.isprintable():
+                user_input += event.unicode
+            
+    screen.fill("white")
+
             
     if currentLvl == 1:
         currentLvlList = lvl1platforms
@@ -61,10 +84,26 @@ while running:
     elif currentLvl == 3:
         currentLvlList = lvl3platforms
         currentLvlMovingList = lvl3movingplatforms
+    elif currentLvl == 4:
+        currentLvlList = [platformG]
+        currentLvlMovingList = []
+        
+        mathProblem = font.render("2 + 2 = ?", True, "red")
+        screen.blit(mathProblem, (WIDTH / 2 - 80, HEIGHT / 2 - 60))
+
+        # Draw input box
+        input_box = pygame.Rect(WIDTH / 2 - 80, HEIGHT / 2, 160, 40)
+        pygame.draw.rect(screen, "black", input_box, 2)
+        input_surf = font.render(user_input, True, "black")
+        screen.blit(input_surf, (input_box.x + 5, input_box.y + 5))
+
+        # Draw feedback
+        if input_feedback:
+            feedback_surf = font.render(input_feedback, True, "orange")
+            screen.blit(feedback_surf, (WIDTH / 2 - 80, HEIGHT / 2 + 50))
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("white")
-
+  
 
     gravity += 1000 * dt
     player_pos.y += gravity * dt
