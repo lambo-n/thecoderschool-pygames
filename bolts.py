@@ -1,5 +1,7 @@
 import pygame
 from enemy import Enemy
+from boltsProjectile import Projectile
+import random
 
 # stationary platforms, player in top left
 # enemies are at the bottom shooting projectiles up
@@ -37,9 +39,26 @@ platform7 = pygame.Rect(200, 600, 200, 25)
 
 platformList = [platformGround, platform1, platform2, platform3, platform4, platform5, platform6, platform7]
 
-enemy1 = Enemy((50, 800))
-enemyList = [enemy1]
 
+
+possibleSpawnList = [
+    (50, 750),
+    (450, 750),
+    (50, 350),
+    (450, 350),
+]   
+
+# random = random.randint(0, 3)
+enemy1 = Enemy(possibleSpawnList[0])
+enemy2 = Enemy(possibleSpawnList[1])
+enemy3 = Enemy(possibleSpawnList[2])
+enemy4 = Enemy(possibleSpawnList[3])
+
+projectile1 = Projectile((50, 750), pygame.Vector2(0, -1))
+
+
+enemyList = [enemy1, enemy2, enemy3, enemy4]
+    
 velocity = pygame.Vector2(0, 0)
 on_ground = False
 SPEED = 300
@@ -91,12 +110,13 @@ while running:
             velocity.y = 0
 
     # Draw
-    screen.blit(backgroundImage, (0, 0))
+    screen.fill("yellow")
     for platform in platformList:
-        pygame.draw.rect(screen, "black", platform)
+        pygame.draw.rect(screen, "brown", platform)
         
     for enemy in enemyList:
         enemy.draw(screen)
+        enemy.update(dt)
         
     screen.blit(playerSprite, player_pos)
 

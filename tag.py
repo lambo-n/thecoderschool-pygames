@@ -4,15 +4,16 @@ import random
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 running = True
 dt = 0
-allowedJumps = 3
+jumpCount = 3
 # normal, bomb, freeze, infection
 gamemode = "normal"
-gameState = "menu" 
-taggedPlayer = random.randint(0, 4)
+gameState = "title" 
+playerCount = 5
+taggedPlayer = random.randint(0, playerCount - 1)
 
 
 WIDTH = screen.get_width()
@@ -30,11 +31,11 @@ player3_pos = pygame.Vector2(400, HEIGHT-100)
 player4_pos = pygame.Vector2(600, HEIGHT-100)
 player5_pos = pygame.Vector2(800, HEIGHT-100)
 
-player1alive = True
-player2alive = True
+player1alive = False
+player2alive = False
 player3alive = False
-player4alive = True
-player5alive = True
+player4alive = False
+player5alive = False
 
 
 player_positions = [player1_pos, 
@@ -55,7 +56,7 @@ player_velocities = [player1_velocity,
                      player4_velocity,
                      player5_velocity]
 
-player_jump_counts = [allowedJumps, allowedJumps, allowedJumps, allowedJumps, allowedJumps]  # remaining jumps per player (max 2)
+player_jump_counts = [jumpCount, jumpCount, jumpCount, jumpCount, jumpCount]  # remaining jumps per player (max 2)
 
 TAG_COOLDOWN = 2.0  # seconds before a newly-tagged player can tag back
 tag_cooldowns = [0.0] * 5  # cooldown timer per player
@@ -83,6 +84,26 @@ TIMER_EVENT = pygame.USEREVENT + 1
 pygame.time.set_timer(TIMER_EVENT, 1000)
 countdown_seconds = 60
 
+
+# TITLE UI ELEMENTS
+titleStart = pygame.Rect(WIDTH/2 - 100, 500, 200, 50)
+
+# MENU UI ELEMENTS
+playerCountIncrement = pygame.Rect(WIDTH/2 + 110, 200, 50, 50)
+playerCountDecrement = pygame.Rect(WIDTH/2 - 160, 200, 50, 50)
+
+jumpCountIncrement = pygame.Rect(WIDTH/2 + 110, 300, 50, 50)
+jumpCountDecrement = pygame.Rect(WIDTH/2 - 160, 300, 50, 50)
+
+gamemodeIncrement = pygame.Rect(WIDTH/2 + 110, 400, 50, 50)
+gamemodeDecrement = pygame.Rect(WIDTH/2 - 160, 400, 50, 50)
+
+startGame = pygame.Rect(WIDTH/2 - 100, 600, 200, 50)
+
+
+
+
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -95,21 +116,81 @@ while running:
                 if event.key == key and player_jump_counts[idx] > 0:
                     player_velocities[idx] = -PLAYER_JUMP_HEIGHT
                     player_jump_counts[idx] -= 1
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            
+            if gameState == "title":
+                if titleStart.collidepoint(event.pos):
+                    gameState = "menu"
+                    
+            if gameState == "menu":
+                if playerCountIncrement.collidepoint(event.pos):
+                    playerCount = min(playerCount + 1, 5)
+                elif playerCountDecrement.collidepoint(event.pos):
+                    playerCount = max(playerCount - 1, 2)
+                elif startGame.collidepoint(event.pos):
+                    gameState = "playing"
+                    if playerCount >= 1:
+                        player1alive = True
+                    if playerCount >= 2:
+                        player2alive = True
+                    if playerCount >= 3:
+                        player3alive = True
+                    if playerCount >= 4:
+                        player4alive = True
+                    if playerCount >= 5:
+                        player5alive = True
+                    
+
         if event.type == TIMER_EVENT:
             countdown_seconds -= 1
             if countdown_seconds <= 0:
                 pygame.time.set_timer(TIMER_EVENT, 0) # Stop the timer
                 
+    if gameState == "title":
+        screen.fill("white")
+        
+        pygame.draw.rect(screen,"lightgrey", titleStart)
+    
     if gameState == "menu":
-        screen.fill("black")
+        screen.fill("white")
         
-        pygame.Rect(540, 200, 200, 100)
-        pygame.draw.rect(screen, "lightgray", (WIDTH/2-250, 100, 500, 500))
+        playerCountDisplay = pygame.Rect(WIDTH/2 - 100, 200, 200, 50)
+        pygame.draw.rect(screen, "lightgrey", playerCountDisplay)
         
-        font = pygame.font.SysFont(None, 100)
-        text_surface = font.render("Tag Game"), True, (0, 0, 0))
-        screen.blit(text_surface, (WIDTH/2 - fontWidth/2, 50))
+        jumpCountDisplay = pygame.Rect(WIDTH/2 - 100, 300, 200, 50)
+        pygame.draw.rect(screen, "lightgrey", jumpCountDisplay)
         
+        gamemodeDisplay = pygame.Rect(WIDTH/2 - 100, 400, 200, 50)
+        pygame.draw.rect(screen, "lightgrey", gamemodeDisplay)
+        
+        def right_tri(r):
+            return [(r.left, r.top), (r.left, r.bottom), (r.right, r.centery)]
+        def left_tri(r):
+            return [(r.right, r.top), (r.right, r.bottom), (r.left, r.centery)]
+
+        pygame.draw.polygon(screen, "lightgrey", right_tri(playerCountIncrement))
+        pygame.draw.polygon(screen, "lightgrey", left_tri(playerCountDecrement))
+        pygame.draw.polygon(screen, "lightgrey", right_tri(jumpCountIncrement))
+        pygame.draw.polygon(screen, "lightgrey", left_tri(jumpCountDecrement))
+        pygame.draw.polygon(screen, "lightgrey", right_tri(gamemodeIncrement))
+        pygame.draw.polygon(screen, "lightgrey", left_tri(gamemodeDecrement))
+
+        
+        font = pygame.font.SysFont(None, 70)
+        text_surface = font.render(str(playerCount), True, (0, 0, 0))
+        screen.blit(text_surface, (WIDTH/2-10, 200))
+        
+        text_surface = font.render(str(jumpCount), True, (0, 0, 0))
+        screen.blit(text_surface, (WIDTH/2-10, 300))
+
+        text_surface = font.render(str(gamemode), True, (0, 0, 0))
+        screen.blit(text_surface, (WIDTH/2-10, 400))
+
+        pygame.draw.rect(screen, "lightgrey", startGame)
+        font = pygame.font.SysFont(None, 50)
+        text_surface = font.render("Start Game", True, (0, 0, 0))
+        screen.blit(text_surface, (WIDTH/2 - 125, 600))
+
 
     elif gameState == "playing":
         playerAliveList = [player1alive, player2alive, player3alive, player4alive, player5alive ]
@@ -242,9 +323,9 @@ while running:
         # Reset jump count when landing
         for i in range(len(player_positions)):
             if on_ground[i]:
-                player_jump_counts[i] = allowedJumps
-            elif player_jump_counts[i] == allowedJumps:
-                player_jump_counts[i] = allowedJumps - 1 
+                player_jump_counts[i] = jumpCount
+            elif player_jump_counts[i] == jumpCount:
+                player_jump_counts[i] = jumpCount - 1 
                 
 
         keys = pygame.key.get_pressed()
