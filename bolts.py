@@ -15,6 +15,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 1 / 60
 
+health = 20
+
 player_pos = pygame.Vector2(10, 10)
 
 playerSprite = pygame.image.load("assets/digdug.png").convert_alpha()
@@ -54,8 +56,8 @@ enemy2 = Enemy(possibleSpawnList[1])
 enemy3 = Enemy(possibleSpawnList[2])
 enemy4 = Enemy(possibleSpawnList[3])
 
-projectile1 = Projectile((50, 750), pygame.Vector2(0, -1))
 
+projectileList = []
 
 enemyList = [enemy1, enemy2, enemy3, enemy4]
     
@@ -64,6 +66,8 @@ on_ground = False
 SPEED = 300
 JUMP_SPEED = -650
 GRAVITY = 1000
+
+font = pygame.font.Font("assets/vcr.ttf", 40)
 
 while running:
     dt = clock.tick(60) / 1000
@@ -78,8 +82,9 @@ while running:
         velocity.x = -SPEED
     if keys[pygame.K_d]:
         velocity.x = SPEED
-    if keys[pygame.K_SPACE] and on_ground:
-        velocity.y = JUMP_SPEED
+    if keys[pygame.K_RSHIFT]:
+        newProjectile = Projectile(player_pos + pygame.Vector2(0, 50), 1, "player")
+        projectileList.append(newProjectile)
 
     velocity.y += GRAVITY * dt
 
@@ -111,6 +116,11 @@ while running:
 
     # Draw
     screen.fill("yellow")
+    
+    text_surface = font.render(str(health), True, "white")
+    text_rect = text_surface.get_rect(center=(screen.get_width() / 2, 30))
+    screen.blit(text_surface, text_rect) 
+    
     for platform in platformList:
         pygame.draw.rect(screen, "brown", platform)
         
@@ -118,6 +128,20 @@ while running:
         enemy.draw(screen)
         enemy.update(dt)
         
+        enemyShootPos = enemy.shootChance()
+        if enemyShootPos:
+            newProjectile = Projectile(enemyShootPos, enemy.direction, "enemy")
+            projectileList.append(newProjectile)
+
+    for projectile in projectileList:
+        projectile.update(dt)
+        projectile.draw(screen)
+        
+        if projectile.get_rect().colliderect(player_rect) and projectile.tag == "enemy":
+            health -= 1
+            projectileList.remove(projectile)
+            print(health)
+
     screen.blit(playerSprite, player_pos)
 
     pygame.display.flip()

@@ -96,8 +96,8 @@ while running:
         coinY = random.randint(50, 550)
         coinRect.center = (coinX, coinY)
         
-    coinText = font.render(f"Coins: {coins}", True, "pink")
-    screen.blit(coinText, (10, 50))
+    coinText = font.render(f"Coins: {coins}", True, "yellow")
+    screen.blit(coinText, (10, 650))
 
     for enemy in enemyList:
         enemy.update(dt)

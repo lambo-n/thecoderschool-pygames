@@ -1,12 +1,13 @@
 import pygame
 
 class Projectile:
-    def __init__(self, pos, direction):
+    def __init__(self, pos, direction, tag):
         self.pos = pygame.Vector2(pos)
-        self.direction = direction
-        self.speed = 500
-        self.image = pygame.image.load("assets/bitcoins.png").convert_alpha()
+        self.direction = pygame.Vector2(direction, 0).normalize()
+        self.speed = 250
+        self.image = pygame.image.load("assets/bitcoin.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (20, 10))
+        self.tag = tag
         
     def update(self, dt):
         self.pos += self.direction * self.speed * dt

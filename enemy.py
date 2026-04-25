@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Enemy:
     def __init__ (self, pos):
@@ -17,6 +18,13 @@ class Enemy:
         self.directionChange += 1
             
         self.pos.x += self.direction * self.speed * dt
+        
+    def shootChance(self):
+        randomNum = random.randint(0, 1000)
+        if randomNum < 5:
+            return self.pos
+        else: 
+            return None
         
     def get_rect(self):
         return pygame.Rect(self.pos.x, self.pos.y, self.image.get_width(), self.image.get_height())
