@@ -20,6 +20,10 @@ speedUpgradeCost = 1
 damageUpgradeCost = 1
 healthUpgradeCost = 1
 
+# each upgrade multiplies damage by 1.5, speed by 1.2, and health by 1.3
+# buying each upgrade increases the cost of the next one by 50% (rounded up)
+# buying health upgrade heals player to full health
+
 
              
 
@@ -82,22 +86,6 @@ while running == True:
         screen.fill((20, 20, 35))
         
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
 
         # Title

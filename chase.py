@@ -1,4 +1,6 @@
 # Example file showing a circle moving on screen
+import random
+
 import pygame
 from moving_platform import MovingPlatform
 from chaseenemy import Enemy
@@ -16,15 +18,23 @@ enemySpawnTime = 2
 coinX = 600
 coinY = 150
 lives = 5
+coins = 0
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 batImage = pygame.image.load("assets/robotVillain.png").convert_alpha()
 batImage = pygame.transform.scale(batImage, (50, 50))
 
+heartImage = pygame.image.load("assets/heart.png").convert_alpha()
+heartImage = pygame.transform.scale(heartImage, (30, 30))
+
 coinImage = pygame.image.load("assets/bitcoin.png").convert_alpha()
 coinImage = pygame.transform.scale(coinImage, (30, 30))
 coinRect = coinImage.get_rect(center=(coinX, coinY))
+
+gameOverImage = pygame.image.load("assets/gameover.jpeg").convert_alpha()
+gameOverImage = pygame.transform.scale(gameOverImage, (400, 200))
+gameOverRect = gameOverImage.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
 
 
 # xpos, ypos, xwidth, yheight
@@ -42,6 +52,7 @@ movingPlatformList = [platform1, platform2, platform3, platform4]
 testEnemy = Enemy()
 enemyList = [testEnemy]
 
+font = pygame.font.SysFont(None, 40)
 
 while running:
     # poll for events
@@ -76,9 +87,17 @@ while running:
 
     screen.blit(coinImage, coinRect)
     
-    if player_rect.collideRect(coinRect):
-        #coinX = random.randint()
+    for i in range(lives):
+        screen.blit(heartImage, (10 + i * 40, 10))
+    
+    if player_rect.colliderect(coinRect):
         coins += 1
+        coinX = random.randint(50, 1230)
+        coinY = random.randint(50, 550)
+        coinRect.center = (coinX, coinY)
+        
+    coinText = font.render(f"Coins: {coins}", True, "pink")
+    screen.blit(coinText, (10, 50))
 
     for enemy in enemyList:
         enemy.update(dt)
@@ -90,7 +109,8 @@ while running:
             lives -= 1
         
         if enemy.pos.x < -50 or enemy.pos.x > 1300:
-            enemy.direction *= -1
+            enemyList.remove(enemy)
+
 
     if enemyTimer >= enemySpawnTime:
         newEnemy = Enemy()
@@ -98,6 +118,10 @@ while running:
         enemyTimer = 0
         
     enemyTimer += dt
+
+    if lives <= 0:
+        screen.blit(gameOverImage, gameOverRect)
+        #running = False
 
     gravity += 1000 * dt
     player_pos.y += gravity * dt
