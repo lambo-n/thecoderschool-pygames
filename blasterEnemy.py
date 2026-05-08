@@ -1,40 +1,57 @@
 import pygame
 
+
+
+
+
 class Enemy:
-    def __init__ (self, pos, enemyType):
+    def __init__(self,pos,enemytype):
         self.pos = pos
-        
-        if enemyType == "normal":
+
+
+
+        if enemytype == "normal":
             self.health = 100
             self.speed = 100
             self.strength = 1
             self.value = 2
-            self.image = pygame.image.load("assets/digdug.png").convert_alpha()
-        if enemyType == "speed":
-            self.health = 50
-            self.speed = 150
-            self.strength = 0.5
-            self.value = 1
-            self.image = pygame.image.load("assets/cops.png").convert_alpha()
-        if enemyType == "stronk":
-            self.health = 200
-            self.speed = 50
-            self.strength = 2
-            self.value = 3
-            self.image = pygame.image.load("assets/robotVillain.png").convert_alpha()
+            self.image = pygame.image.load("assets/Zombie.png").convert_alpha()
             
-        self.image = pygame.transform.scale(self.image, (50, 50))
+        elif enemytype == "speed":
+            self.health = 67
+            self.speed = 200
+            self.strength = 1
+            self.value = 1
+            self.image = pygame.image.load("assets/speedZombie.png").convert_alpha()
         
-    def update(self, player_pos, dt):
-        # Move towards the player
+        
+        
+        elif enemytype == "strong":
+            self.health = 150
+            self.speed = 50
+            self.strength = 50
+            self.value = 10
+            self.image = pygame.image.load("assets/stronkzombie.png").convert_alpha()
+           
+
+        
+        self.image = pygame.transform.scale(self.image, (50, 50))
+
+    
+
+
+    def update(self,player_pos,dt):
+        #Move towards the player
         dx = player_pos.x - self.pos.x
         dy = player_pos.y - self.pos.y
         distance = max(1, (dx**2 + dy**2)**0.5)
-        self.pos.x += (dx / distance) * self.speed * dt
-        self.pos.y += (dy / distance) * self.speed * dt
-        
-    def get_rect(self):
-        return pygame.Rect(self.pos.x, self.pos.y, self.image.get_width(), self.image.get_height())
+        self.pos.x += (dx/distance)*self.speed*dt
+        self.pos.y += (dy/distance)*self.speed*dt
 
-    def draw(self, screen, ):
-        screen.blit(self.image, self.pos)
+    def get_rect(self):
+        return pygame.Rect(self.pos.x , self.pos.y, self.image.get_width(),self.image.get_height())    
+
+
+
+    def draw(self,screen):
+        screen.blit(self.image, self.pos)    
