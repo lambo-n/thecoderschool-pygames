@@ -2,7 +2,7 @@
 import pygame
 import math
 
-from bullet import Bullet
+from ethanBullet import Bullet
 
 def push_circle_out_of_rect(pos, radius, rect):
     """Push a circle out of a rect if overlapping. Returns new pos."""
@@ -45,7 +45,7 @@ TANK_SPEED = 300
 ROTATION_SPEED = 200
 RADIUS = 40
 
-background = pygame.image.load("assets/background.png")
+background = pygame.image.load("assets/flappyBackground.png")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
@@ -78,13 +78,13 @@ tank1health = 3
 tank2health = 3
 
 gameState = "menu"
-tankmenu = pygame.image.load("assets/tankmenu.jpg").convert_alpha()
+tankmenu = pygame.image.load("assets/flappyMenu.png").convert_alpha()
 tankmenu = pygame.transform.scale(tankmenu, (1280, 600))
 
-tankStart = pygame.image.load("assets/tankStart.jpg").convert_alpha()
+tankStart = pygame.image.load("assets/flappyMenu.png").convert_alpha()
 tankStart= pygame.transform.scale(tankStart, (600,100))
 
-menuButton = pygame.image.load("assets/menubutton.png").convert_alpha()
+menuButton = pygame.image.load("assets/cave.jpeg").convert_alpha()
 menuButton= pygame.transform.scale(menuButton, (600,100))
 
 while running:
@@ -100,8 +100,7 @@ while running:
                 menubuttonRect = tankStart.get_rect(center=(WIDTH/2 , 300))
                 if menubuttonRect.collidepoint(mouse_pos):
                     gameState ="menu"
-               
-            
+        
             if gameState == "menu":
                 mouse_pos = pygame.Vector2(event.pos)
                 startbuttonRect = tankStart.get_rect(center=(WIDTH/2 , 300))
@@ -140,29 +139,35 @@ while running:
 
 
         # Draw tank 1 (red) - body circle + barrel line
-        pygame.draw.circle(screen, "red", tank1_pos, 40)
+        
         barrel1_end = tank1_pos + pygame.Vector2(60, 0).rotate(-tank1_angle)
         pygame.draw.line(screen, "black", tank1_pos, barrel1_end, 10)
         pygame.draw.rect(screen,"red", (tank1_pos.x- 40 , tank1_pos.y- 60, 80, 10 ))
         pygame.draw.rect(screen,"green", (tank1_pos.x- 40 , tank1_pos.y- 60, 80/3 * tank1health, 10 ))
-
+        
 
         # Draw tank 2 (blue) - body circle + barrel line
-        pygame.draw.circle(screen, "blue", tank2_pos, 40)
+        
         barrel2_end = tank2_pos + pygame.Vector2(60, 0).rotate(-tank2_angle)
         pygame.draw.line(screen, "black", tank2_pos, barrel2_end, 10)
         pygame.draw.rect(screen,"red", (tank2_pos.x- 40 , tank2_pos.y- 60,  80, 10 ))
         pygame.draw.rect(screen,"green", (tank2_pos.x- 40 , tank2_pos.y- 60, 80/3 * tank2health, 10 ))
+        pygame.draw.circle(screen, "blue", tank2_pos, 40)
         
+        font = pygame.font.SysFont("Arial", 30)
+        livesText = font.render(f"{tank1lives} - {tank2lives}", True, "black")
+        screen.blit(livesText, (600, 0))
 
         if tank1health <= 0 or tank2health <=0:
             
             if tank1health <=0:
-                tank1lives -=3
+                tank1lives -=1
+                
             else:
                 tank2lives -=1
             tank1health=3
             tank2health=3
+            bulletList.clear()
 
             if tank1lives <= 0 or tank2lives <=0:
                 
