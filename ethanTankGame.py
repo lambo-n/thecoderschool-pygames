@@ -2,38 +2,7 @@
 import pygame
 import math
 
-from ethanBullet import Bullet
-
-# pygame setup
-pygame.init()
-screen = pygame.display.set_mode((1280, 600))
-clock = pygame.time.Clock()
-running = True
-dt = 0
-
-WIDTH = screen.get_width()
-HEIGHT = screen.get_height()
-
-TANK_SPEED = 300
-ROTATION_SPEED = 200
-RADIUS = 40
-
-background = pygame.image.load("assets/flappyBackground.png")
-background = pygame.transform.scale(background, (WIDTH, HEIGHT))
-
-tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
-tank1_angle = 0
-
-tank2_pos = pygame.Vector2(WIDTH - WIDTH / 4, HEIGHT - HEIGHT / 4)
-tank2_angle = 0
-
-bulletList = []
-
-
-barrier1 = pygame.Rect(WIDTH//2 - 10 , HEIGHT// 2 - 100, 20 ,200)
-barrier2 = pygame.Rect(WIDTH//2 - 100 , HEIGHT// 2 - 10, 200 ,20)
-barrierList = [barrier1, barrier2]
-
+from bullet import Bullet
 
 def push_circle_out_of_rect(pos, radius, rect):
     """Push a circle out of a rect if overlapping. Returns new pos."""
@@ -62,6 +31,38 @@ def push_circle_out_of_rect(pos, radius, rect):
                 return pygame.Vector2(pos.x, rect.bottom + radius)
     return pos
 
+# pygame setup
+pygame.init()
+screen = pygame.display.set_mode((1280, 600))
+clock = pygame.time.Clock()
+running = True
+dt = 0
+
+WIDTH = screen.get_width()
+HEIGHT = screen.get_height()
+
+TANK_SPEED = 300
+ROTATION_SPEED = 200
+RADIUS = 40
+
+background = pygame.image.load("assets/background.png")
+background = pygame.transform.scale(background, (WIDTH, HEIGHT))
+
+tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
+tank1_angle = 0
+
+tank2_pos = pygame.Vector2(WIDTH - WIDTH / 4, HEIGHT - HEIGHT / 4)
+tank2_angle = 0
+
+bulletList = []
+
+
+barrier1 = pygame.Rect(WIDTH//2 - 10 , HEIGHT// 2 - 100, 20 ,200)
+barrier2 = pygame.Rect(WIDTH//5 - 200 , HEIGHT// 2 - 10, 200 ,20)
+barrier3 = pygame.Rect(WIDTH - 500 , HEIGHT// 10 - 10, 200 ,20)
+barrier4 = pygame.Rect(WIDTH- 1000 , HEIGHT// 5 - 10, 100 ,20)
+barrierList = [barrier1, barrier2, barrier3, barrier4]
+
 
 
 
@@ -70,17 +71,21 @@ tank1_last_shot = 0
 tank2_last_shot = 0
 
 
+tank1lives=3
+tank2lives=3
+
 tank1health = 3
 tank2health = 3
 
 gameState = "menu"
-tankmenu = pygame.image.load("assets/flappyMenu.png").convert_alpha()
+tankmenu = pygame.image.load("assets/tankmenu.jpg").convert_alpha()
 tankmenu = pygame.transform.scale(tankmenu, (1280, 600))
 
-tankStart = pygame.image.load("assets/flappyStart.png").convert_alpha()
+tankStart = pygame.image.load("assets/tankStart.jpg").convert_alpha()
 tankStart= pygame.transform.scale(tankStart, (600,100))
 
-
+menuButton = pygame.image.load("assets/menubutton.png").convert_alpha()
+menuButton= pygame.transform.scale(menuButton, (600,100))
 
 while running:
     # poll for events
@@ -90,6 +95,13 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             print("click")
+            if gameState == "gameover":
+                mouse_pos = pygame.Vector2(event.pos)
+                menubuttonRect = tankStart.get_rect(center=(WIDTH/2 , 300))
+                if menubuttonRect.collidepoint(mouse_pos):
+                    gameState ="menu"
+               
+            
             if gameState == "menu":
                 mouse_pos = pygame.Vector2(event.pos)
                 startbuttonRect = tankStart.get_rect(center=(WIDTH/2 , 300))
@@ -108,11 +120,24 @@ while running:
         tankStartX = WIDTH/4
         screen.blit(tankStart, (tankStartX,200))
 
+    if gameState=="gameover":
+        if tank1lives <=0: 
+            screen.fill("blue")
+        else:
+            screen.fill("red")
+        
+        screen.blit(menuButton,(WIDTH/4,300))    
+
+
 
 
     if gameState == "playing":
         # fill the screen with a color to wipe away anything from last frame
         screen.blit(background, (0, 0))
+
+        for barrier in barrierList:
+            pygame.draw.rect(screen,"grey", barrier)
+
 
         # Draw tank 1 (red) - body circle + barrel line
         pygame.draw.circle(screen, "red", tank1_pos, 40)
@@ -130,18 +155,26 @@ while running:
         pygame.draw.rect(screen,"green", (tank2_pos.x- 40 , tank2_pos.y- 60, 80/3 * tank2health, 10 ))
         
 
-        if tank1health <= 0:
-            screen.fill ("blue")
-            gameState = "menu"
-
-        if tank2health <= 0:
-            screen.fill ("red")
-
-            gameState ="menu"
+        if tank1health <= 0 or tank2health <=0:
             
+            if tank1health <=0:
+                tank1lives -=3
+            else:
+                tank2lives -=1
+            tank1health=3
+            tank2health=3
 
-        for barrier in barrierList:
-            pygame.draw.rect(screen,"grey", barrier)
+            if tank1lives <= 0 or tank2lives <=0:
+                
+                
+                gameState="gameover"
+
+            tank2_pos = pygame.Vector2(WIDTH - WIDTH / 4, HEIGHT - HEIGHT / 4)
+            tank2_angle = 0
+            tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
+            tank1_angle = 0
+
+        
                 
 
         for bullet in bulletList:
@@ -161,27 +194,21 @@ while running:
                 bullet.direction.y *= -1
                 bullet.bounces += 1
 
-
-
-            if bullet in bulletList:
+            if bullet in bulletList: 
                 bullet_rect = pygame.Rect(bullet.pos.x - 10, bullet.pos.y - 10, 20, 20)
                 for barrier in barrierList:
                     if bullet_rect.colliderect(barrier):
                         if bullet.bounces >= 2:
                             bulletList.remove(bullet)
                             break
-                        # Determine which axis to reflect based on smaller overlap
                         dx = min(abs(bullet_rect.right - barrier.left), abs(barrier.right - bullet_rect.left))
-                        dy = min(abs(bullet_rect.bottom - barrier.top), abs(barrier.bottom - bullet_rect.top))
+                        dy = min(abs(bullet_rect.bottom- barrier.top), abs(barrier.bottom - bullet_rect.top))
                         if dx < dy:
                             bullet.direction.x *= -1
                         else:
                             bullet.direction.y *= -1
-                        bullet.bounces += 1
-                        break
-
-
-
+                            break
+              
             if bullet.collidepoint(tank1_pos) and bullet in bulletList:
                 print("Tank 1 hit!")
                 bulletList.remove(bullet)
@@ -207,7 +234,6 @@ while running:
             
         tank1_pos.x = pygame.math.clamp(tank1_pos.x , RADIUS,WIDTH - RADIUS)
         tank1_pos.y = pygame.math.clamp(tank1_pos.y , RADIUS,HEIGHT - RADIUS)
-        
 
 
         current_time = pygame.time.get_ticks() / 1000
@@ -236,11 +262,11 @@ while running:
             
         tank2_pos.x = pygame.math.clamp(tank2_pos.x , RADIUS,WIDTH - RADIUS)
         tank2_pos.y = pygame.math.clamp(tank2_pos.y , RADIUS,HEIGHT - RADIUS)
-        
+
         for barrier in barrierList:
             tank1_pos = push_circle_out_of_rect(tank1_pos, RADIUS, barrier)
             tank2_pos = push_circle_out_of_rect(tank2_pos, RADIUS, barrier)
-            
+
 
     # flip() the display to put your work on screen
     pygame.display.flip()
