@@ -34,6 +34,19 @@ while running:
         if event.type == pygame.MOUSEBUTTONUP:
             if cookieRect.collidepoint(event.pos):
                 totalCookies += clickPower
+            
+            if upgrade1Rect.collidepoint(event.pos):
+                # check if player can afford upgrade
+                # give player upgrade
+                # subtract cost from total cookies
+                # increase cost for next upgrade
+                pass
+            if upgrade2Rect.collidepoint(event.pos):
+                pass
+            if upgrade3Rect.collidepoint(event.pos):
+                pass
+            if upgrade4Rect.collidepoint(event.pos):
+                pass
                 
 
     # fill the screen with a color to wipe away anything from last frame
