@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from moving_platform import MovingPlatform
+from zoieMovingPlatform import MovingPlatform
 
 # pygame setup
 pygame.init()

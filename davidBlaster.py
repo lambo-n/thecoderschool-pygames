@@ -3,7 +3,7 @@ import random
 import math 
 
 import pygame
-from bullet import *
+from ethanBullet import *
 from enemy import Enemy
 
 # pygame setup
