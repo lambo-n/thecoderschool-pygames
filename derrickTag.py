@@ -5,7 +5,7 @@ import random
 # pygame setup
 pygame.init()
 #screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 # 1280 x 720
 # 640 x 360
 clock = pygame.time.Clock()
@@ -18,6 +18,8 @@ gamemode = "normal"
 # Normal, Bomb, Freeze, Infection
 gamemodeList = ["Normal", "Bomb", "Freeze", "Infection"]
 gamemodeIndex = 0
+mapList = ["Map A", "Map B", "Map C", "Map D", "Map E"]
+mapIndex = 0
 platformDevMode = False
 taggedPlayer = random.randint(0, 4)
 print(taggedPlayer)
@@ -74,45 +76,59 @@ player_velocities = [player1_velocity,
 
 player_jump_counts = [jumpCount, jumpCount, jumpCount, jumpCount, jumpCount]
 
+# Map A platforms
 mapAfloorBase = pygame.Rect(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
 mapAplatform1 = pygame.Rect(SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (1280 / 36))
 mapAplatform2 = pygame.Rect(SCREEN_WIDTH / (1280 / 700), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
-mapAplatform3 = pygame.Rect(0, SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 20))
+mapAplatform3 = pygame.Rect(0, SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
 mapAplatform4 = pygame.Rect(SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
 mapAplatform5 = pygame.Rect(SCREEN_WIDTH / (1280 / 700), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 100))
 mapAplatform6 = pygame.Rect(0, SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 20))
-mapAplatform7 = pygame.Rect(SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapAplatform7 = pygame.Rect(SCREEN_WIDTH / (1280 / 105), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 195), SCREEN_HEIGHT / (720 / 20))
 mapAplatform8 = pygame.Rect(SCREEN_WIDTH / (1280 / 800), SCREEN_HEIGHT / (720 / 550), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
-mapAplatform9 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 550), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
-mapAplatform10 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 275), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 145))
-mapAplatform11 = pygame.Rect(SCREEN_WIDTH / (1280 / 1075), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 40), SCREEN_HEIGHT / (720 / 20))
-mapAplatform12 = pygame.Rect(SCREEN_WIDTH / (1280 / 1190), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 20))
-mapAplatform13 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 475), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 75))
-mapAplatform14 = pygame.Rect(SCREEN_WIDTH / (1280 / 1190), SCREEN_HEIGHT / (720 / 475), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 20))
-mapAplatform15 = pygame.Rect(SCREEN_WIDTH / (1280 / 1120), SCREEN_HEIGHT / (720 / 325), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
-mapAplatform16 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 145))
+mapAplatform9 = pygame.Rect(SCREEN_WIDTH / (1280 / 300), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120))
+mapAplatform10 = pygame.Rect(SCREEN_WIDTH / (1280 / 300), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 20))
+mapAplatform11 = pygame.Rect(SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120))
 
-mapA = [mapAfloorBase, mapAplatform1, mapAplatform2, mapAplatform3, mapAplatform4, mapAplatform5, mapAplatform6, mapAplatform7, mapAplatform8, mapAplatform9, mapAplatform10, mapAplatform11, mapAplatform12, mapAplatform13, mapAplatform14, mapAplatform15, mapAplatform16]
-mapB = []
+# Map B platforms
+mapBfloorBase = pygame.Rect(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+mapBplatform1 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 550), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapBplatform2 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 275), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 145))
+mapBplatform3 = pygame.Rect(SCREEN_WIDTH / (1280 / 1075), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 40), SCREEN_HEIGHT / (720 / 20))
+mapBplatform4 = pygame.Rect(SCREEN_WIDTH / (1280 / 1190), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 20))
+mapBplatform5 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 475), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 75))
+mapBplatform6 = pygame.Rect(SCREEN_WIDTH / (1280 / 1190), SCREEN_HEIGHT / (720 / 475), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 20))
+mapBplatform7 = pygame.Rect(SCREEN_WIDTH / (1280 / 1120), SCREEN_HEIGHT / (720 / 325), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
+mapBplatform8 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 145))
+
+mapA = [mapAfloorBase, mapAplatform1, mapAplatform2, mapAplatform3, mapAplatform4, mapAplatform5, mapAplatform6, mapAplatform7, mapAplatform8, mapAplatform9, mapAplatform10, mapAplatform11]
+mapB = [mapBfloorBase, mapBplatform1, mapBplatform2, mapBplatform3, mapBplatform4, mapBplatform5, mapBplatform6, mapBplatform7, mapBplatform8]
+mapC = []
+mapD = []
+mapE = []
+
+map = mapA
 
 downArrowImage = pygame.image.load("arrow1.png").convert_alpha()
 downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 # Menu UI Elements
-jumpCountIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 475, 75, 75)
-jumpCountDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 475, 75, 75)
+gamemodeIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 230, 75, 75)
+gameModeDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 230, 75, 75)
 
-playerCountIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 375, 75, 75)
-playerCountDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 375, 75, 75)
+playerCountIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 325, 75, 75)
+playerCountDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 325, 75, 75)
 
-gamemodeIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 275, 75, 75)
-gameModeDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 275, 75, 75)
+jumpCountIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 420, 75, 75)
+jumpCountDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 420, 75, 75)
 
+mapIncrement = pygame.Rect(SCREEN_WIDTH / 2 + 280, 515, 75, 75)
+mapDecrement = pygame.Rect(SCREEN_WIDTH / 2 - 353, 515, 75, 75)
 
 
 menuStart = pygame.Rect((SCREEN_WIDTH / (1280 / 440), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 150)))
 
-startGame = pygame.Rect((SCREEN_WIDTH / 2 - 250, 600, 500, 75))
+startGame = pygame.Rect((SCREEN_WIDTH / 2 - 250, 610, 500, 75))
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -153,6 +169,16 @@ while running:
                         gamemodeIndex = 3
                     else:
                         gamemodeIndex -= 1
+                elif mapIncrement.collidepoint(event.pos):
+                    if mapIndex == 4:
+                        mapIndex = 0
+                    else:
+                        mapIndex += 1
+                elif mapDecrement.collidepoint(event.pos):
+                    if mapIndex == 0:
+                        mapIndex = 4
+                    else:
+                        mapIndex -= 1
 
                 elif startGame.collidepoint(event.pos):
                     gameState = "playing"
@@ -184,13 +210,11 @@ while running:
         
 
         
-        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 420, 50, 840, 175)) # Tag text
-
-        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 275, 500, 75)) # Type of gamemode
-
-        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 375, 500, 75)) # Amount of players box
-
-        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 475, 500, 75)) # Amount of Double Jumps
+        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 420, 25, 840, 175)) # Tag text
+        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 230, 500, 70)) # Type of gamemode
+        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 325, 500, 70)) # Amount of players box
+        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 420, 500, 70)) # Amount of Double Jumps
+        pygame.draw.rect(screen, "white", (SCREEN_WIDTH / 2 - 250, 515, 500, 70)) # Map
 
         pygame.draw.rect(screen, "green", startGame) # Start Game
 
@@ -211,17 +235,23 @@ while running:
         pygame.draw.polygon(screen, "white", right_tri(jumpCountIncrement))
         pygame.draw.polygon(screen, "white", left_tri(jumpCountDecrement))
 
+        # Map cycle increment and decrement
+        pygame.draw.polygon(screen, "white", right_tri(mapIncrement))
+        pygame.draw.polygon(screen, "white", left_tri(mapDecrement))
 
 
         text_surface = FONT.render(str(gamemodeList[gamemodeIndex]), True, (0, 0, 0))
-        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 275))
+        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 240))
 
         text_surface = FONT.render(str(playerCount) + " Players", True, (0, 0, 0))
-        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 375))
+        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 335))
 
         jumpText = " Jumps" if jumpCount > 1 else " Jump"
         text_surface = FONT.render(str(jumpCount)+ jumpText, True, (0, 0, 0))
-        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 475))
+        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 430))
+
+        text_surface = FONT.render(str(mapList[mapIndex]), True, (0, 0, 0))
+        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 525))
 
     elif gameState == "playing": # Checks if the gamestate is playing
         # fill the screen with a color to wipe away anything from last frame
@@ -254,12 +284,8 @@ while running:
 
         text_surface = FONT.render(str(countdown_seconds), True, (0, 0, 0))
         screen.blit(text_surface, (SCREEN_WIDTH / 2 - fontWidth / 2, (SCREEN_HEIGHT / (1280 / 25))))
-
-        if platformDevMode:
-            for platform in mapA:
-                None
-        else:
-            for platform in mapA:
+        
+        for platform in map:
                 pygame.draw.rect(screen, "black", platform)
 
         for i in range(len(player_velocities)):
@@ -270,7 +296,7 @@ while running:
             player_positions[i].y += player_velocities[i] * dt
             
             player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
-            for platform in mapA:
+            for platform in map:
                 if player_rect.colliderect(platform):
                     if player_velocities[i] >= 0 and player_rect.bottom - platform.top <= 20:
                         player_positions[i].y = platform.y - PLAYER_HEIGHT
@@ -336,7 +362,7 @@ while running:
                         # Re-resolve platform collisions so players can't be pushed through platforms
                         for pi in [i, j]:
                             p_rect = pygame.Rect(player_positions[pi].x, player_positions[pi].y, PLAYER_WIDTH, PLAYER_HEIGHT)
-                            for platform in mapA:
+                            for platform in map:
                                 if p_rect.colliderect(platform):
                                     player_positions[pi].y = platform.y - PLAYER_HEIGHT
                                     player_velocities[pi] = 0
@@ -346,7 +372,7 @@ while running:
         on_ground = []
         for i in range(len(player_positions)):
             check_rect = pygame.Rect(player_positions[i].x, player_positions[i].y + 1, PLAYER_WIDTH, PLAYER_HEIGHT)
-            on_platform = any(check_rect.colliderect(platform) for platform in mapA)
+            on_platform = any(check_rect.colliderect(platform) for platform in map)
             on_player = any(
                 j != i and
                 abs((player_positions[i].y + PLAYER_HEIGHT) - player_positions[j].y) <= 2 and
