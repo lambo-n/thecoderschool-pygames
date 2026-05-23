@@ -1,4 +1,6 @@
 # Example file showing a basic pygame "game loop"
+import math
+
 import pygame
 
 # pygame setup
@@ -11,10 +13,14 @@ cookieY = 360
 cookieImage = pygame.image.load("assets/cookie.png").convert_alpha()
 cookieImage = pygame.transform.scale(cookieImage,(150,150))
 cookieRect = cookieImage.get_rect(center=(cookieX, cookieY))
-totalCookies = 0
-cps = 1
+totalCookies = 100000
+cps = 0
 clickPower = 1
 timeAccumulator = 0
+cursorCost = 35
+grandmaCost = 130
+farmCost = 500
+minesCost = 1000
 
 # MENU ELEMENTS
 backdropRect = pygame.Rect(800,50,450,600)
@@ -35,18 +41,49 @@ while running:
             if cookieRect.collidepoint(event.pos):
                 totalCookies += clickPower
             
+            # cursor
             if upgrade1Rect.collidepoint(event.pos):
+                
                 # check if player can afford upgrade
                 # give player upgrade
                 # subtract cost from total cookies
                 # increase cost for next upgrade
-                pass
+                if totalCookies >= cursorCost:
+                    cps += 1
+                    totalCookies -= cursorCost
+                    cursorCost *= 1.2
+                    cursorCost = int(math.floor(cursorCost))
+                    
+            # grandma
             if upgrade2Rect.collidepoint(event.pos):
-                pass
+                if totalCookies >= grandmaCost:
+                    cps += 5
+                    totalCookies -= grandmaCost
+                    grandmaCost *= 1.2
+                    grandmaCost = int(math.floor(grandmaCost))
+                    
+            # farm
             if upgrade3Rect.collidepoint(event.pos):
-                pass
+                if totalCookies >= farmCost:
+                    cps += 10
+                    totalCookies -= farmCost
+                    farmCost *= 1.2
+                    farmCost = int(math.floor(farmCost))
+            
+            # mines
             if upgrade4Rect.collidepoint(event.pos):
-                pass
+                if totalCookies >= minesCost:
+                    cps += 20
+                    totalCookies -= minesCost
+                    minesCost *= 1.2
+                    minesCost = int(math.floor(minesCost))
+                
+    # Update the game state
+    dt = clock.tick(60) / 1000
+    timeAccumulator += dt
+    if timeAccumulator >= 1:
+        totalCookies += cps
+        timeAccumulator -= 1            
                 
 
     # fill the screen with a color to wipe away anything from last frame
@@ -56,7 +93,14 @@ while running:
     screen.blit (cookieImage,cookieRect)
     font = pygame.font.SysFont("Georgia",40)
     cookieText = font.render(f"Cookies: {totalCookies}", True, (0,0,0))
+    cpsText = font.render(f"CPS: {cps}", True, (0,0,0))
+    clickPowerText = font.render(f"Click Power: {clickPower}", True, (0,0,0))
+
     screen.blit (cookieText, (50,50))
+    screen.blit (cpsText, (50,100))
+    screen.blit (clickPowerText, (50,150))
+    
+    # display upgrade costs
 
 
     # UPGRADES AND SHOP
@@ -82,10 +126,6 @@ while running:
     pygame.display.flip()
       # limits FPS to 60
 
-    dt = clock.tick(60) / 1000
-    timeAccumulator += dt
-    if timeAccumulator >= 1:
-        totalCookies += cps
-        timeAccumulator -= 1
+
 
 pygame.quit()

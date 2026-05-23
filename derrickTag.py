@@ -103,13 +103,48 @@ mapBplatform8 = pygame.Rect(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 /
 
 mapA = [mapAfloorBase, mapAplatform1, mapAplatform2, mapAplatform3, mapAplatform4, mapAplatform5, mapAplatform6, mapAplatform7, mapAplatform8, mapAplatform9, mapAplatform10, mapAplatform11]
 mapB = [mapBfloorBase, mapBplatform1, mapBplatform2, mapBplatform3, mapBplatform4, mapBplatform5, mapBplatform6, mapBplatform7, mapBplatform8]
-mapC = []
-mapD = []
-mapE = []
 
-map = mapA
+# Map C platforms - symmetric arena
+mapCfloorBase = pygame.Rect(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+mapCplatform1 = pygame.Rect(SCREEN_WIDTH / (1280 / 50),   SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform2 = pygame.Rect(SCREEN_WIDTH / (1280 / 1030), SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform3 = pygame.Rect(SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 350), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform4 = pygame.Rect(SCREEN_WIDTH / (1280 / 880), SCREEN_HEIGHT / (720 / 350), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform5 = pygame.Rect(SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform6 = pygame.Rect(SCREEN_WIDTH / (1280 / 980), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform7 = pygame.Rect(SCREEN_WIDTH / (1280 / 540), SCREEN_HEIGHT / (720 / 420), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapCplatform8 = pygame.Rect(SCREEN_WIDTH / (1280 / 540), SCREEN_HEIGHT / (720 / 250), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapC = [mapCfloorBase, mapCplatform1, mapCplatform2, mapCplatform3, mapCplatform4, mapCplatform5, mapCplatform6, mapCplatform7, mapCplatform8]
 
-downArrowImage = pygame.image.load("arrow1.png").convert_alpha()
+# Map D platforms - staircase
+mapDfloorBase = pygame.Rect(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+mapDplatform1 = pygame.Rect(0,                             SCREEN_HEIGHT / (720 / 560), SCREEN_WIDTH / (1280 / 220), SCREEN_HEIGHT / (720 / 20))
+mapDplatform2 = pygame.Rect(SCREEN_WIDTH / (1280 / 200),  SCREEN_HEIGHT / (720 / 480), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapDplatform3 = pygame.Rect(SCREEN_WIDTH / (1280 / 380),  SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapDplatform4 = pygame.Rect(SCREEN_WIDTH / (1280 / 560),  SCREEN_HEIGHT / (720 / 320), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapDplatform5 = pygame.Rect(SCREEN_WIDTH / (1280 / 740),  SCREEN_HEIGHT / (720 / 240), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapDplatform6 = pygame.Rect(SCREEN_WIDTH / (1280 / 900),  SCREEN_HEIGHT / (720 / 160), SCREEN_WIDTH / (1280 / 380), SCREEN_HEIGHT / (720 / 20))
+mapDplatform7 = pygame.Rect(SCREEN_WIDTH / (1280 / 600),  SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapDplatform8 = pygame.Rect(0,                             SCREEN_HEIGHT / (720 / 350), SCREEN_WIDTH / (1280 / 20),  SCREEN_HEIGHT / (720 / 200))
+mapD = [mapDfloorBase, mapDplatform1, mapDplatform2, mapDplatform3, mapDplatform4, mapDplatform5, mapDplatform6, mapDplatform7, mapDplatform8]
+
+# Map E platforms - floating islands
+mapEfloorBase = pygame.Rect(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+mapEplatform1 = pygame.Rect(0,                             SCREEN_HEIGHT / (720 / 450), SCREEN_WIDTH / (1280 / 250), SCREEN_HEIGHT / (720 / 20))
+mapEplatform2 = pygame.Rect(0,                             SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 150), SCREEN_HEIGHT / (720 / 20))
+mapEplatform3 = pygame.Rect(SCREEN_WIDTH / (1280 / 350),  SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 250), SCREEN_HEIGHT / (720 / 20))
+mapEplatform4 = pygame.Rect(SCREEN_WIDTH / (1280 / 350),  SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapEplatform5 = pygame.Rect(SCREEN_WIDTH / (1280 / 700),  SCREEN_HEIGHT / (720 / 450), SCREEN_WIDTH / (1280 / 250), SCREEN_HEIGHT / (720 / 20))
+mapEplatform6 = pygame.Rect(SCREEN_WIDTH / (1280 / 700),  SCREEN_HEIGHT / (720 / 250), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapEplatform7 = pygame.Rect(SCREEN_WIDTH / (1280 / 1030), SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 250), SCREEN_HEIGHT / (720 / 20))
+mapEplatform8 = pygame.Rect(SCREEN_WIDTH / (1280 / 1080), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 150), SCREEN_HEIGHT / (720 / 20))
+mapEplatform9 = pygame.Rect(SCREEN_WIDTH / (1280 / 525),  SCREEN_HEIGHT / (720 / 150), SCREEN_WIDTH / (1280 / 230), SCREEN_HEIGHT / (720 / 20))
+mapE = [mapEfloorBase, mapEplatform1, mapEplatform2, mapEplatform3, mapEplatform4, mapEplatform5, mapEplatform6, mapEplatform7, mapEplatform8, mapEplatform9]
+
+map = [mapA, mapB, mapC, mapD, mapE]
+
+
+downArrowImage = pygame.image.load("assets/arrow1.png").convert_alpha()
 downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 # Menu UI Elements
@@ -192,6 +227,7 @@ while running:
                         player4_alive = True
                     if playerCount >= 5:
                         player5_alive = True
+                    
                 
         
         if event.type == TIMER_EVENT:
@@ -285,8 +321,8 @@ while running:
         text_surface = FONT.render(str(countdown_seconds), True, (0, 0, 0))
         screen.blit(text_surface, (SCREEN_WIDTH / 2 - fontWidth / 2, (SCREEN_HEIGHT / (1280 / 25))))
         
-        for platform in map:
-                pygame.draw.rect(screen, "black", platform)
+        for platform in map[mapIndex]:
+            pygame.draw.rect(screen, "black", platform)
 
         for i in range(len(player_velocities)):
             player_velocities[i] += PLAYER_GRAVITY * dt
@@ -296,7 +332,7 @@ while running:
             player_positions[i].y += player_velocities[i] * dt
             
             player_rect = pygame.Rect(player_positions[i].x, player_positions[i].y, PLAYER_WIDTH, PLAYER_HEIGHT)
-            for platform in map:
+            for platform in map[mapIndex]:
                 if player_rect.colliderect(platform):
                     if player_velocities[i] >= 0 and player_rect.bottom - platform.top <= 20:
                         player_positions[i].y = platform.y - PLAYER_HEIGHT
@@ -362,7 +398,7 @@ while running:
                         # Re-resolve platform collisions so players can't be pushed through platforms
                         for pi in [i, j]:
                             p_rect = pygame.Rect(player_positions[pi].x, player_positions[pi].y, PLAYER_WIDTH, PLAYER_HEIGHT)
-                            for platform in map:
+                            for platform in map[mapIndex]:
                                 if p_rect.colliderect(platform):
                                     player_positions[pi].y = platform.y - PLAYER_HEIGHT
                                     player_velocities[pi] = 0
@@ -372,7 +408,7 @@ while running:
         on_ground = []
         for i in range(len(player_positions)):
             check_rect = pygame.Rect(player_positions[i].x, player_positions[i].y + 1, PLAYER_WIDTH, PLAYER_HEIGHT)
-            on_platform = any(check_rect.colliderect(platform) for platform in map)
+            on_platform = any(check_rect.colliderect(platform) for platform in map[mapIndex])
             on_player = any(
                 j != i and
                 abs((player_positions[i].y + PLAYER_HEIGHT) - player_positions[j].y) <= 2 and
