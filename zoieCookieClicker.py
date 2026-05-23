@@ -112,16 +112,6 @@ while running:
 
 
 
-
-
-
-
-
-
-
-
-
-
     # flip() the display to put youn screen
     pygame.display.flip()
       # limits FPS to 60
