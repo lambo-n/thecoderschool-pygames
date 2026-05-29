@@ -12,6 +12,11 @@ dt = 0
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
+digdugImage = pygame.image.load("assets/digdug.png").convert_alpha()
+digdugImage = pygame.transform.scale(digdugImage, (64, 64))
+
+escapeRect = pygame.Rect(1200, 100, 50, 50)
+
 gravity = 0
 
 platform1 = ObbyPlatform(100, 600, 200, 20, "gray")
@@ -33,16 +38,17 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     
-    playerRect = pygame.Rect(player_pos.x - 40, player_pos.y - 40, 80, 80)
-    pygame.draw.circle(screen, "red", player_pos, 40)
-    
-    
     for platform in platforms:
         platform.update(screen)
-        
+
+    pygame.draw.rect(screen, "gold", escapeRect)
+
     gravity += 12 * dt
     player_pos.y += gravity
-    
+
+    # Build the rect AFTER moving, so collision tests the current position
+    playerRect = pygame.Rect(player_pos.x - 32, player_pos.y - 32, 64, 64)
+
     # Platform collisions
     canJump = False
     for platform in platforms:
@@ -74,14 +80,20 @@ while running:
     
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
+    if keys[pygame.K_w] and canJump:
+        player_pos.y -= 20
+        gravity = -600 * dt
+        canJump = False
+        
     if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
+        pass
     if keys[pygame.K_a]:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
+
+    # Draw the player at its final, collision-corrected position
+    screen.blit(digdugImage, (player_pos.x - 32, player_pos.y - 32))
 
     # flip() the display to put your work on screen
     pygame.display.flip()
