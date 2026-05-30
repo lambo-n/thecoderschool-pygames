@@ -3,6 +3,23 @@ import math
 
 import pygame
 
+def formatNumber():
+    suffix = ["", "K", "M" "B", "T", "Qd", "Qn", "Sx", "Sp", "O", "N", "D"]
+    index = 0
+    
+    #1,000,000
+    #1,000
+    #1
+    while number >= 1000 and index < len(suffix) - 1:
+        number /= 1000
+        index += 1
+    if index == 0:
+        # small numbers stay as whole numbers
+        return f"{int(number)}"
+    # show one decimal place, e.g. 1.5K
+    return f"{number:.1f}{suffix[index]}"
+
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -11,9 +28,9 @@ running = True
 cookieX = 640
 cookieY = 360
 cookieImage = pygame.image.load("assets/cookie.png").convert_alpha()
-cookieImage = pygame.transform.scale(cookieImage,(150,150))
+cookieImage = pygame.transform.scale(cookieImage,(300,300))
 cookieRect = cookieImage.get_rect(center=(cookieX, cookieY))
-totalCookies = 100000
+totalCookies = 1000000000000
 cps = 0
 clickPower = 1
 timeAccumulator = 0
@@ -43,7 +60,6 @@ while running:
             
             # cursor
             if upgrade1Rect.collidepoint(event.pos):
-                
                 # check if player can afford upgrade
                 # give player upgrade
                 # subtract cost from total cookies
@@ -92,7 +108,7 @@ while running:
     # RENDER YOUR GAME HERE
     screen.blit (cookieImage,cookieRect)
     font = pygame.font.SysFont("Georgia",40)
-    cookieText = font.render(f"Cookies: {totalCookies}", True, (0,0,0))
+    cookieText = font.render(f"Cookies: {formatNumber(totalCookies)}", True, (0,0,0))
     cpsText = font.render(f"CPS: {cps}", True, (0,0,0))
     clickPowerText = font.render(f"Click Power: {clickPower}", True, (0,0,0))
 
@@ -100,7 +116,6 @@ while running:
     screen.blit (cpsText, (50,100))
     screen.blit (clickPowerText, (50,150))
     
-    # display upgrade costs
 
 
     # UPGRADES AND SHOP
@@ -109,8 +124,29 @@ while running:
     pygame.draw.rect(screen, "white", upgrade2Rect)
     pygame.draw.rect(screen, "white", upgrade3Rect)
     pygame.draw.rect(screen, "white", upgrade4Rect)
-
-
+    
+    
+    # display upgrade costs
+    upgrade1line1 = font.render(f"Cursor: ${formatNumber(cursorCost)}, and cps", True, "black")
+    upgrade1line2 = font.render("increased by 1.", True, "black")
+    screen.blit(upgrade1line1, (830, 100))
+    screen.blit(upgrade1line2, (830, 130))
+    
+    upgrade2line1 = font.render(f"Grandma: ${formatNumber(grandmaCost)}, ", True, "black")
+    upgrade2line2 = font.render("and cps increases by 5. ", True, "black")
+    screen.blit(upgrade2line1, (830, 245))
+    screen.blit(upgrade2line2, (830, 275))
+    
+    upgrade3line1 = font.render(f"Farm: ${formatNumber(farmCost)}, ", True, "black")
+    upgrade3line2 = font.render("and cps increases by 10. ", True, "black")
+    screen.blit(upgrade3line1, (830, 390))
+    screen.blit(upgrade3line2, (830, 420))
+    
+    upgrade4line1 = font.render(f"Mines: ${formatNumber(minesCost)}, ", True, "black")
+    upgrade4line2 = font.render("and cps increases by 20. ", True, "black")
+    screen.blit(upgrade4line1, (830, 535))
+    screen.blit(upgrade4line2, (830, 565))
+    
 
     # flip() the display to put youn screen
     pygame.display.flip()
@@ -119,3 +155,6 @@ while running:
 
 
 pygame.quit()
+
+
+
