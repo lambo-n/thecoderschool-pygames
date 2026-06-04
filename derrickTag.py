@@ -40,7 +40,9 @@ PLAYER_HEIGHT = SCREEN_HEIGHT / (720 / 20)
 PLAYER_WIDTH = SCREEN_WIDTH / (1280 / 20)
 PLAYER_MOVEMENT_SPEED = SCREEN_WIDTH / (1280 / 250)
 PLAYER_JUMP_HEIGHT = SCREEN_HEIGHT / (720 / 425)
-PLAYER_GRAVITY = SCREEN_HEIGHT / (720 / 700)
+PLAYER_GRAVITY = SCREEN_HEIGHT / (720 / 720)
+PLAYER_TAG_SPEED_MULT = 1.1
+PLAYER_TAG_JUMP_MULT = 1
 
 TAG_COOLDOWN = 3.0
 tag_cooldowns = [0.0] * 5
@@ -88,7 +90,33 @@ player_velocities = [player1_velocity,
 
 player_jump_counts = [jumpCount, jumpCount, jumpCount, jumpCount, jumpCount]
 
+# Platform Types Pink: Can go up and down, Red: Can only go down, Green: Can only go up, Yellow: Only tagger can go through, Orange: Makes you move faster, Blue: Makes you jump higher
+
 # Map A platforms
+mapAfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+mapAroof1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 770), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 50))
+mapAplatform1 = CustomPlatform(SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (1280 / 36))
+mapAplatform2 = CustomPlatform(SCREEN_WIDTH / (1280 / 710), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 210), SCREEN_HEIGHT / (720 / 20))
+mapAplatform3 = CustomPlatform(0, SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapAplatform4 = CustomPlatform(SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapAplatform5 = CustomPlatform(SCREEN_WIDTH / (1280 / 700), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 100))
+mapAplatform6 = CustomPlatform(0, SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 20))
+mapAplatform7 = CustomPlatform(SCREEN_WIDTH / (1280 / 105), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 195), SCREEN_HEIGHT / (720 / 20))
+mapAplatform8 = CustomPlatform(SCREEN_WIDTH / (1280 / 800), SCREEN_HEIGHT / (720 / 550), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapAplatform9 = CustomPlatform(SCREEN_WIDTH / (1280 / 300), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120))
+mapAplatform10 = CustomPlatform(SCREEN_WIDTH / (1280 / 300), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 125), SCREEN_HEIGHT / (720 / 20))
+mapAplatform11 = CustomPlatform(SCREEN_WIDTH / (1280 / 585), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 195), SCREEN_HEIGHT / (720 / 20)) # ,---' platform
+mapAplatform12 = CustomPlatform(SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120))
+mapAplatform13 = CustomPlatform(SCREEN_WIDTH / (1280 / 210), 0, SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 100))
+mapAplatform14 = CustomPlatform(SCREEN_WIDTH / (1280 / 210), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 20))
+mapAplatform15 = CustomPlatform(SCREEN_WIDTH / (1280 / 775), SCREEN_HEIGHT / (720 / 245), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 75))
+mapAplatform16 = CustomPlatform(SCREEN_WIDTH / (1280 / 775), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 75))
+mapAplatform17 = CustomPlatform(SCREEN_WIDTH / (1280 / 785), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 365), SCREEN_HEIGHT / (720 / 20))
+mapAplatform18 = CustomPlatform(SCREEN_WIDTH / (1280 / 575), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 75))
+mapAplatform19 = CustomPlatform(SCREEN_WIDTH / (1280 / 900), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120)) # | middle right side
+mapAplatform20 = CustomPlatform(SCREEN_WIDTH / (1280 / 900), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 125), SCREEN_HEIGHT / (720 / 20))
+mapAplatform21 = CustomPlatform(SCREEN_WIDTH / (1280 / 1025), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 130), SCREEN_HEIGHT / (720 / 20))
+mapAplatform22 = CustomPlatform(SCREEN_WIDTH / (1280 / 1135), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120))
 mapAfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
 mapAroof1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 770), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 50))
 mapAplatform1 = CustomPlatform(SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 500), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (1280 / 36))
@@ -151,6 +179,42 @@ mapB = [mapBfloorBase1, mapBroof1, mapBplatform1, mapBplatform2, mapBplatform3, 
 mapC = [mapCfloorBase1]
 mapD = [mapDfloorBase1]
 mapE = [mapEfloorBase1]
+mapBfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+mapBroof1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 770), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 50))
+mapBplatform1 = CustomPlatform(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 550), SCREEN_WIDTH / (1280 / 200), SCREEN_HEIGHT / (720 / 20))
+mapBplatform2 = CustomPlatform(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 275), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 145))
+mapBplatform3 = CustomPlatform(SCREEN_WIDTH / (1280 / 1075), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 40), SCREEN_HEIGHT / (720 / 20))
+mapBplatform4 = CustomPlatform(SCREEN_WIDTH / (1280 / 1190), SCREEN_HEIGHT / (720 / 400), SCREEN_WIDTH / (1280 / 100), SCREEN_HEIGHT / (720 / 20))
+mapBplatform5 = CustomPlatform(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 475), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 75))
+mapBplatform6 = CustomPlatform(SCREEN_WIDTH / (1280 / 1190), SCREEN_HEIGHT / (720 / 475), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 20))
+mapBplatform7 = CustomPlatform(SCREEN_WIDTH / (1280 / 1120), SCREEN_HEIGHT / (720 / 325), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
+mapBplatform8 = CustomPlatform(SCREEN_WIDTH / (1280 / 1100), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 145))
+mapBplatform9 = CustomPlatform(SCREEN_WIDTH / (1280 / 465), SCREEN_HEIGHT / (720 / 75), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
+mapBplatform10 = CustomPlatform(SCREEN_WIDTH / (1280 / 570), SCREEN_HEIGHT / (720 / 75), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
+mapBplatform11 = CustomPlatform(SCREEN_WIDTH / (1280 / 450), SCREEN_HEIGHT / (720 / 75), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 150))
+mapBplatform12 = CustomPlatform(SCREEN_WIDTH / (1280 / 585), SCREEN_HEIGHT / (720 / 75), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 150))
+mapBplatform13 = CustomPlatform(SCREEN_WIDTH / (1280 / 465), SCREEN_HEIGHT / (720 / 205), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
+mapBplatform14 = CustomPlatform(SCREEN_WIDTH / (1280 / 570), SCREEN_HEIGHT / (720 / 205), SCREEN_WIDTH / (1280 / 25), SCREEN_HEIGHT / (720 / 20))
+
+# Map C platforms
+mapCfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+
+# Map D platforms
+mapDfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+
+# Map E platforms
+mapEfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
+
+mapA = [mapAfloorBase1, mapAroof1, mapAplatform1, mapAplatform2, mapAplatform3, mapAplatform4, mapAplatform5,
+        mapAplatform6, mapAplatform7, mapAplatform8, mapAplatform9, mapAplatform10, mapAplatform11, mapAplatform12,
+        mapAplatform13, mapAplatform14, mapAplatform15, mapAplatform16, mapAplatform17, mapAplatform18, mapAplatform19,
+        mapAplatform20, mapAplatform21, mapAplatform22]
+mapB = [mapBfloorBase1, mapBroof1, mapBplatform1, mapBplatform2, mapBplatform3, mapBplatform4, mapBplatform5,
+        mapBplatform6, mapBplatform7, mapBplatform8, mapBplatform9, mapBplatform10, mapBplatform11, mapBplatform12,
+        mapBplatform13, mapBplatform14]
+mapC = [mapCfloorBase1]
+mapD = [mapDfloorBase1]
+mapE = [mapEfloorBase1]
 
 map = [mapA, mapB, mapC, mapD, mapE]
 
@@ -159,7 +223,7 @@ custPlatform1 = CustomPlatform(200, 200, 100, 20, "blue", "normal")
 customPlatforms = [custPlatform1]
 
 
-downArrowImage = pygame.image.load("assets/arrow1.png").convert_alpha()
+downArrowImage = pygame.image.load("arrow1.png").convert_alpha()
 downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 # Menu UI Elements
@@ -517,18 +581,18 @@ while running:
         if player4_alive and not player_frozen[3]:
             if keys[pygame.K_LEFTBRACKET] and on_ground[3]:
                 player_velocities[3] = -PLAYER_JUMP_HEIGHT
-            if keys[pygame.K_SEMICOLON]:
-                player4_pos.x -= PLAYER_MOVEMENT_SPEED * dt
-            if keys[pygame.K_RETURN]:
-                player4_pos.x += PLAYER_MOVEMENT_SPEED * dt
+                if keys[pygame.K_SEMICOLON]:
+                    player4_pos.x -= PLAYER_MOVEMENT_SPEED * dt
+                if keys[pygame.K_RETURN]:
+                    player4_pos.x += PLAYER_MOVEMENT_SPEED * dt
 
         if player5_alive and not player_frozen[4]:
             if keys[pygame.K_UP] and on_ground[4]:
                 player_velocities[4] = -PLAYER_JUMP_HEIGHT
-            if keys[pygame.K_LEFT]:
-                player5_pos.x -= PLAYER_MOVEMENT_SPEED * dt
-            if keys[pygame.K_RIGHT]:
-                player5_pos.x += PLAYER_MOVEMENT_SPEED * dt
+                if keys[pygame.K_LEFT]:
+                    player5_pos.x -= PLAYER_MOVEMENT_SPEED * dt
+                if keys[pygame.K_RIGHT]:
+                    player5_pos.x += PLAYER_MOVEMENT_SPEED * dt
             
         for pos in player_positions:
             pos.x = max(0, min(pos.x, SCREEN_WIDTH - PLAYER_WIDTH))
