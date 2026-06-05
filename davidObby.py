@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from obby_platform import ObbyPlatform
+from davidPlatform import ObbyPlatform
 
 # pygame setup
 pygame.init()
@@ -12,7 +12,7 @@ canJump = False
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
-playerImage = pygame.image.load("assets/jumpboy.png").convert_alpha()
+playerImage = pygame.image.load("assets/blasterboy.png").convert_alpha()
 playerImage = pygame.transform.scale(playerImage, (64, 64))
 gravity = 0
 
