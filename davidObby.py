@@ -16,15 +16,33 @@ playerImage = pygame.image.load("assets/blasterboy.png").convert_alpha()
 playerImage = pygame.transform.scale(playerImage, (64, 64))
 gravity = 0
 
+# LEVEL 1
 platform1 = ObbyPlatform(0,650,1280,100,"blue")
 platform2 = ObbyPlatform(50,500,300,50,"black")
 platform3 = ObbyPlatform(200,325,300,50,"black")
 platform4 = ObbyPlatform(500,200,300,50,"black")
 
+lvl1List = [platform1,platform2,platform3,platform4]
+
+# LEVEL 2
+
+
+lvl2List = [platform4]
+
+
+
+
+
+
+
+levels = [lvl1List, lvl2List]
+
+currentPlatformList = lvl2List
+
+currentLevel = 1
+
+
 escapeRect = pygame.Rect(1000,100,50,50)
-
-platforms = [platform1,platform2,platform3,platform4]
-
 
 
 while running:
@@ -37,7 +55,7 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("white")
     
-    for platform in platforms:
+    for platform in currentPlatformList:
         platform.update(screen)
 
     pygame.draw.rect(screen,"gold",escapeRect)
@@ -49,7 +67,7 @@ while running:
 
     #PLATFORM PHYSICS
     canJump = False
-    for platform in platforms:
+    for platform in currentPlatformList:
         if playerRect.colliderect(platform):
             overlap_top = playerRect.bottom - platform.top
             overlap_bottom = platform.bottom - playerRect.top
