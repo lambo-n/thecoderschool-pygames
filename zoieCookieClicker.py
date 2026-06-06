@@ -34,39 +34,30 @@ totalCookies = 0
 cps = 0
 clickPower = 1
 timeAccumulator = 0
-# Each upgrade is a dictionary. Add more entries here and the menu
-# automatically becomes scrollable.
-upgrades = [
-    {"name": "Cursor",  "cost": 35,   "cps": 1,  "desc": "increases cps by 1."},
-    {"name": "Grandma", "cost": 130,  "cps": 5,  "desc": "increases cps by 5."},
-    {"name": "Farm",    "cost": 500,  "cps": 10, "desc": "increases cps by 10."},
-    {"name": "Mines",   "cost": 1000, "cps": 20, "desc": "increases cps by 20."},
-    {"name": "Factory", "cost": 5000, "cps": 50, "desc": "increases cps by 50."},
-    {"name": "Bank",    "cost": 20000,"cps": 100,"desc": "increases cps by 100."},
-]
+cursorCost = 35
+grandmaCost = 130
+farmCost = 500
+minesCost = 1000
 
 # MENU ELEMENTS
 backdropRect = pygame.Rect(800,50,450,600)
-
-# Scrollable upgrade-menu layout
-itemX = 825          # left edge of each upgrade box
-itemWidth = 400      # width of each upgrade box
-itemHeight = 100     # height of each upgrade box
-itemSpacing = 145    # vertical distance between the top of one box and the next
-menuTop = 90         # y of the first box when not scrolled
-
-scrollOffset = 0
-# how far down the full list of upgrades extends
-contentHeight = len(upgrades) * itemSpacing
-# how much of the menu is actually visible inside the backdrop
-visibleHeight = backdropRect.bottom - menuTop
-# the most we ever need to scroll (0 if everything already fits)
-maxScroll = max(0, contentHeight - visibleHeight)
+upgrade1Rect = pygame.Rect(825,90,400,100)
+upgrade2Rect = pygame.Rect(825, 235, 400,100)
+upgrade3Rect = pygame.Rect(825,380,400,100)
+upgrade4Rect = pygame.Rect(825,525, 400,100)
 
 secondShopRect = pygame.Rect(50, 235, 400, 400)
 tool1Rect = pygame.Rect(75, 260, 100, 100)
 tool2Rect = pygame.Rect(200, 260, 100, 100)
 tool3Rect = pygame.Rect(325, 260, 100, 100)
+tool4Rect = pygame.Rect(75, 385, 100, 100)
+tool5Rect = pygame.Rect(200, 385, 100, 100)
+tool6Rect = pygame.Rect(325, 385, 100, 100)
+tool7Rect = pygame.Rect(75, 510, 100, 100)
+tool8Rect = pygame.Rect(200, 510, 100, 100)
+tool9Rect = pygame.Rect(325, 510, 100, 100)
+
+
 
 
 
@@ -78,28 +69,45 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        # scroll the upgrade menu with the mouse wheel
-        if event.type == pygame.MOUSEWHEEL:
-            scrollOffset -= event.y * 30
-            scrollOffset = max(0, min(scrollOffset, maxScroll))
-
         if event.type == pygame.MOUSEBUTTONUP:
             if cookieRect.collidepoint(event.pos):
                 totalCookies += clickPower
 
-            # only handle upgrade clicks that land inside the menu area,
-            # so we don't buy through a box that's scrolled out of view
-            if backdropRect.collidepoint(event.pos):
-                for index, upgrade in enumerate(upgrades):
-                    itemRect = pygame.Rect(itemX,
-                                           menuTop + index * itemSpacing - scrollOffset,
-                                           itemWidth, itemHeight)
-                    if itemRect.collidepoint(event.pos):
-                        # check if player can afford it, then buy it
-                        if totalCookies >= upgrade["cost"]:
-                            cps += upgrade["cps"]
-                            totalCookies -= upgrade["cost"]
-                            upgrade["cost"] = int(math.floor(upgrade["cost"] * 1.2))
+            # cursor
+            if upgrade1Rect.collidepoint(event.pos):
+                # check if player can afford upgrade
+                # give player upgrade
+                # subtract cost from total cookies
+                # increase cost for next upgrade
+                if totalCookies >= cursorCost:
+                    cps += 1
+                    totalCookies -= cursorCost
+                    cursorCost *= 1.2
+                    cursorCost = int(math.floor(cursorCost))
+
+            # grandma
+            if upgrade2Rect.collidepoint(event.pos):
+                if totalCookies >= grandmaCost:
+                    cps += 5
+                    totalCookies -= grandmaCost
+                    grandmaCost *= 1.2
+                    grandmaCost = int(math.floor(grandmaCost))
+
+            # farm
+            if upgrade3Rect.collidepoint(event.pos):
+                if totalCookies >= farmCost:
+                    cps += 10
+                    totalCookies -= farmCost
+                    farmCost *= 1.2
+                    farmCost = int(math.floor(farmCost))
+
+            # mines
+            if upgrade4Rect.collidepoint(event.pos):
+                if totalCookies >= minesCost:
+                    cps += 20
+                    totalCookies -= minesCost
+                    minesCost *= 1.2
+                    minesCost = int(math.floor(minesCost))
                 
     # Update the game state
     dt = clock.tick(60) / 1000
@@ -127,25 +135,45 @@ while running:
 
     # UPGRADES AND SHOP
     pygame.draw.rect(screen,  (55,0,0), backdropRect)
-
-    # Only draw inside the backdrop, so scrolled boxes get clipped at the edges
-    screen.set_clip(backdropRect)
-    for index, upgrade in enumerate(upgrades):
-        itemRect = pygame.Rect(itemX,
-                               menuTop + index * itemSpacing - scrollOffset,
-                               itemWidth, itemHeight)
-        pygame.draw.rect(screen, "white", itemRect)
-        line1 = font.render(f'{upgrade["name"]}: ${formatNumber(upgrade["cost"])}', True, "black")
-        line2 = font.render(upgrade["desc"], True, "black")
-        screen.blit(line1, (itemRect.x + 5, itemRect.y + 10))
-        screen.blit(line2, (itemRect.x + 5, itemRect.y + 50))
-    screen.set_clip(None)
+    pygame.draw.rect(screen, "white", upgrade1Rect)
+    pygame.draw.rect(screen, "white", upgrade2Rect)
+    pygame.draw.rect(screen, "white", upgrade3Rect)
+    pygame.draw.rect(screen, "white", upgrade4Rect)
 
     # secondary shop
     pygame.draw.rect(screen, (0, 55, 0), secondShopRect)
+    
     pygame.draw.rect(screen, "white", tool1Rect)
     pygame.draw.rect(screen, "white", tool2Rect)
     pygame.draw.rect(screen, "white", tool3Rect)
+    pygame.draw.rect(screen, "white", tool4Rect)
+    pygame.draw.rect(screen, "white", tool5Rect)
+    pygame.draw.rect(screen, "white", tool6Rect)
+    pygame.draw.rect(screen, "white", tool7Rect)
+    pygame.draw.rect(screen, "white", tool8Rect)
+    pygame.draw.rect(screen, "white", tool9Rect)
+
+
+    # display upgrade costs
+    upgrade1line1 = font.render(f"Cursor: ${formatNumber(cursorCost)}, and cps", True, "black")
+    upgrade1line2 = font.render("increased by 1.", True, "black")
+    screen.blit(upgrade1line1, (830, 100))
+    screen.blit(upgrade1line2, (830, 130))
+
+    upgrade2line1 = font.render(f"Grandma: ${formatNumber(grandmaCost)}, ", True, "black")
+    upgrade2line2 = font.render("and cps increases by 5. ", True, "black")
+    screen.blit(upgrade2line1, (830, 245))
+    screen.blit(upgrade2line2, (830, 275))
+
+    upgrade3line1 = font.render(f"Farm: ${formatNumber(farmCost)}, ", True, "black")
+    upgrade3line2 = font.render("and cps increases by 10. ", True, "black")
+    screen.blit(upgrade3line1, (830, 390))
+    screen.blit(upgrade3line2, (830, 420))
+
+    upgrade4line1 = font.render(f"Mines: ${formatNumber(minesCost)}, ", True, "black")
+    upgrade4line2 = font.render("and cps increases by 20. ", True, "black")
+    screen.blit(upgrade4line1, (830, 535))
+    screen.blit(upgrade4line2, (830, 565))
 
 
     # flip() the display to put youn screen
