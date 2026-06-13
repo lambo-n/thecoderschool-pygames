@@ -141,7 +141,7 @@ while running:
     pygame.draw.rect(screen, "white", upgrade4Rect)
 
     # secondary shop
-    pygame.draw.rect(screen, (0, 55, 0), secondShopRect)
+    pygame.draw.rect(screen, (55,0,0), secondShopRect)
     
     pygame.draw.rect(screen, "white", tool1Rect)
     pygame.draw.rect(screen, "white", tool2Rect)
@@ -175,6 +175,9 @@ while running:
     screen.blit(upgrade4line1, (830, 535))
     screen.blit(upgrade4line2, (830, 565))
 
+    tool1space1 = font.render("click power * 1.2", True, "black")
+    screen.blit(tool1space1,(75, 260, 100, 100))
+
 
     # flip() the display to put youn screen
     pygame.display.flip()
@@ -183,6 +186,5 @@ while running:
 
 
 pygame.quit()
-
 
 
