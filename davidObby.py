@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from obby_platform import ObbyPlatform
+from davidPlatform import ObbyPlatform
 
 # pygame setup
 pygame.init()
@@ -11,37 +11,40 @@ dt = 0
 canJump = False
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
-playerRect = pygame.Rect(player_pos.x - 32, player_pos.y - 32, 32,32)
+playerRect = pygame.Rect(player_pos.x - 32, player_pos.y - 32, 64,64)
 
-playerImage = pygame.image.load("assets/jumpboy.png").convert_alpha()
-playerImage = pygame.transform.scale(playerImage, (32, 32))
+playerImage = pygame.image.load("assets/blasterboy.png").convert_alpha()
+playerImage = pygame.transform.scale(playerImage, (64, 64))
 gravity = 0
 
-# lvl 1 platforms
+# LEVEL 1
 platform1lvl1 = ObbyPlatform(0,650,1280,100,"blue")
 platform2lvl1 = ObbyPlatform(50,500,300,50,"black")
 platform3lvl1 = ObbyPlatform(200,325,300,50,"black")
 platform4lvl1 = ObbyPlatform(500,200,300,50,"black")
 
-lvl1List = [platform1lvl1,platform2lvl1,platform3lvl1,platform4lvl1]
+lvl1List = [platform1lvl1, platform2lvl1, platform3lvl1, platform4lvl1]
 
-# lvl 2 platforms
+# LEVEL 2
 platform1lvl2 = ObbyPlatform(0,650,1280,100,"blue")
-platform2lvl2 = ObbyPlatform(400,400,1,1,"black")
-platform3lvl2 = ObbyPlatform(200,600,1,1,"black")
-platform4lvl2 = ObbyPlatform(700,200,1,1,"black")
+platform2lvl2 = ObbyPlatform(50,500,300,50,"black")
+platform3lvl2 = ObbyPlatform(200,325,300,50,"black")
+platform4lvl2 = ObbyPlatform(500,200,300,50,"black")
 
 
 lvl2List = [platform1lvl2, platform2lvl2, platform3lvl2, platform4lvl2]
 
 
-levels = [lvl1List,lvl2List]
 
+levels = [lvl1List, lvl2List]
 
-currentLvl = 2
-currentPlatformList = lvl1List
+currentPlatformList = lvl2List
+
+currentLevel = 1
+
 
 escapeRect = pygame.Rect(1000,100,50,50)
+
 
 while running:
     # poll for events
@@ -51,7 +54,7 @@ while running:
             running = False
 
 
-    # MOVEMENT
+    # PLAYER MOVEMENT
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and canJump == True:
         player_pos.y -= 20
@@ -63,19 +66,19 @@ while running:
         player_pos.x -= 300 * dt
     if keys[pygame.K_d]:
         player_pos.x += 300 * dt
-
-
-    # GRAVITY
+        
+        
+    # GRAVITY PHYSICS
     gravity += 12 * dt
     player_pos.y += gravity
     
-    
-    # update player hitbox
+
+    # UPDATE PLAYER POSITION
     playerRect = pygame.Rect(player_pos.x - 32, player_pos.y - 32, 64,64)
+    
 
-
-    # COLLISION CHECKS
-    # platform physics
+     #PLATFORM PHYSICS
+    currentPlatformList = levels[currentLevel - 1]
     canJump = False
     for platform in currentPlatformList:
         if playerRect.colliderect(platform):
@@ -90,6 +93,7 @@ while running:
                 if gravity >= 0 and overlap_top <= overlap_bottom:
                     playerRect.bottom = platform.top
                     gravity = 0
+        
                     canJump = True
                 else:
                     playerRect.top = platform.bottom
@@ -101,27 +105,18 @@ while running:
                     playerRect.left = platform.right
             player_pos.x = playerRect.centerx
             player_pos.y = playerRect.centery
-
-
-    # door collision check
-    if escapeRect.colliderect(playerRect):
-        gravity = 0
-        player_pos.x = 100
-        player_pos.y = 600
-        currentLvl += 1
-
-
-
-    # PRINT STUFF ON SCREEN
+            
+    
+    # DRAW THINGS ON  SCREEN
     screen.fill("white")
-
-
-    # print/move platforms
-    currentPlatformList = levels[currentLvl - 1]
+        
+    currentPlatformList = levels[currentLevel - 1]
     for platform in currentPlatformList:
         platform.update(screen)
-
+        
+        
     pygame.draw.rect(screen,"gold",escapeRect)
+
     screen.blit(playerImage,playerRect)
 
     # flip() the display to put your work on screen
