@@ -2,7 +2,7 @@
 import random
 
 import pygame
-from platformTemplate import CustomPlatform
+from platformTemplate import *
 
 # pygame setup
 pygame.init()
@@ -17,14 +17,14 @@ player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 
 # xpos, ypos, xwidth, yheight
-platformGround = pygame.Rect(0, 600, 1280, 20)
+platformGround = CustomPlatform(0, 600, 1280, 20, "white")
 platform1 = CustomPlatform(100, 250, 150, 20, "white")
 platform2 = CustomPlatform(400, 450, 150, 20, "white")
 platform3 = CustomPlatform(700, 150, 150, 20, "white")
 platform4 = CustomPlatform(100, 350, 150, 20, "white")
 
 
-platformList = [platformGround, platform1.rect, platform2.rect, platform3.rect, platform4.rect]
+platformList = [platformGround, platform1, platform2, platform3, platform4]
 
 
 
@@ -96,7 +96,7 @@ while running:
     screen.fill("black")
 
     for platform in platformList:
-        pygame.draw.rect(screen, "white", platform)
+        platform.update(screen)
     
     pygame.draw.rect(screen, "gold", player_rect)
 
