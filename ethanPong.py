@@ -12,12 +12,16 @@ WIDTH = screen.get_width()
 
 player1_y = HEIGHT / 2
 player2_y = HEIGHT / 2
+pong1Height = 115
+pong2Height = 115
 circle_pos = pygame.Vector2(600,300)
 speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
 speedy = random.randrange(300,601,100) * random.randrange(-1,2,2)
 points1 = 0
 points2 = 0
 powerupShow = True
+redPowerUp = False
+bluePowerUp = False
 
 
 powerupImage = pygame.image.load("assets/powerupImage.png").convert_alpha()
@@ -55,19 +59,37 @@ while running:
   
     # hitboxes
     circleHitBox = pygame.Rect(circle_pos.x-7.5,circle_pos.y - 7.5 ,15,15)
-    pong1 = pygame.Rect(100,player1_y,25,115)
-    pong2 =  pygame.Rect(1100,player2_y,25,115)
+    pong1 = pygame.Rect(100,player1_y,25,pong1Height)
+    pong2 =  pygame.Rect(1100,player2_y,25,pong2Height)
     
     
     powerupRect = powerupImage.get_rect(center = powerup_pos)
-    screen.blit(powerupImage, powerupRect)
+    if powerupShow == True:
+        screen.blit(powerupImage, powerupRect)
+    else:
+        powerupRect = pygame.Rect(0,0,0,0)
    
     # collision checks
 # powerupHitbox = pygame.Rect(powerup_pos.x, powerup_pos.y,50,60)
 
 
     if powerupRect.colliderect(circleHitBox):
-        print("powerup")
+        powerupShow = False
+        
+        if speedx > 0: 
+            redPowerUp = True
+        elif speedx < 0:
+            bluePowerUp = True
+    
+    if redPowerUp == True:
+        pong1Height = 200
+    else:
+        pong1Height = 115
+        
+    if bluePowerUp == True:
+        pong2Height = 200
+    else:
+        pong2Height = 115
 
 
     if circleHitBox.right >= WIDTH or circleHitBox.left <= 0:

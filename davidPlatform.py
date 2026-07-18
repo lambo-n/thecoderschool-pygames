@@ -22,7 +22,7 @@ class ObbyPlatform:
 
     def update(self,screen, player_pos ,playerHitbox):
         pygame.draw.rect(screen, self.color, self.rect)
-        return False
+        return None
 
 
         
@@ -43,6 +43,8 @@ class Teleporter(ObbyPlatform):
         if playerHitbox.colliderect(self.rect):
             player_pos.x = self.teleportX
             player_pos.y = self.teleportY
+            
+        
 
 
 
@@ -55,7 +57,8 @@ class Killblock(ObbyPlatform):
     def update(self,screen,player_pos,playerHitbox):
             super().update(screen, player_pos ,playerHitbox)
     
-            return playerHitbox.colliderect(self.rect)
+            if playerHitbox.colliderect(self.rect):
+                return "kill"
                 
 
 class Escape(ObbyPlatform):
@@ -72,7 +75,9 @@ class Escape(ObbyPlatform):
             super().update(screen, player_pos ,playerHitbox)
     
             if playerHitbox.colliderect(self.rect):
-                print("escape")
+                player_pos.x = self.escapeX
+                player_pos.y = self.escapeY
+                return "escape"
 
 
 
