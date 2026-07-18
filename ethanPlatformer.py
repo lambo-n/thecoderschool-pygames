@@ -2,7 +2,10 @@
 import random
 
 import pygame
-from platformTemplate import *
+from ethanPlatform import *
+from ethanBullet import *
+
+BULLET_COOLDOWN = 1.0
 
 # pygame setup
 pygame.init()
@@ -12,6 +15,8 @@ running = True
 dt = 0
 gravity = 0
 canJump = False
+
+
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
@@ -25,6 +30,11 @@ platform4 = CustomPlatform(100, 350, 150, 20, "white")
 
 
 platformList = [platformGround, platform1, platform2, platform3, platform4]
+
+bulletList = []
+bulletCooldown = 6.0
+
+
 
 
 
@@ -43,8 +53,14 @@ while running:
         
     player_rect = pygame.Rect(player_pos.x - 20, player_pos.y - 20, 40, 40)
     
+    bulletCooldown -= dt
    
-    
+    if bulletCooldown < 0:
+        bulletCooldown = 6.0
+        randomPos = pygame.Vector2(random.randint(0, 1280), random.randint(0, 720))
+        newBullet = Bullet(randomPos, player_pos)
+        bulletList.append(newBullet)
+
     gravity += 1000 * dt
     player_pos.y += gravity * dt
 
