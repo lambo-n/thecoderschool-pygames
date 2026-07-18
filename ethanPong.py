@@ -119,6 +119,11 @@ while running:
         powerup_pos.x = random.randint(0,WIDTH)
         powerup_pos.y = random.randint(0,HEIGHT)
         speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
+        powerupShow = True
+        redPowerUp = False
+        bluePowerUp = False
+        
+        
     if circle_pos.x > 1200:
         points1 += 1
         print("Points1")
@@ -127,6 +132,9 @@ while running:
         powerup_pos.x = random.randint(0,WIDTH)
         powerup_pos.y = random.randint(0,HEIGHT)
         speedx =  speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
+        powerupShow = True
+        redPowerUp = False
+        bluePowerUp = False
 
     font = pygame.font.SysFont("Arial", 40)
     livesText = font.render(f"{points1} - {points2}", True, "white")
