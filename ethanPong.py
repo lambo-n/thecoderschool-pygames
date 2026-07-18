@@ -1,5 +1,5 @@
 import pygame
-
+import random
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1200, 600))
@@ -13,12 +13,16 @@ WIDTH = screen.get_width()
 player1_y = HEIGHT / 2
 player2_y = HEIGHT / 2
 circle_pos = pygame.Vector2(600,300)
-speedx = 300
-speedy = 300
+speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
+speedy = random.randrange(300,601,100) * random.randrange(-1,2,2)
 points1 = 0
 points2 = 0
+powerupShow = True
 
 
+powerupImage = pygame.image.load("assets/powerupImage.png").convert_alpha()
+powerupImage = pygame.transform.scale(powerupImage, (70, 70))
+powerup_pos = pygame.Vector2 (random.randint(0,WIDTH), random.randint(0, HEIGHT))
 
 while running:
     # poll for events
@@ -38,15 +42,15 @@ while running:
     keys = pygame.key.get_pressed()
     # player 1
     if keys[pygame.K_w] and player1_y >= 0:
-        player1_y -= 390 * dt
+        player1_y -= 500 * dt
     if keys[pygame.K_s] and player1_y <= 485:
-        player1_y += 390 * dt
+        player1_y += 500 * dt
 
     # player 2
     if keys[pygame.K_UP] and player2_y >= 0:
-        player2_y -= 390 * dt
+        player2_y -= 500 * dt
     if keys[pygame.K_DOWN] and player2_y <= 485:
-        player2_y += 390 * dt
+        player2_y += 500 * dt
 
   
     # hitboxes
@@ -55,8 +59,15 @@ while running:
     pong2 =  pygame.Rect(1100,player2_y,25,115)
     
     
+    powerupRect = powerupImage.get_rect(center = powerup_pos)
+    screen.blit(powerupImage, powerupRect)
    
     # collision checks
+# powerupHitbox = pygame.Rect(powerup_pos.x, powerup_pos.y,50,60)
+
+
+    if powerupRect.colliderect(circleHitBox):
+        print("powerup")
 
 
     if circleHitBox.right >= WIDTH or circleHitBox.left <= 0:
@@ -83,13 +94,17 @@ while running:
         print("Points2")
         circle_pos.x = 600
         circle_pos.y = 300
-        speedx = 1
+        powerup_pos.x = random.randint(0,WIDTH)
+        powerup_pos.y = random.randint(0,HEIGHT)
+        speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
     if circle_pos.x > 1200:
         points1 += 1
         print("Points1")
         circle_pos.x = 600
         circle_pos.y = 300
-        speedx = 1
+        powerup_pos.x = random.randint(0,WIDTH)
+        powerup_pos.y = random.randint(0,HEIGHT)
+        speedx =  speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
 
     font = pygame.font.SysFont("Arial", 40)
     livesText = font.render(f"{points1} - {points2}", True, "white")
@@ -101,12 +116,12 @@ while running:
         
         
         
-    # if points1 == 5:
-    #     screen.fill("red")
+    if points1 == 5:
+        screen.fill("red")
 
-    # elif points2 ==5:
-    #     screen.fill("blue")
-# pong1 = red pong2 = blue
+    elif points2 ==5:
+        screen.fill("blue")
+    # pong1 = red pong2 = blue
 
 
 
@@ -118,6 +133,9 @@ while running:
 
     # flip() the display to put your work on screen
     pygame.display.flip()
+
+
+
 
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
