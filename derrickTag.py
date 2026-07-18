@@ -219,11 +219,11 @@ mapE = [mapEfloorBase1]
 map = [mapA, mapB, mapC, mapD, mapE]
 
 # Extra hand-placed custom platforms, shared across every map
-custPlatform1 = CustomPlatform(200, 200, 100, 20, "blue", "normal")
+custPlatform1 = CustomPlatform(200, 200, 100, 20, "normal")
 customPlatforms = [custPlatform1]
 
 
-downArrowImage = pygame.image.load("arrow1.png").convert_alpha()
+downArrowImage = pygame.image.load("assets/arrow1.png").convert_alpha()
 downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 # Menu UI Elements

@@ -10,6 +10,9 @@ dt = 0
 HEIGHT = screen.get_height()
 WIDTH = screen.get_width()
 
+POWERUP_DURATION = 10.0   # seconds the big paddle lasts
+POWERUP_RESPAWN = 20.0    # seconds until a new powerup appears
+
 player1_y = HEIGHT / 2
 player2_y = HEIGHT / 2
 pong1Height = 115
@@ -20,8 +23,11 @@ speedy = random.randrange(300,601,100) * random.randrange(-1,2,2)
 points1 = 0
 points2 = 0
 powerupShow = True
-redPowerUp = False
-bluePowerUp = False
+
+  
+redTimer = 0
+blueTimer = 0
+powerupTimer = 0
 
 
 powerupImage = pygame.image.load("assets/powerupImage.png").convert_alpha()
@@ -66,27 +72,35 @@ while running:
     powerupRect = powerupImage.get_rect(center = powerup_pos)
     if powerupShow == True:
         screen.blit(powerupImage, powerupRect)
-    else:
-        powerupRect = pygame.Rect(0,0,0,0)
-   
+
     # collision checks
-# powerupHitbox = pygame.Rect(powerup_pos.x, powerup_pos.y,50,60)
 
+    # tick timers down
+    redTimer -= dt
+    blueTimer -= dt
+    powerupTimer -= dt
 
-    if powerupRect.colliderect(circleHitBox):
+    if powerupShow == True and powerupRect.colliderect(circleHitBox):
         powerupShow = False
-        
-        if speedx > 0: 
-            redPowerUp = True
-        elif speedx < 0:
-            bluePowerUp = True
-    
-    if redPowerUp == True:
+        powerupTimer = POWERUP_RESPAWN
+
+        if speedx > 0:
+            redTimer = POWERUP_DURATION
+        else:
+            blueTimer = POWERUP_DURATION
+
+    # respawn in a new spot once the cooldown runs out
+    if not powerupShow and powerupTimer <= 0:
+        powerup_pos.x = random.randint(70,WIDTH-70)
+        powerup_pos.y = random.randint(70,HEIGHT-70)
+        powerupShow = True
+
+    if redTimer > 0:
         pong1Height = 200
     else:
         pong1Height = 115
-        
-    if bluePowerUp == True:
+
+    if blueTimer > 0:
         pong2Height = 200
     else:
         pong2Height = 115
@@ -120,8 +134,9 @@ while running:
         powerup_pos.y = random.randint(0,HEIGHT)
         speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
         powerupShow = True
-        redPowerUp = False
-        bluePowerUp = False
+        redTimer = 0
+        blueTimer = 0
+        powerupTimer = 0
         
         
     if circle_pos.x > 1200:
@@ -131,10 +146,11 @@ while running:
         circle_pos.y = 300
         powerup_pos.x = random.randint(0,WIDTH)
         powerup_pos.y = random.randint(0,HEIGHT)
-        speedx =  speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
+        speedx = random.randrange(300,601,100) * random.randrange(-1,2,2)
         powerupShow = True
-        redPowerUp = False
-        bluePowerUp = False
+        redTimer = 0
+        blueTimer = 0
+        powerupTimer = 0
 
     font = pygame.font.SysFont("Arial", 40)
     livesText = font.render(f"{points1} - {points2}", True, "white")
