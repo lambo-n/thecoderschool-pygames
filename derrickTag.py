@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
-from customPlatform import CustomPlatform
+from customPlatform import *
 
 # pygame setup
 pygame.init()
@@ -128,7 +128,7 @@ mapAplatform19 = CustomPlatform(SCREEN_WIDTH / (1280 / 900), SCREEN_HEIGHT / (72
 mapAplatform20 = CustomPlatform(SCREEN_WIDTH / (1280 / 900), SCREEN_HEIGHT / (720 / 200), SCREEN_WIDTH / (1280 / 125), SCREEN_HEIGHT / (720 / 20))
 mapAplatform21 = CustomPlatform(SCREEN_WIDTH / (1280 / 1025), SCREEN_HEIGHT / (720 / 300), SCREEN_WIDTH / (1280 / 130), SCREEN_HEIGHT / (720 / 20), "bounce") # Bounce
 mapAplatform22 = CustomPlatform(SCREEN_WIDTH / (1280 / 1135), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 20), SCREEN_HEIGHT / (720 / 120))
-mapAplatform23 = CustomPlatform(SCREEN_WIDTH / (1280 / 310), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 150), SCREEN_HEIGHT / (720 / 20), "phase")
+mapAplatform23 = CustomPlatform(SCREEN_WIDTH / (1280 / 400), SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH / (1280 / 150), SCREEN_HEIGHT / (720 / 20), "random")
 
 # Map B platforms
 mapBfloorBase1 = CustomPlatform(0, SCREEN_HEIGHT - SCREEN_HEIGHT / (720 / 100), SCREEN_WIDTH, SCREEN_HEIGHT / (720 / 75))
@@ -242,7 +242,8 @@ while running:
             jump_bindings = [pygame.K_w, pygame.K_t, pygame.K_i, pygame.K_LEFTBRACKET, pygame.K_UP]
             for idx, key in enumerate(jump_bindings):
                 if event.key == key and player_jump_counts[idx] > 0 and aliveList[idx] and not player_frozen[idx]:
-                    player_velocities[idx] = -PLAYER_JUMP_HEIGHT
+                    player_velocities[idx] = -PLAYER_JUMP_HEIGHT * player_jump_mults[idx]
+                    player_velocities[idx] = 1
                     player_jump_counts[idx] -= 1
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if gameState == "titleScreen":
@@ -421,8 +422,11 @@ while running:
         # Moving Platforms
         if (mapAplatform21.bottom >= SCREEN_HEIGHT / (720 / 400) or mapAplatform21.top <= SCREEN_HEIGHT / (720 / 200)):
             platform21SpeedNormal *= -1
-
         mapAplatform21.move_ip(0, platform21SpeedNormal)
+
+        if (mapAplatform23.left <= 310 or mapAplatform23.right >= 800):
+            platform23SpeedNormal *= -1
+        mapAplatform23.move_ip(platform23SpeedNormal, 0)
 
         for platform in active_platforms:
             pygame.draw.rect(screen, platform.color, platform)
@@ -473,33 +477,37 @@ while running:
                         #if (prect.top >= player_rect.bottom and 
                             # prect.bottom <= player_rect.top):
                                 # continue
-                        if (player_velocities[i] >= 0 and 
-                            prev_bottom <= prect.top + 1 and 
-                            not player_dropping[i]):
+                        overlap_left = player_rect.right - prect.left
+                        overlap_right = prect.right - player_rect.left
+                        overlap_top = player_rect.bottom - prect.top
+                        overlap_bottom = prect.bottom - player_rect.top
+                        min_h = min(overlap_left, overlap_right)
+                        min_v = min(overlap_top, overlap_bottom)
+                        if min_h < min_v:
+                            if overlap_left < overlap_right:
+                                player_rect.right = prect.left
+                            else:
+                                player_rect.left = prect.right
+                            player_positions[i].x = player_rect.x
+
+                        elif (overlap_top < overlap_bottom 
+                              and player_velocities[i] >= 0
+                              and not player_dropping[i]):
                             player_positions[i].y = prect.y - PLAYER_HEIGHT
                             player_velocities[i] = 0
                             player_rect.y = player_positions[i].y
-                        
-                        elif (player_velocities[i] < 0 and 
-                            prect.bottom - player_rect.top <= 20):
-                            player_rect.top = prect.bottom # If the bottom player is on the top of the platform
-                            player_positions[i].y = player_rect.y
-                            player_velocities[i] = -player_velocities[i] * 0.3
 
-                        if (not player_rect.right >= platform.left or 
-                              not player_rect.left <= platform.right):
-                            if (player_rect.right <= prect.left):
-                                    player_rect.right = prect.left
-                            else: player_rect.left = prect.right
-                                # Going into the side of the platform
+                        
+                            
+
                         player_positions[i].x = player_rect.x
                         continue
                         # Pink Platforms
                     if getattr(platform, "type", "normal") == "bounce":
                         if (prev_bottom <= prect.top + 1):
-                            player_jump_mults[i] = 2
+                            player_jump_mults[i] = 1.5
                         if player_velocities[i] >= 0 and player_rect.bottom - prect.top <= 20:
-                            player_jump_mults[i] = 2
+                            player_jump_mults[i] = 1.5
                             player_positions[i].y = prect.y - PLAYER_HEIGHT
                             player_velocities[i] = 0
                             player_rect.y = player_positions[i].y
