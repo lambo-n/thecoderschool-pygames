@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
-from customPlatform import *
+from derrickCustomPlatform import *
 
 # pygame setup
 pygame.init()
@@ -211,7 +211,7 @@ map = [mapA, mapB, mapC, mapD, mapE]
 #customPlatforms = [custPlatform1]
 
 
-downArrowImage = pygame.image.load("arrow1.png").convert_alpha()
+downArrowImage = pygame.image.load("assets/arrow1.png").convert_alpha()
 downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 # Menu UI Elements
