@@ -47,6 +47,29 @@ class CustomPlatform(pygame.Rect):
             # elif type == "crash":
                 # self.color = "#F22525"
             else:
-                self.color = "#000000" # Black
-                flag = False
+                self.color = "#000000"
+                #self.color = "#000000" # Black
             # print(type)
+
+
+class VerticleMovingPlatform(CustomPlatform):
+    def __init__(self, posx, posy, width, height, bottomLimit, topLimit, speed, direction, type="normal"):
+        super().__init__(posx, posy, width, height, type)
+        self.bottomLimit = bottomLimit
+        self.topLimit = topLimit
+        self.speed = speed
+        self.direction = direction
+    
+    def update(self, screen):
+        pass
+
+class HorizontalMovingPlatform(CustomPlatform):
+    def __init__(self, posx, posy, width, height, leftLimit, rightLimit, speed, direction, type="normal"):
+        super().__init__(posx, posy, width, height, type)
+        self.leftLimit = leftLimit
+        self.rightLimit = rightLimit
+        self.speed = speed
+        self.direction = direction
+    
+    def update(self, screen):
+        pass
