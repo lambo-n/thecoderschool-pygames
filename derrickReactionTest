@@ -4,20 +4,54 @@ import random
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
 clock = pygame.time.Clock()
 running = True
 
+FPS = 60
+
+SCREEN_WIDTH = screen.get_width()
+SCREEN_HEIGHT = screen.get_height()
+SCREEN_AVERAGE_LENGTH = (SCREEN_HEIGHT + SCREEN_WIDTH) / 2
+
+fontWidth = int(SCREEN_AVERAGE_LENGTH / (1000 / 80))
+FONT = pygame.font.SysFont(None, fontWidth)
+
 gameState = "titleScreen"
 
-waitTime = round(random.uniform(1, 10), 3)
-reactTriggered = False
-elapsed_time = 0.0
-reactionTime = 0.0
+reactionTimeScores = []
 
+def restartVars():
+    global waitTime, reactTriggered, elapsed_time, reactionTime
+    
+    waitTime = round(random.uniform(1, 6), 3)
+    reactTriggered = False
+    elapsed_time = 0.0
+    reactionTime = 0.0
+
+def handleReactionTimeTest():
+    global gameState, reactTriggered, reactionTimeScores
+    if reactTriggered == False:
+        gameState = "falseStart"
+    else:
+                                            
+        # print(round(reactionTime, 3))
+        reactionTimeScores.append(round(reactionTime, 3))
+        #print(reactionTimeScores)
+
+        gameState = "results"
+        
+
+# waitTime = round(random.uniform(1, 10), 3)
+# reactTriggered = False
+# elapsed_time = 0.0
+# reactionTime = 0.0
+restartVars()
 
 startButtonBox = pygame.Rect(390, 400, 500, 200)
 reactionTimeTestBox = pygame.Rect(390, 400, 500, 200)
+restartTestBox = pygame.Rect(0, 0, 1080, 720)
+# restartTestBox = pygame.Rect(390, 500, 500, 100) Old
 
 while running:
     # poll for events
@@ -32,6 +66,16 @@ while running:
             if gameState == "menu":
                 if reactionTimeTestBox.collidepoint(event.pos):
                     gameState = "reactionTimeTest"
+            if gameState == "results" or gameState == "falseStart":
+                if restartTestBox.collidepoint(event.pos):
+                    restartVars()
+                    gameState = "reactionTimeTest"
+        # if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            
+        #     if gameState == "reactionTimeTest":
+        #         handleReactionTimeTest()
+                
+
 
     if gameState == "titleScreen":
 
@@ -40,15 +84,20 @@ while running:
 
         pygame.draw.rect(screen, "#FFFFFF", (390, 400, 500, 200)) # Start Button Box
 
-    if gameState == "menu":
+    elif gameState == "menu":
         screen.fill("#7DDCFF")
         pygame.draw.rect(screen, "#FFFFFF", (390, 400, 500, 200)) # First Choice
 
-    if gameState == "reactionTimeTest":
+    elif gameState == "reactionTimeTest":
         screen.fill("#FF3636")
 
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_w]:
+            handleReactionTimeTest()
+            continue
 
-        dt = clock.tick(60) / 1000.0
+
+        dt = clock.tick(FPS) / 1000.0
 
         if not reactTriggered:
             elapsed_time += dt
@@ -58,22 +107,35 @@ while running:
                 
         if reactTriggered == True:
             screen.fill("#46ff4c")
-            reactionTime += (1 / 60)
+            reactionTime += (1 / FPS)
 
         pygame.draw.circle(screen, "#F0F0F0", (640, 360), 10)
 
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-
-            reactTriggered = False
-            
-            print(round(reactionTime, 3))
-
-            gameState = "results"
-
-            #print("W key pressed")
+       
+    elif gameState == "falseStart":
+        screen.fill("#FF3636")
+        text_surface = FONT.render(("False Start"), True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        screen.blit(text_surface, text_rect)
         
+    elif gameState == "results":
+        screen.fill("#7DDCFF")
+
+        text_surface = FONT.render(str(round(reactionTime, 3)), True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT / (1280 / 300)))
+        screen.blit(text_surface, text_rect)
+
+        text_surface = FONT.render("Best Time is: " + str(round(min(reactionTimeScores), 3)), True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT / (1280 / 500)))
+        screen.blit(text_surface, text_rect)
+
+        averageReactionTime = round(sum(reactionTimeScores) / len(reactionTimeScores), 3)
+        text_surface = FONT.render("Average Time is: "+ str(averageReactionTime), True, (0, 0, 0))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT / (1280 / 700)))
+        screen.blit(text_surface, text_rect)
+
+        pygame.draw.rect(screen, "#FFFFFF", (390, 500, 500, 100)) # Restart Test Box
 
     # fill the screen with a color to wipe away anything from last frame
 
@@ -83,6 +145,6 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)  # limits FPS to 60
+    clock.tick(FPS)  # limits FPS to 60
 
 pygame.quit()
