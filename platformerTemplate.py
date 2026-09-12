@@ -17,7 +17,7 @@ JUMP_SPEED = 600
 
 # xpos, ypos, xwidth, yheight
 platformGround = CustomPlatform(0, 600, 1280, 20, "white")
-platform1 = CustomPlatform(100, 250, 150, 20, "white")
+platform1 = CustomPlatform(100, 300, 150, 20, "white")
 platform2 = CustomPlatform(400, 450, 150, 20, "white")
 platform3 = CustomPlatform(700, 150, 150, 20, "white")
 
@@ -28,8 +28,8 @@ wall = CustomPlatform(950, 300, 40, 300, "white")
 
 # Two platforms sharing an edge.  Walking across the seam is smooth -- nothing
 # to snag on, because horizontal and vertical collisions are handled separately.
-ledgeA = CustomPlatform(180, 520, 120, 20, "white")
-ledgeB = CustomPlatform(300, 520, 120, 20, "white")
+ledgeA = CustomPlatform(180, 540, 120, 20, "white")
+ledgeB = CustomPlatform(300, 540, 120, 20, "white")
 
 platformList = [platformGround, platform1, platform2, platform3, wall, ledgeA, ledgeB]
 
