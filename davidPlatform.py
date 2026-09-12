@@ -80,6 +80,18 @@ class Escape(ObbyPlatform):
 
 
 
+class Jumpblock(ObbyPlatform):
+
+    def __init__(self,posX,posY,width,height,color):
+
+        super().__init__(posX, posY, width, height, color)
+        
+    
+    def update(self,screen,player_pos,playerHitbox):
+        super().update(screen, player_pos ,playerHitbox)
+    
+        if playerHitbox.colliderect(self.rect):
+            return "bounce"
 
 
 
