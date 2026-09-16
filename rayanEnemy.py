@@ -21,6 +21,7 @@ class Enemy:
             
         self.pos.x += self.direction * self.speed * dt
         
+        
     def shootChance(self):
         randomNum = random.randint(0, 1000)
         if randomNum < 5:

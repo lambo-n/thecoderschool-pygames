@@ -40,4 +40,8 @@ while running:
     # independent physics.
     dt = clock.tick(60) / 1000
 
+
+
+
+pygame.time.wait(3000)
 pygame.quit()

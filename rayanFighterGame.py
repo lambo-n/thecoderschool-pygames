@@ -36,7 +36,9 @@ player2 = Player(player2_pos,  0, canJump, "p2")
 
 playerList = [player1, player2]
 
-font = pygame.font.SysFont(None, 40)
+font = pygame.font.SysFont("meslolgldznerdfontmono", 40)
+avail = pygame.font.get_fonts()
+print(f"{avail}\n")
 
 while running:
     # poll for events
@@ -97,7 +99,35 @@ while running:
     
     for player in playerList:
         player.draw(screen)
+        
+        if player.punching:
+            if player.player_id == "p1" and player.rect.colliderect(player2.rect) and player2.iframe <= 0:
+                player2.iframe = 60
+                print("Player 1 hit Player 2!")
+                player2.health -= 1
+                
+            if player.player_id == "p2" and player.rect.colliderect(player1.rect) and player1.iframe <= 0:
+                player1.iframe = 60
+                print("Player 2 hit Player 1!")
+                player1.health -= 1
 
+        if player.health <= 0:
+            if player.player_id == "p1":
+                screen.fill("black")
+                
+                text_surface = font.render("Player 2 Wins!", True, "white")
+                text_rect = text_surface.get_rect(center=(460, 360))
+                screen.blit(text_surface, text_rect)
+                
+                break
+            elif player.player_id == "p2":
+                screen.fill("white")
+                
+                text_surface = font.render("Player 1 Wins!", True, "black")
+                text_rect = text_surface.get_rect(center=(460, 360))
+                screen.blit(text_surface, text_rect)
+                
+                break
 
     # flip() the display to put your work on screen
     pygame.display.flip()

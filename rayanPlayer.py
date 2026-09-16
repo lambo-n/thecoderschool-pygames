@@ -21,11 +21,14 @@ class Player:
         self.player_id = player_id
         self.punching = False
         self.punch_Frame = 0
+        self.iframe = 0
+        self.health = 1
     
     def update(self, dt):
         self.gravity += 1000 * dt
         self.pos.y += self.gravity * dt
         self.rect = pygame.Rect(self.pos.x-70, self.pos.y-70, 140, 140)
+        self.iframe -= 1
         
         if self.punching:
             self.punch_Frame += 1
