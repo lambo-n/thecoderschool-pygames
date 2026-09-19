@@ -8,12 +8,10 @@ screen = pygame.display.set_mode((300,400))
 clock = pygame.time.Clock()
 running = True
 
-scrollChange = 0
-
 font = pygame.font.SysFont("Verdana", 40)
 
 player = pygame.transform.scale(
-        pygame.image.load("assets/jumpboy.png"),
+            pygame.image.load("seal2.jpg"),
         (60,50)
     )
 player_rect = player.get_rect()
@@ -24,7 +22,7 @@ pygame.display.set_icon(
 player_vy = 0
 
 nenemy = pygame.transform.scale(
-    pygame.image.load("assets/pacboy.png"), (75, 75)
+    pygame.image.load("TetoPlush.png"), (75, 75)
 )
 nenemy_rect = nenemy.get_rect()
 nenemy_dir = 1
@@ -76,23 +74,18 @@ while running:
             pygame.quit()
             exit()
     screen.fill((60,90,130))
-    print(player_vy)
-
-    if scrollChange >= 10:
-        scrollChange = 0
-        f = random.randint(0,2)
-        if f == 0: # issue with this is the green swarm, get rid of other funcxtion
-            platforms.append(pygame.Rect(random.randint(0, 300), (platforms[-1].top - 20), 50, 25)) # when do this, remove the removing thingyin draw
-        if f == 1:
-                platforms.append(pygame.Rect(random.randint(0, 300), (platforms[-1].top - 40), 50, 25))
-        if f == 2:
-                platforms.append(pygame.Rect(random.randint(0, 300), (platforms[-1].top - 55), 50, 25))
+    f = random.randint(0,2)
+    if f == 0: # issue with this is the green swarm, get rid of other funcxtion
+        platforms.append(pygame.Rect(random.randint(0, 300), (platforms[-1].top - 20), 50, 25)) # when do this, remove the removing thingyin draw
+    if f == 1:
+            platforms.append(pygame.Rect(random.randint(0, 300), (platforms[-1].top - 40), 50, 25))
+    if f == 2:
+            platforms.append(pygame.Rect(random.randint(0, 300), (platforms[-1].top - 55), 50, 25))
     for platform in platforms:
         pygame.draw.rect(screen, (100, 200, 120), platform)
         if len(platforms) >= 3:
             if player_vy < 0 and player_rect.centery < 150:
                 platform.y += -player_vy
-                scrollChange += -player_vy
                 # if player_rect.colliderect(platform):
                 #     platforms.remove(platform)
                 # else:
