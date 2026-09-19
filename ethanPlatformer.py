@@ -28,7 +28,8 @@ platformList = levels[currentLevel-1]()
 gameWOn = False
 
 
-bulletList = []
+enemyBulletList = []
+playerBulletList = []
 enemyList = enemies[currentLevel - 1]()
 
 font = pygame.font.SysFont(None, 40)
@@ -48,7 +49,7 @@ while running:
         bulletcooldown = BULLET_COOLDOWN
         randomPos = pygame.Vector2(random.randint(0, 1280), -10)
         newBullet = Bullet(randomPos, player_pos)
-        bulletList.append(newBullet)
+        enemyBulletList.append(newBullet)
     
     
     
@@ -117,7 +118,7 @@ while running:
                 platformList = levels[currentLevel-1]()
                 enemyList = enemies[currentLevel-1]()
                 gravity = 0
-                bulletList.clear()
+                enemyBulletList.clear()
             else:
                 running = False
             break
@@ -129,17 +130,17 @@ while running:
             playerHealth -= 2
             enemyList.remove(enemy)
 
-    for bullet in bulletList:
+    for bullet in enemyBulletList:
         bullet.update(dt)
         bullet.draw(screen)
         bullet_rect = pygame.Rect( bullet.pos.x - 10, bullet.pos.y - 10 , 20, 20 )
         if bullet_rect.colliderect(player_rect):
             playerHealth -= 1
-            bulletList.remove(bullet)
+            enemyBulletList.remove(bullet)
         if bullet.pos.x >= 1280:
-            bulletList.remove(bullet)
+            enemyBulletList.remove(bullet)
         if bullet.pos.y >= 720:
-            bulletList.remove(bullet)
+            enemyBulletList.remove(bullet)
 
     if playerHealth <= 0:
         running = False

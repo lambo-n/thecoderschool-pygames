@@ -432,7 +432,6 @@ while running:
                 print("you win")
             player_pos.x = platform.escapeX
             player_pos.y = platform.escapeY
-
         elif outcome == "bounce":
             gravity = -700 * dt
 
