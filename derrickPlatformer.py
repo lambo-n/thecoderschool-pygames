@@ -1,9 +1,9 @@
 # Example platformer.
-#   platformTemplate.py     -- CustomPlatform, the solid boxes
-#   physicsBodyTemplate.py  -- PhysicsBody, all of the collision maths
+#   derrickPlatform.py     -- CustomPlatform, the solid boxes
+#   derrickPhysicsBody.py  -- PhysicsBody, all of the collision maths
 import pygame
-from platformTemplate import CustomPlatform
-from physicsBodyTemplate import PhysicsBody
+from derrickPlatform import CustomPlatform
+from derrickPhysicsBody import PhysicsBody
 
 # pygame setup
 pygame.init()
