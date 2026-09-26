@@ -13,9 +13,10 @@ class Bullet:
     def update(self, dt):
         self.pos += self.direction * 500 * dt
     
-    def draw(self, screen):
-        pygame.draw.circle(screen, "white", self.pos, 10)
+    def draw(self, screen, color):
+        pygame.draw.circle(screen, color, self.pos, 10)
 
 
     def collidepoint(self,point):
         return self.pos.distance_to(point) < 40
+
