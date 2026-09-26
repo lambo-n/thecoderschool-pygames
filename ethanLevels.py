@@ -1,4 +1,4 @@
-from custom_platform import *
+from ethanPlatform import *
 
 
 def level2():
@@ -115,16 +115,96 @@ def level1():
     ]
 
 
-
+# Levels 3-7: World 1-1 from the original Super Mario Bros, split into 5 screens.
+# 1 Mario tile = 32px, ground surface at y=600.
 def level3():
     return[
-        CustomPlatform(0, 600, 1280, 20, "blue"), #floor 
-        CustomPlatform ( 250, 450, 200 ,20, "blue"), #1
-        CustomPlatform ( 250, 325,200,20, "blue" ), #2
-        CustomPlatform ( 250, 325,200,20, "blue" ), #3
-        
-
+        CustomPlatform(0, 600, 1280, 120, "red"), # ground
+        CustomPlatform(192, 472, 32, 32, "red"), # ? block
+        CustomPlatform(320, 472, 160, 32, "red"), # brick ? brick ? brick
+        CustomPlatform(384, 344, 32, 32, "red"), # upper ? block
+        CustomPlatform(576, 536, 64, 64, "red"), # small pipe
+        CustomPlatform(896, 504, 64, 96, "red"), # medium pipe
+        CustomPlatform(1152, 472, 64, 128, "red"), # tall pipe
+        EscapeDoor(1270, 0, 10, 600, 40, 540), # walk off the right edge
     ]
 
 
-levels = [level1, level2, level3]
+def level4():
+    return[
+        CustomPlatform(0, 600, 608, 120, "red"), # ground
+        CustomPlatform(672, 600, 480, 120, "red"), # ground
+        CustomPlatform(1248, 600, 32, 120, "red"), # ground
+        CustomPlatform(224, 472, 64, 128, "red"), # tall pipe
+        CustomPlatform(864, 472, 96, 32, "red"), # brick ? brick
+        CustomPlatform(960, 344, 256, 32, "red"), # long upper brick row
+        EscapeDoor(1270, 0, 10, 600, 40, 540), # walk off the right edge
+    ]
+
+
+def level5():
+    return[
+        CustomPlatform(0, 600, 1280, 120, "red"), # ground
+        CustomPlatform(32, 344, 128, 32, "red"), # upper bricks + ? block
+        CustomPlatform(128, 472, 32, 32, "red"), # coin brick
+        CustomPlatform(320, 472, 64, 32, "red"), # two bricks (star)
+        CustomPlatform(512, 472, 32, 32, "red"), # ? block
+        CustomPlatform(608, 472, 32, 32, "red"), # ? block
+        CustomPlatform(608, 344, 32, 32, "red"), # upper ? block
+        CustomPlatform(704, 472, 32, 32, "red"), # ? block
+        CustomPlatform(896, 472, 32, 32, "red"), # single brick
+        CustomPlatform(992, 344, 96, 32, "red"), # upper bricks
+        EscapeDoor(1270, 0, 10, 600, 40, 540), # walk off the right edge
+    ]
+
+
+def level6():
+    return[
+        CustomPlatform(0, 600, 1280, 120, "red"), # ground
+        CustomPlatform(32, 344, 128, 32, "red"), # brick ? ? brick
+        CustomPlatform(64, 472, 64, 32, "red"), # bricks under the ? blocks
+        CustomPlatform(224, 568, 32, 32, "red"), # stairs up
+        CustomPlatform(256, 536, 32, 64, "red"), # stairs up
+        CustomPlatform(288, 504, 32, 96, "red"), # stairs up
+        CustomPlatform(320, 472, 32, 128, "red"), # stairs up
+        CustomPlatform(416, 472, 32, 128, "red"), # stairs down
+        CustomPlatform(448, 504, 32, 96, "red"), # stairs down
+        CustomPlatform(480, 536, 32, 64, "red"), # stairs down
+        CustomPlatform(512, 568, 32, 32, "red"), # stairs down
+        CustomPlatform(672, 568, 32, 32, "red"), # stairs up to the gap
+        CustomPlatform(704, 536, 32, 64, "red"), # stairs up to the gap
+        CustomPlatform(736, 504, 32, 96, "red"), # stairs up to the gap
+        CustomPlatform(768, 472, 32, 128, "red"), # stairs up to the gap
+        CustomPlatform(800, 472, 32, 128, "red"), # stairs up to the gap
+        # (the pit between these stairs is left filled in, otherwise you'd be stuck forever)
+        CustomPlatform(896, 472, 32, 128, "red"), # stairs down from the gap
+        CustomPlatform(928, 504, 32, 96, "red"), # stairs down from the gap
+        CustomPlatform(960, 536, 32, 64, "red"), # stairs down from the gap
+        CustomPlatform(992, 568, 32, 32, "red"), # stairs down from the gap
+        CustomPlatform(1152, 536, 64, 64, "red"), # small pipe
+        EscapeDoor(1270, 0, 10, 600, 40, 540), # walk off the right edge
+    ]
+
+
+def level7():
+    return[
+        CustomPlatform(0, 600, 1280, 120, "red"), # ground
+        CustomPlatform(32, 472, 128, 32, "red"), # brick brick ? brick
+        CustomPlatform(384, 536, 64, 64, "red"), # small pipe
+        CustomPlatform(448, 568, 32, 32, "red"), # final staircase
+        CustomPlatform(480, 536, 32, 64, "red"), # final staircase
+        CustomPlatform(512, 504, 32, 96, "red"), # final staircase
+        CustomPlatform(544, 472, 32, 128, "red"), # final staircase
+        CustomPlatform(576, 440, 32, 160, "red"), # final staircase
+        CustomPlatform(608, 408, 32, 192, "red"), # final staircase
+        CustomPlatform(640, 376, 32, 224, "red"), # final staircase
+        CustomPlatform(672, 344, 32, 256, "red"), # final staircase
+        CustomPlatform(704, 344, 32, 256, "red"), # final staircase
+        CustomPlatform(992, 568, 32, 32, "red"), # flagpole base
+        CustomPlatform(1120, 536, 160, 64, "red"), # castle base
+        CustomPlatform(1152, 472, 96, 64, "red"), # castle tower
+        EscapeDoor(1004, 248, 8, 320, 0, 500), # flagpole (touch it to finish)
+    ]
+
+
+levels = [level1, level2, level3, level4, level5, level6, level7]

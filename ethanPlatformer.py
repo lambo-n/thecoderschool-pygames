@@ -107,7 +107,7 @@ PlayerBulletDamage = 6
 # xpos, ypos, xwidth, yheight
 
 
-currentLevel = 1
+currentLevel = 3
 platformList = levels[currentLevel-1]()
 gameWOn = False
 
