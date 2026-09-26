@@ -1,19 +1,102 @@
 # Example file showing a circle moving on screen
 import random
-from bullet import *
+from ethanBullet import *
 import pygame
-from custom_platform import *
-from levels import *
-from enemies import*
+from ethanPlatform import *
+from ethanLevels import *
+from ethanEnemies import*
 ENEMYBULLET_COOLDOWN = 1
 PLAYERBULLET_COOLDOWN = .2
+
+# Player physics
+PLAYER_SIZE = 40
+HALF = PLAYER_SIZE / 2
+MOVE_SPEED = 300
+JUMP_SPEED = 575
+GRAVITY = 1000
+TERMINAL_VELOCITY = 1600
+HEAD_BUMP_SPEED = 120      # downward speed after hitting a ceiling, so you bounce off instead of sticking
+MAX_PHYSICS_DT = 1 / 30    # a lag spike can't fling the player through a platform
+EPSILON = 0.001            # touching edges (standing on a floor, leaning on a wall) don't count as overlap
+
+
+# Collisions are resolved one axis at a time (x, then y), and only against
+# platform faces the player actually crossed this frame.  That means a wall is
+# always a wall, a floor is always a floor, and nothing snaps you backwards.
+
+def player_box(pos):
+    return pos.x - HALF, pos.y - HALF, pos.x + HALF, pos.y + HALF
+
+
+def push_out(pos, solids):
+    """Move the player out of any platform they are already inside (bad spawn, level change)."""
+    for r in solids:
+        left, top, right, bottom = player_box(pos)
+        if left >= r.right - EPSILON or right <= r.left + EPSILON or top >= r.bottom - EPSILON or bottom <= r.top + EPSILON:
+            continue
+        # Smallest push wins; ties favour standing on top
+        pushes = [(bottom - r.top, 0, -1), (r.bottom - top, 0, 1), (right - r.left, -1, 0), (r.right - left, 1, 0)]
+        distance, sx, sy = min(pushes, key=lambda p: p[0])
+        pos.x += sx * distance
+        pos.y += sy * distance
+
+
+def move_x(pos, dx, solids, bounds):
+    """Move sideways, stopping at the first wall crossed.  Returns True if blocked."""
+    left, top, right, bottom = player_box(pos)
+    new_x = pos.x + dx
+    blocked = False
+    for r in solids:
+        if top >= r.bottom - EPSILON or bottom <= r.top + EPSILON:
+            continue  # platform is above or below us, not beside us
+        if dx > 0 and right <= r.left + EPSILON and new_x + HALF > r.left:
+            new_x = r.left - HALF
+            blocked = True
+        elif dx < 0 and left >= r.right - EPSILON and new_x - HALF < r.right:
+            new_x = r.right + HALF
+            blocked = True
+    if new_x - HALF < bounds.left:
+        new_x = bounds.left + HALF
+        blocked = True
+    elif new_x + HALF > bounds.right:
+        new_x = bounds.right - HALF
+        blocked = True
+    pos.x = new_x
+    return blocked
+
+
+def move_y(pos, dy, solids, bounds):
+    """Move vertically.  Returns "ground" if we landed, "ceiling" if we hit our head, else None."""
+    left, top, right, bottom = player_box(pos)
+    new_y = pos.y + dy
+    hit = None
+    for r in solids:
+        if left >= r.right - EPSILON or right <= r.left + EPSILON:
+            continue  # platform is beside us, not above or below
+        if dy >= 0 and bottom <= r.top + EPSILON and new_y + HALF > r.top - EPSILON:
+            new_y = r.top - HALF
+            hit = "ground"
+        elif dy < 0 and top >= r.bottom - EPSILON and new_y - HALF < r.bottom:
+            new_y = r.bottom + HALF
+            hit = "ceiling"
+    if new_y + HALF >= bounds.bottom:
+        new_y = bounds.bottom - HALF
+        hit = "ground"
+    elif new_y - HALF < bounds.top:
+        new_y = bounds.top + HALF
+        hit = "ceiling"
+    pos.y = new_y
+    return hit
+
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
-gravity = 0
+vel_x = 0
+vel_y = 0
 canJump = False
 bulletcooldown = ENEMYBULLET_COOLDOWN
 playerHealth = 20
@@ -62,17 +145,11 @@ while running:
     
    
     
-    gravity += 1000 * dt
-    player_pos.y += gravity * dt
-
     keys = pygame.key.get_pressed()
+    vel_x = (keys[pygame.K_d] - keys[pygame.K_a]) * MOVE_SPEED
     if keys[pygame.K_w] and canJump:
-        gravity = -575
+        vel_y = -JUMP_SPEED
         canJump = False
-    if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
     if keys[pygame.K_e] and playerbulletcooldown < 0: 
         playerbulletcooldown = PLAYERBULLET_COOLDOWN
         currentPosition = player_pos.copy()
@@ -80,44 +157,27 @@ while running:
         playerbulletlist.append(newPlayerbullet)
 
 
-    # Rebuild rect after movement so collisions use updated position
-    player_rect = pygame.Rect(player_pos.x - 20, player_pos.y - 20, 40, 40)
+    # Player physics: gravity, then move and collide one axis at a time
+    physics_dt = min(dt, MAX_PHYSICS_DT)
+    solids = [platform.rect for platform in platformList if not isinstance(platform, EscapeDoor)]
+    bounds = screen.get_rect()
+    push_out(player_pos, solids)
 
-    # Platform collisions using minimum overlap (MTV)
+    vel_y = min(vel_y + GRAVITY * physics_dt, TERMINAL_VELOCITY)
+
+    if move_x(player_pos, vel_x * physics_dt, solids, bounds):
+        vel_x = 0
+
     canJump = False
-    for platform in platformList:
-        if isinstance(platform, EscapeDoor):
-            continue
-        if player_rect.colliderect(platform):
-            overlap_top    = player_rect.bottom - platform.top
-            overlap_bottom = platform.bottom - player_rect.top
-            overlap_left   = player_rect.right - platform.left
-            overlap_right  = platform.right - player_rect.left
-            overlap_y = min(overlap_top, overlap_bottom)
-            overlap_x = min(overlap_left, overlap_right)
+    hit = move_y(player_pos, vel_y * physics_dt, solids, bounds)
+    if hit == "ground":
+        vel_y = 0
+        canJump = True
+    elif hit == "ceiling":
+        vel_y = HEAD_BUMP_SPEED
 
-            if overlap_y <= overlap_x:
-                # Vertical collision
-                if gravity >= 0 and overlap_top <= overlap_bottom:
-                    player_rect.bottom = platform.top
-                    gravity = 0
-                    canJump = True
-                else:
-                    player_rect.top = platform.bottom
-                    gravity = 0
-            else:
-                # Horizontal collision
-                if overlap_left <= overlap_right:
-                    player_rect.right = platform.left
-                else:
-                    player_rect.left = platform.right
-            player_pos.x = player_rect.centerx
-            player_pos.y = player_rect.centery
+    player_rect = pygame.Rect(round(player_pos.x - HALF), round(player_pos.y - HALF), PLAYER_SIZE, PLAYER_SIZE)
 
-    player_rect.clamp_ip(screen.get_rect())
-    player_pos.x = player_rect.centerx
-    player_pos.y = player_rect.centery
-    
     screen.fill("black")
 
     for platform in platformList:
@@ -130,7 +190,7 @@ while running:
             if currentLevel <= len(levels):
                 platformList = levels[currentLevel-1]()
                 enemyList = enemies[currentLevel-1]()
-                gravity = 0
+                vel_y = 0
                 Enemybulletlist.clear()
             else:
                 running = False
