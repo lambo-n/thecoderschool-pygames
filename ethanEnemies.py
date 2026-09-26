@@ -1,5 +1,4 @@
 import pygame
-import math
 
 
 def level1():
@@ -9,8 +8,8 @@ def level1():
 
 def level2():
     return[
-        Enemy((450,380), pygame.image.load("assets/Skeleton.png"), 30, (500,180)),
-        Enemy((650,380), pygame.image.load("assets/Skeleton.png"), 30, (700, 180)),
+        Enemy((450,480), pygame.image.load("assets/Skeleton.png"), 30, (500,300)),
+        Enemy((650,480), pygame.image.load("assets/Skeleton.png"), 30, (700, 300)),
     ]
 
 def level3():
