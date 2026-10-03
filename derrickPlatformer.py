@@ -12,10 +12,10 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-gameState = "playing"
+gameState = "levelSelect"
 
 BACKGROUND_COLOR = pygame.Color("#202020")
-PANEL_COLOR = pygame.Color("#666768")
+PANEL_COLOR = pygame.Color("#66676880")  # last two digits are alpha: 80 hex = 128 = 50%
 PLATFORM_COLOR = pygame.Color("#101010")
 PLAYER_COLOR = pygame.Color("#FFB44B")
 TEXT_COLOR = pygame.Color("#EFEFEF")
@@ -33,6 +33,12 @@ KICK_TIME = 0.1
 FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
 
 startButton = pygame.Rect(440, 285, 400, 150)
+
+# pygame.draw.rect ignores alpha, so draw the panel onto its own surface that
+# supports transparency (SRCALPHA) and blit that onto the screen instead.
+levelPanel = pygame.Rect(100, 100, 800, 500)
+levelPanelSurface = pygame.Surface(levelPanel.size, pygame.SRCALPHA)
+levelPanelSurface.fill(PANEL_COLOR)
 
 # Platforms xpos, ypos, xwidth, yheight
 platformGround = CustomPlatform(0, 670, 1280, 50, PLATFORM_COLOR)
@@ -86,7 +92,9 @@ while running:
         text_surface = FONT.render("Level Select", True, pygame.Color("#EFEFEF"))
         screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 50))
 
-        pygame.draw.rect(screen, PANEL_COLOR, (100, 100, 800, 500))
+        screen.blit(levelPanelSurface, levelPanel.topleft)
+        
+        
 
 
     elif gameState == "playing":
