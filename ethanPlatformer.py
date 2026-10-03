@@ -11,7 +11,7 @@ PLAYERBULLET_COOLDOWN = .2
 # Player physics
 PLAYER_SIZE = 40
 HALF = PLAYER_SIZE / 2
-MOVE_SPEED = 300
+MOVE_SPEED = 335
 JUMP_SPEED = 575
 GRAVITY = 1000
 TERMINAL_VELOCITY = 1600
@@ -100,14 +100,17 @@ vel_y = 0
 canJump = False
 bulletcooldown = ENEMYBULLET_COOLDOWN
 playerHealth = 20
-player_pos = pygame.Vector2(300, 600)
+player_pos = pygame.Vector2(300, 600) #300, 600
 playerbulletcooldown = PLAYERBULLET_COOLDOWN
 PlayerBulletDamage = 6
+currentPosition = player_pos.copy()
+aim = "left"
+
 
 # xpos, ypos, xwidth, yheight
 
 
-currentLevel = 3
+currentLevel = 1
 platformList = levels[currentLevel-1]()
 gameWOn = False
 
@@ -147,15 +150,29 @@ while running:
     
     keys = pygame.key.get_pressed()
     vel_x = (keys[pygame.K_d] - keys[pygame.K_a]) * MOVE_SPEED
+    
     if keys[pygame.K_w] and canJump:
         vel_y = -JUMP_SPEED
         canJump = False
+    if keys[pygame.K_d]:
+        aim = "right"
+        
+    if keys[pygame.K_a]:
+        aim = "left"
+
     if keys[pygame.K_e] and playerbulletcooldown < 0: 
         playerbulletcooldown = PLAYERBULLET_COOLDOWN
         currentPosition = player_pos.copy()
-        newPlayerbullet = Bullet(currentPosition, (currentPosition.x+50, currentPosition.y))
-        playerbulletlist.append(newPlayerbullet)
 
+        if aim == "right":
+            newPlayerbullet = Bullet(currentPosition, (currentPosition.x+50, currentPosition.y))
+
+
+        if aim == "left":
+            newPlayerbullet = Bullet(currentPosition, (currentPosition.x-50, currentPosition.y))
+        
+       
+        playerbulletlist.append(newPlayerbullet)
 
     # Player physics: gravity, then move and collide one axis at a time
     physics_dt = min(dt, MAX_PHYSICS_DT)
@@ -184,6 +201,7 @@ while running:
         outcome = platform.update(screen, player_rect)
 
         if outcome == "escape":
+            playerHealth = 20
             currentLevel += 1
             player_pos.x = platform.spawnx
             player_pos.y = platform.spawny
@@ -220,7 +238,9 @@ while running:
                 enemy.health -= 6
                 playerbulletlist.remove(bullet)
 
-        
+        for platform in platformList:
+            if playerbulletrect.colliderect(platform.rect):
+                playerbulletlist.remove(bullet)
 
 
 

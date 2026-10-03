@@ -13,21 +13,22 @@ def level2():
     ]
 
 def level3():
-    return[]
+    return[
+        Enemy((400,500), pygame.image.load("assets/Skeleton.png"), 30, (400, 300)),
+        Enemy((500,600), pygame.image.load("assets/Skeleton.png"), 30, (500, 400)),
+        Enemy((100,300), pygame.image.load("assets/Skeleton.png"), 30, (100,100)),
+    ]
 
 def level4():
-    return[]
+    return[
+        Enemy((400,500), pygame.image.load("assets/Skeleton.png"), 30, (400, 300)),
+        Enemy((500,600), pygame.image.load("assets/Skeleton.png"), 30, (500, 400)),
+        Enemy((100,300), pygame.image.load("assets/Skeleton.png"), 30, (100,100)),
+    ]
 
-def level5():
-    return[]
 
-def level6():
-    return[]
 
-def level7():
-    return[]
-
-enemies = [level1, level2, level3, level4, level5, level6, level7]
+enemies = [level1, level2, level3, level4]
 
 class Enemy:
     def __init__(self, pos, image, health, target):

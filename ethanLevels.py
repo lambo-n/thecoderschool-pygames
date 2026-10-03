@@ -102,7 +102,7 @@ def level3():
 
         # Upper Right Goal Enclosure
         CustomPlatform(880, 395, 60, 12, "blue"),
-        EscapeDoor(1040, 115, 80, 15, 0, 500),
+        EscapeDoor(1040, 115, 80, 15, 1100, 100),
     ]
 
 
@@ -110,35 +110,35 @@ def level4():
     return [
     # Left Elevated Enclosure & Hanging Walls
     CustomPlatform(0, 440, 450, 15, "blue"),         # Main left base platform
-    CustomPlatform(210, 120, 250, 15, "blue"),        # Upper left horizontal roof
-    CustomPlatform(210, 120, 15, 250, "blue"),        # Far-left vertical drop wall
-    CustomPlatform(290, 260, 15, 180, "blue"),        # Center-left vertical divider
-    CustomPlatform(365, 160, 15, 230, "blue"),        # Right inner vertical wall
-    CustomPlatform(465, 120, 15, 230, "blue"),        # Outer left boundary vertical wall
+    CustomPlatform(210, 130, 250, 15, "blue"),        # Upper left horizontal roof
+    CustomPlatform(210, 130, 15, 250, "blue"),        # Far-left vertical drop wall
+    CustomPlatform(290, 280, 15, 160, "blue"),        # Center-left vertical divider
+    CustomPlatform(365, 170, 15, 220, "blue"),        # Right inner vertical wall
+    CustomPlatform(465, 130, 15, 220, "blue"),        # Outer left boundary vertical wall
 
     # Mid-Section Pit & Stepped Bridges
-    CustomPlatform(465, 200, 190, 15, "blue"),        # Mid upper bridge platform
-    CustomPlatform(545, 200, 15, 340, "blue"),        # Deep center vertical drop pillar
-    CustomPlatform(655, 200, 15, 240, "blue"),        # Mid right vertical wall
-    CustomPlatform(660, 300, 40, 10, "blue"),         # Small right-pointing ledge
+    CustomPlatform(465, 210, 190, 15, "blue"),        # Mid upper bridge platform
+    CustomPlatform(545, 210, 15, 320, "blue"),        # Deep center vertical drop pillar
+    CustomPlatform(655, 210, 15, 230, "blue"),        # Mid right vertical wall
+    CustomPlatform(660, 310, 30, 10, "blue"),         # Small right-pointing ledge
 
     # Upper Vertical Obstacle Bars (Top Section)
-    CustomPlatform(735, 0, 15, 360, "blue"),          # Vertical bar 1
-    CustomPlatform(815, 0, 15, 120, "blue"),          # Upper vertical stub bar 2
-    CustomPlatform(815, 240, 15, 200, "blue"),         # Lower vertical bar 2
-    CustomPlatform(905, 0, 15, 370, "blue"),          # Vertical bar 3
-    CustomPlatform(980, 100, 15, 340, "blue"),         # Vertical bar 4
-    CustomPlatform(1085, 0, 15, 370, "blue"),         # Vertical bar 5
-    CustomPlatform(1030, 270, 60, 12, "blue"),        # Small horizontal crossbar
+    CustomPlatform(735, 0, 15, 350, "blue"),          # Vertical bar 1
+    CustomPlatform(815, 0, 15, 110, "blue"),          # Upper vertical stub bar 2
+    CustomPlatform(815, 285, 15, 165, "blue"),         # Lower vertical bar 2
+    CustomPlatform(905, 0, 15, 360, "blue"),          # Vertical bar 3
+    CustomPlatform(980, 140, 15, 300, "blue"),         # Vertical bar 4
+    CustomPlatform(1085, 0, 15, 360, "blue"),         # Vertical bar 5
+    CustomPlatform(1040, 280, 45, 12, "blue"),        # Small horizontal crossbar
 
     # Mid Horizontal Corridor
     CustomPlatform(660, 440, 620, 15, "blue"),        # Main right horizontal deck
 
     # Lower Pit & Lower Right Corridor Path
-    CustomPlatform(470, 440, 15, 210, "blue"),        # Drop-down left pit wall
-    CustomPlatform(470, 650, 690, 15, "blue"),        # Lowest pit floor run
-    CustomPlatform(720, 440, 15, 110, "blue"),        # Inner hanging pit wall
-    CustomPlatform(720, 550, 400, 15, "blue"),        # Middle horizontal runner
+    CustomPlatform(470, 450, 15, 200, "blue"),        # Drop-down left pit wall
+    CustomPlatform(470, 660, 690, 15, "blue"),        # Lowest pit floor run
+    CustomPlatform(720, 450, 15, 100, "blue"),        # Inner hanging pit wall
+    CustomPlatform(720, 560, 400, 15, "blue"),        # Middle horizontal runner
 
     # Escape Door (Green door at the end of the bottom right tunnel)
     EscapeDoor(1150, 520, 15, 130, 0, 500),
