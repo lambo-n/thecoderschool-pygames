@@ -5,6 +5,9 @@ import math
 import pygame
 from ethan.ethanBullet import *
 from david.davidBlasterEnemy import Enemy
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -31,7 +34,7 @@ HEIGHT = screen.get_height()
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
 
-blasterBoyImage = pygame.image.load("assets/blasterboy.png").convert_alpha()
+blasterBoyImage = pygame.image.load(ASSETS / "blasterboy.png").convert_alpha()
 
 
 bulletlist = []

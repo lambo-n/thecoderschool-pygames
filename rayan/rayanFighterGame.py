@@ -2,7 +2,7 @@
 import random
 
 import pygame
-from templates.platformTemplate import *
+from rayan.rayanPlatform import *
 from rayan.rayanPlayer import *
 
 # pygame setup

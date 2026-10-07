@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -14,13 +17,13 @@ gameState = "playing"
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 spirit_pos = pygame.Vector2(500, 200)
 
-freddyImage = pygame.image.load("assets/robotVillain.png").convert_alpha()
+freddyImage = pygame.image.load(ASSETS / "robotVillain.png").convert_alpha()
 freddyImage = pygame.transform.scale(freddyImage, (100, 100))
 
-spiritImage = pygame.image.load("assets/cryingChild.png").convert_alpha()
+spiritImage = pygame.image.load(ASSETS / "cryingChild.png").convert_alpha()
 spiritImage = pygame.transform.scale(spiritImage, (50, 50))
 
-shopImage = pygame.image.load("assets/cave.jpeg").convert_alpha()
+shopImage = pygame.image.load(ASSETS / "cave.jpeg").convert_alpha()
 shopImage = pygame.transform.scale(shopImage, (200, 100))
 shopRect = shopImage.get_rect(topleft=(640, 600))
 

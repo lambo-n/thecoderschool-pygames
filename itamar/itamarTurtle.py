@@ -1,4 +1,7 @@
 from py5 import *
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 def settings():
     size(500, 500)
@@ -9,8 +12,8 @@ def setup():
     playerY = 250
     keys = set()
     frame_rate(60)
-    turtleImage = load_image('assets/turtle.png')
-    jiillyFissh = load_image('assets/jellyfish.png')
+    turtleImage = load_image(ASSETS / 'turtle.png')
+    jiillyFissh = load_image(ASSETS / 'jellyfish.png')
 
 def draw():
     global playerX, playerY, turtleImage, jiillyFissh

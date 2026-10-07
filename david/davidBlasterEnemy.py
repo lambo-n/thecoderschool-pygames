@@ -1,4 +1,7 @@
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 
 
@@ -15,14 +18,14 @@ class Enemy:
             self.speed = 100
             self.strength = 1
             self.value = 2
-            self.image = pygame.image.load("assets/Zombie.png").convert_alpha()
+            self.image = pygame.image.load(ASSETS / "Zombie.png").convert_alpha()
             
         elif enemytype == "speed":
             self.health = 67
             self.speed = 200
             self.strength = 1
             self.value = 1
-            self.image = pygame.image.load("assets/speedZombie.png").convert_alpha()
+            self.image = pygame.image.load(ASSETS / "speedZombie.png").convert_alpha()
         
         
         
@@ -31,7 +34,7 @@ class Enemy:
             self.speed = 50
             self.strength = 50
             self.value = 10
-            self.image = pygame.image.load("assets/stronkzombie.png").convert_alpha()
+            self.image = pygame.image.load(ASSETS / "stronkzombie.png").convert_alpha()
            
 
         

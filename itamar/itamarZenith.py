@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 import pygame
 from zoieMovingPlatform import MovingPlatform
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -42,7 +45,7 @@ currentLvlList = lvl1platforms
 currentLvlMovingList = lvl1movingplatforms
 currentLvl = 4
 
-squareImage = pygame.image.load("assets/digdug.png")
+squareImage = pygame.image.load(ASSETS / "digdug.png")
 squareImage = pygame.transform.scale(squareImage, (40, 40))
 
 font = pygame.font.SysFont(None, 40)

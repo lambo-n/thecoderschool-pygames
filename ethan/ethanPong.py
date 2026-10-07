@@ -1,5 +1,8 @@
 import pygame
 import random
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1200, 600))
@@ -30,7 +33,7 @@ blueTimer = 0
 powerupTimer = 0
 
 
-powerupImage = pygame.image.load("assets/powerupImage.png").convert_alpha()
+powerupImage = pygame.image.load(ASSETS / "powerupImage.png").convert_alpha()
 powerupImage = pygame.transform.scale(powerupImage, (70, 70))
 powerup_pos = pygame.Vector2 (random.randint(0,WIDTH), random.randint(0, HEIGHT))
 

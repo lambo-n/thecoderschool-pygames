@@ -2,6 +2,9 @@
 import pygame
 import random
 from derrick.derrickCustomPlatform import *
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -214,16 +217,16 @@ map = [mapA, mapB, mapC, mapD, mapE]
 #customPlatforms = [custPlatform1]
 
 
-downArrowImage = pygame.image.load("assets/arrow1.png").convert_alpha()
+downArrowImage = pygame.image.load(ASSETS / "arrow1.png").convert_alpha()
 downArrowImage = pygame.transform.scale(downArrowImage, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
-playerPositionStill = pygame.image.load("assets/playerPositionStill.png").convert_alpha()
+playerPositionStill = pygame.image.load(ASSETS / "playerPositionStill.png").convert_alpha()
 playerPositionStill = pygame.transform.scale(playerPositionStill, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
-playerPositionLeft = pygame.image.load("assets/playerPositionLeft.png").convert_alpha()
+playerPositionLeft = pygame.image.load(ASSETS / "playerPositionLeft.png").convert_alpha()
 playerPositionLeft = pygame.transform.scale(playerPositionLeft, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
-playerPositionRight = pygame.image.load("assets/playerPositionRight.png").convert_alpha()
+playerPositionRight = pygame.image.load(ASSETS / "playerPositionRight.png").convert_alpha()
 playerPositionRight = pygame.transform.scale(playerPositionRight, (PLAYER_WIDTH, PLAYER_HEIGHT))
 
 player1Sprite = playerPositionStill

@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 import random
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -18,16 +21,16 @@ cop_pos = pygame.Vector2(1600, 800)
 coinsCollected = 0
 
 # load and scale images
-coinImage = pygame.image.load("assets/bomb.png").convert_alpha()
+coinImage = pygame.image.load(ASSETS / "bomb.png").convert_alpha()
 coinImage = pygame.transform.scale(coinImage, (64, 64))
 
-robberImage = pygame.image.load("assets/digdug.png").convert_alpha()
+robberImage = pygame.image.load(ASSETS / "digdug.png").convert_alpha()
 robberImage = pygame.transform.scale(robberImage, (64, 64))
 
-copImage = pygame.image.load("assets/cops.png").convert_alpha   ()
+copImage = pygame.image.load(ASSETS / "cops.png").convert_alpha   ()
 copImage = pygame.transform.scale(copImage, (64, 64))
 
-gameOverImage = pygame.image.load("assets/cave.jpeg").convert_alpha()
+gameOverImage = pygame.image.load(ASSETS / "cave.jpeg").convert_alpha()
 gameOverImage = pygame.transform.scale(gameOverImage, (1920, 1080))
 
 # text font

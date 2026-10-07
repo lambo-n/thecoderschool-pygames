@@ -4,6 +4,9 @@ import random
 import pygame
 from zoie.zoieMovingPlatform import MovingPlatform
 from zoie.zoieChaseEnemy import Enemy
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -22,17 +25,17 @@ coins = 0
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
-batImage = pygame.image.load("assets/robotVillain.png").convert_alpha()
+batImage = pygame.image.load(ASSETS / "robotVillain.png").convert_alpha()
 batImage = pygame.transform.scale(batImage, (50, 50))
 
-heartImage = pygame.image.load("assets/heart.png").convert_alpha()
+heartImage = pygame.image.load(ASSETS / "heart.png").convert_alpha()
 heartImage = pygame.transform.scale(heartImage, (30, 30))
 
-coinImage = pygame.image.load("assets/bitcoin.png").convert_alpha()
+coinImage = pygame.image.load(ASSETS / "bitcoin.png").convert_alpha()
 coinImage = pygame.transform.scale(coinImage, (30, 30))
 coinRect = coinImage.get_rect(center=(coinX, coinY))
 
-gameOverImage = pygame.image.load("assets/gameover.jpeg").convert_alpha()
+gameOverImage = pygame.image.load(ASSETS / "gameover.jpeg").convert_alpha()
 gameOverImage = pygame.transform.scale(gameOverImage, (400, 200))
 gameOverRect = gameOverImage.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
 

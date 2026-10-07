@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -18,22 +21,22 @@ topPipe_pos = bottomPipe_pos - pygame.Vector2(0, 520)
 gravity = 0
 space_pressed = False
 
-flappyBirdImage = pygame.image.load("assets/flappybird.png").convert_alpha()
+flappyBirdImage = pygame.image.load(ASSETS / "flappybird.png").convert_alpha()
 flappyBirdImage = pygame.transform.scale(flappyBirdImage, (75, 50))
 
-bottomPipeImage = pygame.image.load("assets/pipes.png").convert_alpha()
+bottomPipeImage = pygame.image.load(ASSETS / "pipes.png").convert_alpha()
 bottomPipeImage = pygame.transform.scale(bottomPipeImage, (100, 200))
 
 topPipeImage = pygame.transform.flip(bottomPipeImage, False, True)
 topPipeImage = pygame.transform.scale(topPipeImage, (100, 200))
 
-backgroundImage = pygame.image.load("assets/flappyBackground.png").convert_alpha()
+backgroundImage = pygame.image.load(ASSETS / "flappyBackground.png").convert_alpha()
 backgroundImage = pygame.transform.scale(backgroundImage, (1280, 720))
 
-menuImage = pygame.image.load("assets/flappyMenu.png").convert_alpha()
+menuImage = pygame.image.load(ASSETS / "flappyMenu.png").convert_alpha()
 menuImage = pygame.transform.scale(menuImage, (1280, 720))
 
-startButtonImage = pygame.image.load("assets/flappyStart.png").convert_alpha()
+startButtonImage = pygame.image.load(ASSETS / "flappyStart.png").convert_alpha()
 startButtonImage = pygame.transform.scale(startButtonImage, (400, 100))
 
 GAMEOVER = pygame.USEREVENT + 1

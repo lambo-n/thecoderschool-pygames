@@ -1,10 +1,13 @@
 import pygame
 import random
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 class Enemy:
     def __init__ (self, pos):
         self.pos = pygame.Vector2(pos)
-        self.image = pygame.image.load("assets/robotVillain.png").convert_alpha()
+        self.image = pygame.image.load(ASSETS / "robotVillain.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.speed = 100
         self.directionChange = 0

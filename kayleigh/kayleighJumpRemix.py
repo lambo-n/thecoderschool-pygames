@@ -1,5 +1,8 @@
 import pygame
 import random
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 #want to do so dont get sea of green
 pygame.init()
 pygame.mixer.init()
@@ -11,7 +14,7 @@ running = True
 font = pygame.font.SysFont("Verdana", 40)
 
 player = pygame.transform.scale(
-        pygame.image.load("assets/jumpboy.png"),
+        pygame.image.load(ASSETS / "jumpboy.png"),
         (60,50)
     )
 player_rect = player.get_rect(midbottom=(150, 370))  # start standing on the bottom platform
@@ -22,7 +25,7 @@ pygame.display.set_icon(
 player_vy = 0
 
 nenemy = pygame.transform.scale(
-    pygame.image.load("assets/pacboy.png"), (75, 75)
+    pygame.image.load(ASSETS / "pacboy.png"), (75, 75)
 )
 nenemy_rect = nenemy.get_rect()
 nenemy_dir = 1

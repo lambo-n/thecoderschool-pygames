@@ -1,5 +1,8 @@
 # Example file showing a circle moving on screen
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -9,7 +12,7 @@ running = True
 dt = 0
 
 
-cookieimage = pygame.image.load("assets/cookie.png").convert_alpha()
+cookieimage = pygame.image.load(ASSETS / "cookie.png").convert_alpha()
 cookieimage = pygame.transform.scale(cookieimage, (100, 120))
 
 cookierect = pygame.Rect(400, 400, 100, 120)

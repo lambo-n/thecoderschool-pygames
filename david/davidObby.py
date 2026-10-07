@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 import pygame
 from david.davidPlatform import *
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -15,7 +18,7 @@ playerRect = pygame.Rect(player_pos.x - 32, player_pos.y - 32, 64,64)
 playerHitbox = pygame.Rect(player_pos.x - 34, player_pos.y - 34, 67 ,67)
 
 
-playerImage = pygame.image.load("assets/jumpboy.png").convert_alpha()
+playerImage = pygame.image.load(ASSETS / "jumpboy.png").convert_alpha()
 playerImage = pygame.transform.scale(playerImage, (64, 64))
 gravity = 0
 

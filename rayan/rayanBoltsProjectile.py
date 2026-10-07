@@ -1,11 +1,14 @@
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 class Projectile:
     def __init__(self, pos, direction, tag):
         self.pos = pygame.Vector2(pos)
         self.direction = pygame.Vector2(direction, 0).normalize()
         self.speed = 250
-        self.image = pygame.image.load("assets/bitcoin.png").convert_alpha()
+        self.image = pygame.image.load(ASSETS / "bitcoin.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (20, 10))
         self.tag = tag
         

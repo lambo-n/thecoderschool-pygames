@@ -1,6 +1,9 @@
 # Example file showing a circle moving on screen
 from random import randint
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -11,11 +14,11 @@ dt = 0
 
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() - 200)
 
-playerImage = pygame.image.load("assets/digdug.png").convert_alpha()
+playerImage = pygame.image.load(ASSETS / "digdug.png").convert_alpha()
 playerImage = pygame.transform.scale(playerImage, (100, 100))
 
 soda_pos = pygame.Vector2(screen.get_width() / 2, -50)
-sodaImage = pygame.image.load("assets/bomb.png").convert_alpha()
+sodaImage = pygame.image.load(ASSETS / "bomb.png").convert_alpha()
 sodaImage = pygame.transform.scale(sodaImage, (50, 50))
 
 points = 0

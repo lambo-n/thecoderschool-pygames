@@ -3,6 +3,9 @@ import pygame
 import math
 
 from ethan.ethanBullet import Bullet
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 def push_circle_out_of_rect(pos, radius, rect):
     """Push a circle out of a rect if overlapping. Returns new pos."""
@@ -45,7 +48,7 @@ TANK_SPEED = 300
 ROTATION_SPEED = 200
 RADIUS = 40
 
-background = pygame.image.load("assets/flappyBackground.png")
+background = pygame.image.load(ASSETS / "flappyBackground.png")
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
 tank1_pos = pygame.Vector2(WIDTH / 4, HEIGHT / 4)
@@ -78,13 +81,13 @@ tank1health = 3
 tank2health = 3
 
 gameState = "menu"
-tankmenu = pygame.image.load("assets/flappyMenu.png").convert_alpha()
+tankmenu = pygame.image.load(ASSETS / "flappyMenu.png").convert_alpha()
 tankmenu = pygame.transform.scale(tankmenu, (1280, 600))
 
-tankStart = pygame.image.load("assets/flappyMenu.png").convert_alpha()
+tankStart = pygame.image.load(ASSETS / "flappyMenu.png").convert_alpha()
 tankStart= pygame.transform.scale(tankStart, (600,100))
 
-menuButton = pygame.image.load("assets/cave.jpeg").convert_alpha()
+menuButton = pygame.image.load(ASSETS / "cave.jpeg").convert_alpha()
 menuButton= pygame.transform.scale(menuButton, (600,100))
 
 while running:

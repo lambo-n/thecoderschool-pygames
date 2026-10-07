@@ -1,29 +1,32 @@
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 
 def level1():
     return[
-        Enemy((400,500), pygame.image.load("assets/Skeleton.png"), 30, (400,300)),
+        Enemy((400,500), pygame.image.load(ASSETS / "Skeleton.png"), 30, (400,300)),
     ]
 
 def level2():
     return[
-        Enemy((450,480), pygame.image.load("assets/Skeleton.png"), 30, (500,300)),
-        Enemy((650,480), pygame.image.load("assets/Skeleton.png"), 30, (700, 300)),
+        Enemy((450,480), pygame.image.load(ASSETS / "Skeleton.png"), 30, (500,300)),
+        Enemy((650,480), pygame.image.load(ASSETS / "Skeleton.png"), 30, (700, 300)),
     ]
 
 def level3():
     return[
-        Enemy((400,500), pygame.image.load("assets/Skeleton.png"), 30, (400, 300)),
-        Enemy((500,600), pygame.image.load("assets/Skeleton.png"), 30, (500, 400)),
-        Enemy((100,300), pygame.image.load("assets/Skeleton.png"), 30, (100,100)),
+        Enemy((400,500), pygame.image.load(ASSETS / "Skeleton.png"), 30, (400, 300)),
+        Enemy((500,600), pygame.image.load(ASSETS / "Skeleton.png"), 30, (500, 400)),
+        Enemy((100,300), pygame.image.load(ASSETS / "Skeleton.png"), 30, (100,100)),
     ]
 
 def level4():
     return[
-        Enemy((400,500), pygame.image.load("assets/Skeleton.png"), 30, (400, 300)),
-        Enemy((500,600), pygame.image.load("assets/Skeleton.png"), 30, (500, 400)),
-        Enemy((100,300), pygame.image.load("assets/Skeleton.png"), 30, (100,100)),
+        Enemy((400,500), pygame.image.load(ASSETS / "Skeleton.png"), 30, (400, 300)),
+        Enemy((500,600), pygame.image.load(ASSETS / "Skeleton.png"), 30, (500, 400)),
+        Enemy((100,300), pygame.image.load(ASSETS / "Skeleton.png"), 30, (100,100)),
     ]
 
 

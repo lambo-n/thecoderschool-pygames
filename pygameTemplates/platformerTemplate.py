@@ -2,8 +2,8 @@
 #   platformTemplate.py     -- CustomPlatform, the solid boxes
 #   physicsBodyTemplate.py  -- PhysicsBody, all of the collision maths
 import pygame
-from templates.platformTemplate import CustomPlatform
-from templates.physicsBodyTemplate import PhysicsBody
+from pygameTemplates.platformTemplate import CustomPlatform
+from pygameTemplates.physicsBodyTemplate import PhysicsBody
 
 # pygame setup
 pygame.init()

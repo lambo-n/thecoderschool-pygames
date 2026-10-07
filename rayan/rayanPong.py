@@ -1,5 +1,8 @@
 # Example file showing a circle moving on screen
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # pygame setup
 pygame.init()
@@ -14,10 +17,10 @@ rightPaddle_pos = pygame.Vector2(screen.get_width() - 25, screen.get_height() / 
 ball_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 ball_speed = pygame.Vector2(300, 300)
 
-leftPaddleImage = pygame.image.load("assets/pipes.png").convert_alpha()
+leftPaddleImage = pygame.image.load(ASSETS / "pipes.png").convert_alpha()
 leftPaddleImage = pygame.transform.scale(leftPaddleImage, (50, 130))
 
-rightPaddleImage = pygame.image.load("assets/pipes.png").convert_alpha()
+rightPaddleImage = pygame.image.load(ASSETS / "pipes.png").convert_alpha()
 rightPaddleImage = pygame.transform.scale(rightPaddleImage, (50, 130))
 
 player1Score = 0

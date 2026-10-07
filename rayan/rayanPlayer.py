@@ -1,15 +1,18 @@
 import pygame
+from pathlib import Path
 
-player1_image = pygame.image.load("assets/jumpboy.png")
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
+
+player1_image = pygame.image.load(ASSETS / "jumpboy.png")
 player1_image = pygame.transform.scale(player1_image, (140, 140))
 
-player1_punch = pygame.image.load("assets/cops.png")
+player1_punch = pygame.image.load(ASSETS / "cops.png")
 player1_punch = pygame.transform.scale(player1_punch, (140, 140))
 
-player2_image = pygame.image.load("assets/cryingChild.png")
+player2_image = pygame.image.load(ASSETS / "cryingChild.png")
 player2_image = pygame.transform.scale(player2_image, (140, 140))
 
-player2_punch = pygame.image.load("assets/cave.jpeg")
+player2_punch = pygame.image.load(ASSETS / "cave.jpeg")
 player2_punch = pygame.transform.scale(player2_punch, (140, 140))
 
 class Player:

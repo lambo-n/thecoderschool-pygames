@@ -2,6 +2,9 @@
 import math
 
 import pygame
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 def formatNumber(number):
     suffix = ["", "K", "M", "B", "T", "Qd", "Qn", "Sx", "Sp", "O", "N", "D"]
@@ -27,7 +30,7 @@ clock = pygame.time.Clock()
 running = True
 cookieX = 640
 cookieY = 360
-cookieImage = pygame.image.load("assets/cookie.png").convert_alpha()
+cookieImage = pygame.image.load(ASSETS / "cookie.png").convert_alpha()
 cookieImage = pygame.transform.scale(cookieImage,(300,300))
 cookieRect = cookieImage.get_rect(center=(cookieX, cookieY))
 totalCookies = 0

@@ -2,6 +2,9 @@ import pygame
 from rayan.rayanEnemy import Enemy
 from rayan.rayanBoltsProjectile import Projectile
 import random
+from pathlib import Path
+
+ASSETS = Path(__file__).resolve().parent.parent / "assets"
 
 # stationary platforms, player in top left
 # enemies are at the bottom shooting projectiles up
@@ -19,12 +22,12 @@ health = 20
 
 player_pos = pygame.Vector2(10, 10)
 
-playerSprite = pygame.image.load("assets/digdug.png").convert_alpha()
+playerSprite = pygame.image.load(ASSETS / "digdug.png").convert_alpha()
 playerSprite = pygame.transform.scale(playerSprite, (80, 80))
 
 
 
-backgroundImage = pygame.image.load("assets/flappyBackground.png").convert()
+backgroundImage = pygame.image.load(ASSETS / "flappyBackground.png").convert()
 backgroundImage = pygame.transform.scale(backgroundImage, (900, 900))
 
 
@@ -67,7 +70,7 @@ SPEED = 300
 JUMP_SPEED = -650
 GRAVITY = 1000
 
-font = pygame.font.Font("assets/vcr.ttf", 40)
+font = pygame.font.Font(ASSETS / "vcr.ttf", 40)
 
 while running:
     dt = clock.tick(60) / 1000
