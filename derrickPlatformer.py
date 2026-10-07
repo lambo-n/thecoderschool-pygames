@@ -4,6 +4,7 @@
 import pygame
 from derrickPlatform import CustomPlatform
 from derrickPhysicsBody import PhysicsBody
+from derrickLevels import *
 
 # pygame setup
 pygame.init()
@@ -13,9 +14,10 @@ running = True
 dt = 0
 
 gameState = "levelSelect"
+currentLevel = 0
 
 BACKGROUND_COLOR = pygame.Color("#202020")
-PANEL_COLOR = pygame.Color("#66676880")  # last two digits are alpha: 80 hex = 128 = 50%
+PANEL_COLOR = pygame.Color("#666768B0")  # #666768B0 # last two digits are alpha: 80 hex = 128 = 50%
 PLATFORM_COLOR = pygame.Color("#101010")
 PLAYER_COLOR = pygame.Color("#FFB44B")
 TEXT_COLOR = pygame.Color("#EFEFEF")
@@ -24,10 +26,10 @@ SCREEN_HEIGHT = screen.get_height()
 SCREEN_WIDTH = screen.get_width()
 SCREEN_AVERAGE_LENGTH = (SCREEN_HEIGHT + SCREEN_WIDTH) / 2
 
-WALK_SPEED = 300
+WALK_SPEED = 400 # 300
 JUMP_SPEED = 500
 WALL_JUMP_SPEED = 430
-WALL_KICK = 150
+WALL_KICK = 250
 KICK_TIME = 0.1
 
 FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
@@ -36,18 +38,26 @@ startButton = pygame.Rect(440, 285, 400, 150)
 
 # pygame.draw.rect ignores alpha, so draw the panel onto its own surface that
 # supports transparency (SRCALPHA) and blit that onto the screen instead.
-levelPanel = pygame.Rect(100, 100, 800, 500)
+levelPanel = pygame.Rect(90, 200, 1100, 452)
 levelPanelSurface = pygame.Surface(levelPanel.size, pygame.SRCALPHA)
 levelPanelSurface.fill(PANEL_COLOR)
 
-# Platforms xpos, ypos, xwidth, yheight
-platformGround = CustomPlatform(0, 670, 1280, 50, PLATFORM_COLOR)
-platformWallLeft = CustomPlatform(0, 0, 50, 720, PLATFORM_COLOR)
-platformWallRight = CustomPlatform(1230, 0, 50, 720, PLATFORM_COLOR)
-platformCeiling = CustomPlatform(0, 0, 1280, 50, PLATFORM_COLOR)
-platform1 = CustomPlatform(200, 520, 250, 150, PLATFORM_COLOR)
-platform2 = CustomPlatform(50, 200, 150, 150, PLATFORM_COLOR)
-platform3 = CustomPlatform(700, 220, 150, 20, PLATFORM_COLOR)
+levelSelectTextPanel = pygame.Rect(340, 37, 600, 100)
+
+levelSelectTextPanelSurface = pygame.Surface(levelSelectTextPanel.size, pygame.SRCALPHA)
+levelSelectTextPanelSurface.fill(PANEL_COLOR)
+
+level1Panel = pygame.Rect(110, 220, 196, 196)
+level2Panel = pygame.Rect(326, 220, 196, 196)
+level3Panel = pygame.Rect(542, 220, 196, 196)
+level4Panel = pygame.Rect(758, 220, 196, 196)
+level5Panel = pygame.Rect(974, 220, 196, 196)
+level6Panel = pygame.Rect(110, 436, 196, 196)
+level7Panel = pygame.Rect(326, 436, 196, 196)
+level8Panel = pygame.Rect(542, 436, 196, 196)
+level9Panel = pygame.Rect(758, 436, 196, 196)
+level10Panel = pygame.Rect(974, 436, 196, 196)
+
 
 # A tall platform is just a platform.  Side collisions work the same way: walk
 # into it and you stop, jump beside it and you slide up it, land on it and you
@@ -59,7 +69,7 @@ wall = CustomPlatform(950, 380, 40, 300, "#101010")
 ledgeA = CustomPlatform(180, 620, 120, 20, "#101010")
 ledgeB = CustomPlatform(300, 620, 120, 20, "#101010")
 
-platformList = [platformGround, platformWallLeft, platformWallRight, platformCeiling, platform1, platform2, platform3, wall, ledgeA, ledgeB]
+platformList = levels[currentLevel]()
 
 # xpos, ypos, xwidth, yheight -- the top-left corner, same as a platform.
 # Any size works; try 12 x 12 or 80 x 140.
@@ -79,9 +89,12 @@ while running:
             if gameState == "startScreen":
                 if startButton.collidepoint(event.pos):
                     gameState = "levelSelect"
+            if gameState == "levelSelect":
+                if level1Panel.collidepoint(event.pos):
+                    gameState = "playing"
 
     if gameState == "startScreen":
-        
+
         screen.fill(BACKGROUND_COLOR)
         pygame.draw.rect(screen, TEXT_COLOR, startButton)
 
@@ -89,18 +102,30 @@ while running:
 
         screen.fill(BACKGROUND_COLOR)
 
+        screen.blit(levelSelectTextPanelSurface, levelSelectTextPanel.topleft)
+
         text_surface = FONT.render("Level Select", True, pygame.Color("#EFEFEF"))
         screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 50))
 
         screen.blit(levelPanelSurface, levelPanel.topleft)
-        
-        
+
+        pygame.draw.rect(screen, PLATFORM_COLOR, level1Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level2Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level3Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level4Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level5Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level6Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level7Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level8Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level9Panel)
+        pygame.draw.rect(screen, PLATFORM_COLOR, level10Panel)
 
 
     elif gameState == "playing":
         keys = pygame.key.get_pressed()
-        jump_now = (keys[pygame.K_UP] or keys[pygame.K_w]) and not jump_held
-        jump_held = keys[pygame.K_UP] or keys[pygame.K_w]
+        jump_down = keys[pygame.K_UP] or keys[pygame.K_w]
+        jump_now = jump_down and not jump_held  # True only on the frame the key goes down
+        jump_held = jump_down
         # Set a velocity; the engine does the moving.  Never move the player
         # directly, or you will move it inside a platform.
         if kick_timer > 0:
@@ -112,9 +137,9 @@ while running:
             if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 player.vel_x = WALK_SPEED
 
-        if jump_now:
-            if player.on_ground:
-                player.jump(JUMP_SPEED)
+        if jump_down and player.on_ground:
+            player.jump(JUMP_SPEED)
+        elif jump_now:
             if player.hit_wall_left:
                 player.vel_x = WALL_KICK
                 player.jump(WALL_JUMP_SPEED)
@@ -123,7 +148,6 @@ while running:
                 kick_timer = KICK_TIME
                 player.vel_x = -WALL_KICK
                 player.jump(WALL_JUMP_SPEED)
-        
 
 
         # Gravity, movement, substepping and every collision, in one call.  The
