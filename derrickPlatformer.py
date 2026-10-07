@@ -26,13 +26,15 @@ SCREEN_HEIGHT = screen.get_height()
 SCREEN_WIDTH = screen.get_width()
 SCREEN_AVERAGE_LENGTH = (SCREEN_HEIGHT + SCREEN_WIDTH) / 2
 
-WALK_SPEED = 400 # 300
-JUMP_SPEED = 500
-WALL_JUMP_SPEED = 430
+WALK_SPEED = 350 # 300
+JUMP_SPEED = 450
+WALL_JUMP_SPEED = 400
 WALL_KICK = 250
-KICK_TIME = 0.1
+KICK_TIME = 0.05
 
 FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
+
+jumpCount = 2
 
 startButton = pygame.Rect(440, 285, 400, 150)
 
@@ -124,7 +126,7 @@ while running:
     elif gameState == "playing":
         keys = pygame.key.get_pressed()
         jump_down = keys[pygame.K_UP] or keys[pygame.K_w]
-        jump_now = jump_down and not jump_held  # True only on the frame the key goes down
+        jump_now = jump_down and not jump_held
         jump_held = jump_down
         # Set a velocity; the engine does the moving.  Never move the player
         # directly, or you will move it inside a platform.
@@ -136,18 +138,28 @@ while running:
                 player.vel_x = -WALK_SPEED
             if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 player.vel_x = WALK_SPEED
-
+        if player.on_ground:
+            jumpCount = 1
         if jump_down and player.on_ground:
             player.jump(JUMP_SPEED)
+            jumpCount = 1
         elif jump_now:
+            if player.on_ground:
+                player.jump(JUMP_SPEED)
             if player.hit_wall_left:
                 player.vel_x = WALL_KICK
                 player.jump(WALL_JUMP_SPEED)
                 kick_timer = KICK_TIME
+                jumpCount = 1
             if player.hit_wall_right:
                 kick_timer = KICK_TIME
                 player.vel_x = -WALL_KICK
                 player.jump(WALL_JUMP_SPEED)
+                jumpCount = 1
+            if jumpCount == 1 and not player.on_ground and not player.hit_wall_right and not player.hit_wall_left:
+                player.jump(JUMP_SPEED)
+                jumpCount -= 1
+
 
 
         # Gravity, movement, substepping and every collision, in one call.  The
