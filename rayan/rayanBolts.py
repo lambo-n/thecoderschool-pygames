@@ -1,6 +1,6 @@
 import pygame
-from rayanEnemy import Enemy
-from rayanBoltsProjectile import Projectile
+from rayan.rayanEnemy import Enemy
+from rayan.rayanBoltsProjectile import Projectile
 import random
 
 # stationary platforms, player in top left

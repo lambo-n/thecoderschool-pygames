@@ -2,8 +2,8 @@
 import random
 
 import pygame
-from zoieMovingPlatform import MovingPlatform
-from zoieChaseEnemy import Enemy
+from zoie.zoieMovingPlatform import MovingPlatform
+from zoie.zoieChaseEnemy import Enemy
 
 # pygame setup
 pygame.init()

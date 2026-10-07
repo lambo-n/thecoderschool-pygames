@@ -8,9 +8,11 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
-mimicImage = pygame.image.load("assets/robotVilain.png").convert_alpha()
+cookieimage = pygame.image.load("assets/cookie.png").convert_alpha()
+cookieimage = pygame.transform.scale(cookieimage, (100, 120))
+
+cookierect = pygame.Rect(400, 400, 100, 120)
 
 while running:
     # poll for events
@@ -22,17 +24,9 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    screen.blit(mimicImage, player_pos)
+    screen.blit(cookieimage, cookierect)
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_w]:
-        player_pos.y -= 300 * dt
-    if keys[pygame.K_s]:
-        player_pos.y += 300 * dt
-    if keys[pygame.K_a]:
-        player_pos.x -= 300 * dt
-    if keys[pygame.K_d]:
-        player_pos.x += 300 * dt
+ 
 
     # flip() the display to put your work on screen
     pygame.display.flip()
@@ -42,4 +36,8 @@ while running:
     # independent physics.
     dt = clock.tick(60) / 1000
 
+
+
+
+pygame.time.wait(3000)
 pygame.quit()

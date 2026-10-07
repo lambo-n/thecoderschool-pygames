@@ -2,7 +2,7 @@
 import pygame
 import math
 
-from ethanBullet import Bullet
+from ethan.ethanBullet import Bullet
 
 def push_circle_out_of_rect(pos, radius, rect):
     """Push a circle out of a rect if overlapping. Returns new pos."""

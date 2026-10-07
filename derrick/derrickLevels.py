@@ -1,4 +1,4 @@
-from derrickPlatform import *
+from derrick.derrickPlatform import *
 import pygame
 
 PLATFORM_COLOR = pygame.Color("#101010")

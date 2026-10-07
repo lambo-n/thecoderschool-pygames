@@ -2,9 +2,9 @@
 #   platformTemplate.py     -- CustomPlatform, the solid boxes
 #   physicsBodyTemplate.py  -- PhysicsBody, all of the collision maths
 import pygame
-from derrickPlatform import CustomPlatform
-from derrickPhysicsBody import PhysicsBody
-from derrickLevels import *
+from derrick.derrickPlatform import CustomPlatform
+from derrick.derrickPhysicsBody import PhysicsBody
+from derrick.derrickLevels import *
 
 # pygame setup
 pygame.init()

@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
-from derrickCustomPlatform import *
+from derrick.derrickCustomPlatform import *
 
 # pygame setup
 pygame.init()

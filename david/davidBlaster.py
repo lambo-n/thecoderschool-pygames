@@ -3,8 +3,8 @@ import random
 import math 
 
 import pygame
-from ethanBullet import *
-from davidBlasterEnemy import Enemy
+from ethan.ethanBullet import *
+from david.davidBlasterEnemy import Enemy
 
 # pygame setup
 pygame.init()

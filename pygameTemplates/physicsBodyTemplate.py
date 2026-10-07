@@ -39,7 +39,7 @@ import math
 
 import pygame
 
-from platformTemplate import box_of, int_rect, solid_boxes
+from templates.platformTemplate import box_of, int_rect, solid_boxes
 
 __all__ = [
     "PhysicsBody",

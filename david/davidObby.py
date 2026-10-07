@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from davidPlatform import *
+from david.davidPlatform import *
 
 # pygame setup
 pygame.init()
