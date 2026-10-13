@@ -23,6 +23,9 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if cookierect.collidepoint(event.pos):
+                print("cookie clicked")
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")

@@ -1,6 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
-from zoieMovingPlatform import MovingPlatform
+from itamar.itamarMovingPlatform import MovingPlatform
 from pathlib import Path
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
