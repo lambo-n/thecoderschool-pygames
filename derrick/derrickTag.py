@@ -1,7 +1,7 @@
 # Example file showing a circle moving on screen
 import pygame
 import random
-from derrick.derrickCustomPlatform import *
+from derrick.custom_platform2 import *
 from pathlib import Path
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"

@@ -2,9 +2,9 @@
 #   platformTemplate.py     -- CustomPlatform, the solid boxes
 #   physicsBodyTemplate.py  -- PhysicsBody, all of the collision maths
 import pygame
-from derrick.derrickPlatform import CustomPlatform
-from derrick.derrickPhysicsBody import PhysicsBody
-from derrick.derrickLevels import *
+from customPlatform import CustomPlatform, DeathBlock
+from physicsBody import PhysicsBody
+from levels import *
 
 # pygame setup
 pygame.init()
@@ -19,6 +19,7 @@ currentLevel = 0
 BACKGROUND_COLOR = pygame.Color("#202020")
 PANEL_COLOR = pygame.Color("#666768B0")  # #666768B0 # last two digits are alpha: 80 hex = 128 = 50%
 PLATFORM_COLOR = pygame.Color("#101010")
+PLATFORM_RED_COLOR = pygame.Color("#FF2B1B")
 PLAYER_COLOR = pygame.Color("#FFB44B")
 TEXT_COLOR = pygame.Color("#EFEFEF")
 
@@ -27,10 +28,12 @@ SCREEN_WIDTH = screen.get_width()
 SCREEN_AVERAGE_LENGTH = (SCREEN_HEIGHT + SCREEN_WIDTH) / 2
 
 WALK_SPEED = 350 # 300
-JUMP_SPEED = 450
-WALL_JUMP_SPEED = 400
+JUMP_SPEED = 400
+WALL_JUMP_SPEED = 350
 WALL_KICK = 250
 KICK_TIME = 0.05
+
+PLAYER_STARTING_POS = pygame.Vector2(100, 600)
 
 FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
 
@@ -75,7 +78,7 @@ platformList = levels[currentLevel]()
 
 # xpos, ypos, xwidth, yheight -- the top-left corner, same as a platform.
 # Any size works; try 12 x 12 or 80 x 140.
-player = PhysicsBody(100, 600, 20, 20, PLAYER_COLOR)
+player = PhysicsBody(PLAYER_STARTING_POS.x, PLAYER_STARTING_POS.y, 20, 20, PLAYER_COLOR)
 kick_timer = 0.0
 jump_held = False
 font = pygame.font.SysFont(None, 26)
@@ -169,7 +172,19 @@ while running:
         screen.fill(BACKGROUND_COLOR)
 
         for platform in platformList:
-            platform.update(screen)
+            if isinstance(platform, DeathBlock):
+                outcome = platform.update(screen, player.rect)
+
+                if outcome == "death":
+                    player.pos = PLAYER_STARTING_POS
+                    player.vel_x = 0
+                    player.vel_y = 0
+                    player.on_ground = False
+                    player.hit_head = False
+                    player.hit_wall_left = False
+                    player.hit_wall_right = False
+            else:
+                platform.update(screen)
 
         player.draw(screen)
 

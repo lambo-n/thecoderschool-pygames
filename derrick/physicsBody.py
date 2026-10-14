@@ -39,7 +39,7 @@ import math
 
 import pygame
 
-from derrick.derrickPlatform import box_of, int_rect, solid_boxes
+from customPlatform import box_of, int_rect, solid_boxes
 
 __all__ = [
     "PhysicsBody",
@@ -52,7 +52,7 @@ __all__ = [
 ]
 
 # Downward acceleration, pixels per second per second.
-GRAVITY = 1000.0
+GRAVITY = 900.0
 
 # Speed cap.  Without one, a long fall eventually covers more ground in a
 # single frame than a platform is thick, and substepping has to work far harder
