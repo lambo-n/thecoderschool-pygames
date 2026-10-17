@@ -1,21 +1,22 @@
 # Example file showing a circle moving on screen
 import random
-from ethan.ethanBullet import *
+from bullet import *
 import pygame
-from ethan.ethanPlatform import *
-from ethan.ethanLevels import *
-from ethan.ethanEnemies import*
+from custom_platform import *
+from levels import *
+from enemies import*
+from powers import*
 ENEMYBULLET_COOLDOWN = 1
 PLAYERBULLET_COOLDOWN = .2
 
 # Player physics
 PLAYER_SIZE = 40
 HALF = PLAYER_SIZE / 2
-MOVE_SPEED = 335
-JUMP_SPEED = 575
+MOVE_SPEED = 375 # 375
+JUMP_SPEED = 575 #575
 GRAVITY = 1000
 TERMINAL_VELOCITY = 1600
-HEAD_BUMP_SPEED = 120      # downward speed after hitting a ceiling, so you bounce off instead of sticking
+HEAD_BUMP_SPEED = 120    # downward speed after hitting a ceiling, so you bounce off instead of sticking
 MAX_PHYSICS_DT = 1 / 30    # a lag spike can't fling the player through a platform
 EPSILON = 0.001            # touching edges (standing on a floor, leaning on a wall) don't count as overlap
 
@@ -99,12 +100,21 @@ vel_x = 0
 vel_y = 0
 canJump = False
 bulletcooldown = ENEMYBULLET_COOLDOWN
-playerHealth = 20
+playerHealth = 10
 player_pos = pygame.Vector2(300, 600) #300, 600
 playerbulletcooldown = PLAYERBULLET_COOLDOWN
 PlayerBulletDamage = 6
 currentPosition = player_pos.copy()
 aim = "left"
+
+# testPower1 = PowerUp(400,400, "life")
+# testPower2 = PowerUp(400,500, "speed")
+# testPower3 = PowerUp(400,600, "jumpboost")
+# testPower4 = PowerUp(400,100, "health")
+# testPower5 = PowerUp(400,300, "immunity")
+# testPower6 = PowerUp(400,200, "pierce")
+
+
 
 
 # xpos, ypos, xwidth, yheight
@@ -114,7 +124,7 @@ currentLevel = 1
 platformList = levels[currentLevel-1]()
 gameWOn = False
 
-
+powerList = powers[currentLevel - 1]()
 Enemybulletlist = []
 playerbulletlist = []
 enemyList = enemies[currentLevel - 1]()
@@ -197,22 +207,40 @@ while running:
 
     screen.fill("black")
 
+    # testPower1.draw(screen)
+    # testPower2.draw(screen)
+    # testPower3.draw(screen)
+    # testPower4.draw(screen)
+    # testPower5.draw(screen)
+    # testPower6.draw(screen)
+
+
+
+    
+
     for platform in platformList:
         outcome = platform.update(screen, player_rect)
 
         if outcome == "escape":
-            playerHealth = 20
+            playerHealth = 10
             currentLevel += 1
             player_pos.x = platform.spawnx
             player_pos.y = platform.spawny
             if currentLevel <= len(levels):
                 platformList = levels[currentLevel-1]()
                 enemyList = enemies[currentLevel-1]()
+                powerList = powers[currentLevel - 1]()
                 vel_y = 0
                 Enemybulletlist.clear()
             else:
                 running = False
             break
+
+
+    for power in powerList:
+            power.draw(screen)
+
+
 
     for enemy in enemyList:
         enemy.update(dt)
@@ -268,7 +296,7 @@ while running:
 
 
     pygame.draw.rect(screen,"red", (player_pos.x- 40 , player_pos.y- 60, 80, 10 ))
-    pygame.draw.rect(screen,"green", (player_pos.x- 40 , player_pos.y- 60, 80/20 * playerHealth, 10 ))
+    pygame.draw.rect(screen,"green", (player_pos.x- 40 , player_pos.y- 60, 80/10 * playerHealth, 10 ))
     # flip() the display to put your work on screen
     pygame.display.flip()
 

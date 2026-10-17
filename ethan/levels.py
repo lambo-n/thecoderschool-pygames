@@ -1,4 +1,4 @@
-from ethan.ethanPlatform import *
+from custom_platform import *
 
 
 def level1():
@@ -75,34 +75,36 @@ def level3():
 
         # Mid-Left S-Shape / Vertical Assembly
         CustomPlatform(260, 510, 185, 15, "blue"),
-        CustomPlatform(525, 350, 15, 180, "blue"),
-        CustomPlatform(420, 390, 70, 15, "blue"),
-        CustomPlatform(370, 390, 15, 110, "blue"),
-        CustomPlatform(390, 430, 40, 15, "blue"),
+        CustomPlatform(525, 390, 15, 180, "blue"),
+        CustomPlatform(420, 330, 70, 15, "blue"),
+        CustomPlatform(370, 400, 15, 110, "blue"),
+        CustomPlatform(390, 470, 40, 15, "blue"),
 
         # Center Floating & Stair Feature
         CustomPlatform(550, 260, 210, 15, "blue"),
-        CustomPlatform(590, 360, 50, 15, "blue"),
-        CustomPlatform(640, 500, 150, 15, "blue"),
-        CustomPlatform(640, 500, 15, 120, "blue"),      # L-stem down
+        CustomPlatform(600, 380, 50, 15, "blue"),
+        CustomPlatform(630, 500, 150, 15, "blue"),
+        CustomPlatform(660, 500, 15, 250, "blue"),      # L-stem down
 
         # Mid-Right Cross & Pillar Complex
-        CustomPlatform(800, 195, 200, 15, "blue"),
-        CustomPlatform(800, 265, 15, 260, "blue"),
-        CustomPlatform(700, 365, 180, 15, "blue"),
+        CustomPlatform(850, 195, 200, 15, "blue"),
+        CustomPlatform(820, 420, 15, 210, "blue"),
+        CustomPlatform(750, 365, 180, 15, "blue"),
         CustomPlatform(705, 410, 70, 15, "blue"),
 
         # Far Right Ladder Steps & Boundary Wall
         CustomPlatform(1130, 20, 15, 680, "blue"),      # Right vertical boundary
         CustomPlatform(1030, 150, 100, 12, "blue"),
-        CustomPlatform(1060, 240, 70, 12, "blue"),
-        CustomPlatform(1060, 360, 70, 12, "blue"),
-        CustomPlatform(1060, 470, 70, 12, "blue"),
+        CustomPlatform(1060, 300, 70, 12, "blue"),
+        CustomPlatform(1060, 390, 70, 12, "blue"),
+        CustomPlatform(1060, 500, 70, 12, "blue"),
         CustomPlatform(1060, 590, 70, 12, "blue"),
+        CustomPlatform(950, 420, 20, 400, "blue"),
+
 
         # Upper Right Goal Enclosure
         CustomPlatform(880, 395, 60, 12, "blue"),
-        EscapeDoor(1040, 115, 80, 15, 1100, 100),
+        EscapeDoor(680, 520, 80, 15, 1100, 100),
     ]
 
 

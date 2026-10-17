@@ -2,7 +2,7 @@
 import pygame
 import math
 
-from ethan.ethanBullet import Bullet
+from bullet import Bullet
 from pathlib import Path
 
 ASSETS = Path(__file__).resolve().parent.parent / "assets"
