@@ -176,7 +176,8 @@ while running:
                 outcome = platform.update(screen, player.rect)
 
                 if outcome == "death":
-                    player.pos = PLAYER_STARTING_POS
+                    player.x = PLAYER_STARTING_POS.x
+                    player.y = PLAYER_STARTING_POS.y
                     player.vel_x = 0
                     player.vel_y = 0
                     player.on_ground = False
