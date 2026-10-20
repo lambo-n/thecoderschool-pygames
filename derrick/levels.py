@@ -18,7 +18,7 @@ def level1():
         CustomPlatform(370, 220, 450, 150, PLATFORM_COLOR),
         CustomPlatform(220, 220, 150, 20, PLATFORM_COLOR),
         CustomPlatform(670, 350, 150, 150, PLATFORM_COLOR),
-        DeathBlock(670, 630, 100, 20)
+        DeathBlock(670, 630, 100, 20, PLATFORM_RED_COLOR)
 
     ]
 

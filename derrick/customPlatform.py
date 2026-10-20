@@ -12,7 +12,7 @@ solid_boxes() below, so it works with CustomPlatforms, plain pygame.Rects,
 
 import pygame
 
-__all__ = ["CustomPlatform", "ExitPortal", "DeathBlock", "int_rect", "box_of", "solid_boxes"]
+__all__ = ["CustomPlatform", "int_rect", "box_of", "solid_boxes"]
 
 
 def int_rect(x, y, w, h):
@@ -185,18 +185,17 @@ class CustomPlatform:
     def draw(self, screen):
         self.update(screen)
 
-
 class ExitPortal(CustomPlatform):
     pass
 
-
 class DeathBlock(CustomPlatform):
-    def __init__(self, posx, posy, width, height, color="red"):
-        super().__init__(posx, posy, width, height, color)
+    def ___init___(self, posx, posy, width, height):
+        super().__init__(posx, posy, width, height, color="Red")
 
     def update(self, screen, player_rect):
-        super().update(screen)
+       super().update(screen)
 
-        if self.rect.colliderect(player_rect.inflate(2, 2)):
-            print("player touched deathblock")
-            return "death"
+       if self.rect.colliderect(player_rect.inflate(2,2)):
+        print("player touched deathblock")
+
+        return "death"
