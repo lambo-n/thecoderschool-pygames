@@ -190,12 +190,12 @@ class ExitPortal(CustomPlatform):
 
 class DeathBlock(CustomPlatform):
     def ___init___(self, posx, posy, width, height):
-        super().__init__(posx, posy, width, height, color="Red")
+        super().__init__(posx, posy, width, height, color="#FF2B1B")
 
     def update(self, screen, player_rect):
        super().update(screen)
 
        if self.rect.colliderect(player_rect.inflate(2,2)):
-        print("player touched deathblock")
+        #print("player touched deathblock")
 
         return "death"

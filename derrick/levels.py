@@ -12,13 +12,15 @@ def level1():
         CustomPlatform(0, 0, 1280, 70, PLATFORM_COLOR),
         CustomPlatform(220, 500, 300, 150, PLATFORM_COLOR),
         CustomPlatform(70, 220, 150, 150, PLATFORM_COLOR),
-        CustomPlatform(820, 220, 200, 20, PLATFORM_COLOR),
-        CustomPlatform(820, 480, 200, 20, PLATFORM_COLOR),
-        CustomPlatform(1020, 350, 200, 20, PLATFORM_COLOR),
+        CustomPlatform(820, 220, 200, 40, PLATFORM_COLOR),
+        CustomPlatform(820, 460, 200, 40, PLATFORM_COLOR),
+        CustomPlatform(1020, 340, 200, 40, PLATFORM_COLOR),
         CustomPlatform(370, 220, 450, 150, PLATFORM_COLOR),
-        CustomPlatform(220, 220, 150, 20, PLATFORM_COLOR),
+        CustomPlatform(220, 220, 150, 40, PLATFORM_COLOR),
         CustomPlatform(670, 350, 150, 150, PLATFORM_COLOR),
-        DeathBlock(670, 630, 100, 20, PLATFORM_RED_COLOR)
+        DeathBlock(775, 650, 125, 20, PLATFORM_RED_COLOR),
+        DeathBlock(370, 220, 450, 20, PLATFORM_RED_COLOR),
+        CustomPlatform(500, 170, 200, 20, PLATFORM_COLOR)
 
     ]
 

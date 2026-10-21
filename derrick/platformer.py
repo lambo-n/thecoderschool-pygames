@@ -15,6 +15,8 @@ dt = 0
 
 gameState = "levelSelect"
 currentLevel = 0
+deathCount = 0
+isPaused = False
 
 BACKGROUND_COLOR = pygame.Color("#202020")
 PANEL_COLOR = pygame.Color("#666768B0")  # #666768B0 # last two digits are alpha: 80 hex = 128 = 50%
@@ -33,7 +35,7 @@ WALL_JUMP_SPEED = 350
 WALL_KICK = 250
 KICK_TIME = 0.05
 
-PLAYER_STARTING_POS = pygame.Vector2(100, 600)
+PLAYER_STARTING_POS = pygame.Vector2(135, 615)
 
 FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
 
@@ -41,16 +43,31 @@ jumpCount = 2
 
 startButton = pygame.Rect(440, 285, 400, 150)
 
+def transRect(x, y, length, height, color="#666768B0"):
+    
+    transparentRect = pygame.Rect(x, y, length, height)
+
+    transparentRectSurface = pygame.Surface(transparentRect.size, pygame.SRCALPHA)
+    transparentRectSurface.fill(color)
+    return transparentRectSurface, transparentRect
+
+
 # pygame.draw.rect ignores alpha, so draw the panel onto its own surface that
 # supports transparency (SRCALPHA) and blit that onto the screen instead.
 levelPanel = pygame.Rect(90, 200, 1100, 452)
 levelPanelSurface = pygame.Surface(levelPanel.size, pygame.SRCALPHA)
 levelPanelSurface.fill(PANEL_COLOR)
 
-levelSelectTextPanel = pygame.Rect(340, 37, 600, 100)
+# levelSelectTextPanel = pygame.Rect(340, 37, 600, 100)
 
-levelSelectTextPanelSurface = pygame.Surface(levelSelectTextPanel.size, pygame.SRCALPHA)
-levelSelectTextPanelSurface.fill(PANEL_COLOR)
+# levelSelectTextPanelSurface = pygame.Surface(levelSelectTextPanel.size, pygame.SRCALPHA)
+# levelSelectTextPanelSurface.fill(PANEL_COLOR)
+
+levelSelectTextPanelSurface, levelSelectTextPanel = transRect(340, 37, 600, 100)
+
+deathsTextPanelSurface, deathsTextPanelRect = transRect(35, 35, 255, 65)
+
+pauseButtonPanelSurface, pauseButtonPanelRect = transRect(1245 - 50, 35, 50, 50)
 
 level1Panel = pygame.Rect(110, 220, 196, 196)
 level2Panel = pygame.Rect(326, 220, 196, 196)
@@ -75,13 +92,13 @@ ledgeA = CustomPlatform(180, 620, 120, 20, "#101010")
 ledgeB = CustomPlatform(300, 620, 120, 20, "#101010")
 
 platformList = levels[currentLevel]()
+levelLength = len(levels)
 
 # xpos, ypos, xwidth, yheight -- the top-left corner, same as a platform.
 # Any size works; try 12 x 12 or 80 x 140.
 player = PhysicsBody(PLAYER_STARTING_POS.x, PLAYER_STARTING_POS.y, 20, 20, PLAYER_COLOR)
 kick_timer = 0.0
 jump_held = False
-font = pygame.font.SysFont(None, 26)
 
 while running:
     # poll for events
@@ -131,6 +148,7 @@ while running:
         jump_down = keys[pygame.K_UP] or keys[pygame.K_w]
         jump_now = jump_down and not jump_held
         jump_held = jump_down
+        pause_key = keys[pygame.K_ESCAPE]
         # Set a velocity; the engine does the moving.  Never move the player
         # directly, or you will move it inside a platform.
         if kick_timer > 0:
@@ -160,7 +178,7 @@ while running:
                 player.jump(WALL_JUMP_SPEED)
                 jumpCount = 1
             if jumpCount == 1 and not player.on_ground and not player.hit_wall_right and not player.hit_wall_left:
-                player.jump(JUMP_SPEED)
+                player.jump(JUMP_SPEED - 25)
                 jumpCount -= 1
 
 
@@ -184,10 +202,19 @@ while running:
                     player.hit_head = False
                     player.hit_wall_left = False
                     player.hit_wall_right = False
+                    deathCount += 1
+                    #print(deathCount)
             else:
                 platform.update(screen)
 
         player.draw(screen)
+
+        screen.blit(pauseButtonPanelSurface, pauseButtonPanelRect.topleft)
+
+        screen.blit(deathsTextPanelSurface, deathsTextPanelRect.topleft)
+        font = pygame.font.SysFont(None, 60)
+        text_surface = font.render("Deaths: " + str(deathCount), True, pygame.Color("#EFEFEF"))
+        screen.blit(text_surface, (50, 50))
 
     # Live read-out of what the engine decided this frame.
     # state = "on_ground %s   hit_head %s   walls %s%s   squeezed %s   vel_y %6.1f" % (
