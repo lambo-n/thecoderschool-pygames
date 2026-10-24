@@ -1,5 +1,6 @@
 # Example file showing a circle moving on screen
 import pygame
+from projectile import *
 
 # pygame setup
 pygame.init()
@@ -13,6 +14,8 @@ player_rect = pygame.Rect(player_pos.x, player_pos.y, 60, 40)
 
 gun_image = pygame.image.load("assets/bomb.png").convert_alpha()
 gun_image = pygame.transform.scale(gun_image, (60, 40))
+
+
 
 while running:
     # poll for events
