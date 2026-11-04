@@ -2,7 +2,7 @@
 #   platformTemplate.py     -- CustomPlatform, the solid boxes
 #   physicsBodyTemplate.py  -- PhysicsBody, all of the collision maths
 import pygame
-from customPlatform import CustomPlatform, DeathBlock
+from customPlatform import CustomPlatform, DeathBlock, EndPortal
 from physicsBody import PhysicsBody
 from levels import *
 
@@ -29,13 +29,13 @@ SCREEN_HEIGHT = screen.get_height()
 SCREEN_WIDTH = screen.get_width()
 SCREEN_AVERAGE_LENGTH = (SCREEN_HEIGHT + SCREEN_WIDTH) / 2
 
-WALK_SPEED = 350 # 300
+WALK_SPEED = 400 # 300
 JUMP_SPEED = 400
 WALL_JUMP_SPEED = 350
 WALL_KICK = 250
 KICK_TIME = 0.05
 
-PLAYER_STARTING_POS = pygame.Vector2(135, 615)
+playerStartingPos = pygame.Vector2(135, 615)
 
 FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
 
@@ -65,10 +65,6 @@ levelPanelSurface.fill(PANEL_COLOR)
 
 levelSelectTextPanelSurface, levelSelectTextPanel = transRect(340, 37, 600, 100)
 
-deathsTextPanelSurface, deathsTextPanelRect = transRect(35, 35, 255, 65)
-
-pauseButtonPanelSurface, pauseButtonPanelRect = transRect(1245 - 50, 35, 50, 50)
-
 level1Panel = pygame.Rect(110, 220, 196, 196)
 level2Panel = pygame.Rect(326, 220, 196, 196)
 level3Panel = pygame.Rect(542, 220, 196, 196)
@@ -96,9 +92,25 @@ levelLength = len(levels)
 
 # xpos, ypos, xwidth, yheight -- the top-left corner, same as a platform.
 # Any size works; try 12 x 12 or 80 x 140.
-player = PhysicsBody(PLAYER_STARTING_POS.x, PLAYER_STARTING_POS.y, 20, 20, PLAYER_COLOR)
+player = PhysicsBody(playerStartingPos.x, playerStartingPos.y, 20, 20, PLAYER_COLOR)
 kick_timer = 0.0
 jump_held = False
+
+
+def resetPlayer():
+    """Put the player back at the start with no leftover movement."""
+    global kick_timer, jumpCount
+    player.x = playerStartingPos.x
+    player.y = playerStartingPos.y
+    player.vel_x = 0
+    player.vel_y = 0
+    player.on_ground = False
+    player.hit_head = False
+    player.hit_wall_left = False
+    player.hit_wall_right = False
+    kick_timer = 0.0  # a running wall kick would keep overriding vel_x
+    jumpCount = 1
+
 
 while running:
     # poll for events
@@ -113,8 +125,19 @@ while running:
                     gameState = "levelSelect"
             if gameState == "levelSelect":
                 if level1Panel.collidepoint(event.pos):
+                    currentLevel = 0
                     gameState = "playing"
-
+                    playerStartingPos.x = startPositions[currentLevel][0]
+                    playerStartingPos.y = startPositions[currentLevel][1]
+                    resetPlayer()
+                    
+                if level2Panel.collidepoint(event.pos):
+                    currentLevel = 1
+                    gameState = "playing"
+                    playerStartingPos.x = startPositions[currentLevel][0]
+                    playerStartingPos.y = startPositions[currentLevel][1]
+                    resetPlayer()
+                    
     if gameState == "startScreen":
 
         screen.fill(BACKGROUND_COLOR)
@@ -188,33 +211,35 @@ while running:
         player.move_and_collide(platformList, dt, bounds=screen.get_rect())
 
         screen.fill(BACKGROUND_COLOR)
-
+        platformList = levels[currentLevel]()
         for platform in platformList:
             if isinstance(platform, DeathBlock):
                 outcome = platform.update(screen, player.rect)
 
                 if outcome == "death":
-                    player.x = PLAYER_STARTING_POS.x
-                    player.y = PLAYER_STARTING_POS.y
-                    player.vel_x = 0
-                    player.vel_y = 0
-                    player.on_ground = False
-                    player.hit_head = False
-                    player.hit_wall_left = False
-                    player.hit_wall_right = False
+                    resetPlayer()
                     deathCount += 1
                     #print(deathCount)
+            elif isinstance(platform, EndPortal):
+                outcome = platform.update(screen, player.rect)
+
+                if outcome == "exit":
+                    if currentLevel + 1 < len(levels):
+                        currentLevel += 1
+                        platformList = levels[currentLevel]()
+                        playerStartingPos.x = platform.playerStartPosX
+                        playerStartingPos.y = platform.playerStartPosY
+                        resetPlayer()
             else:
                 platform.update(screen)
 
         player.draw(screen)
 
-        screen.blit(pauseButtonPanelSurface, pauseButtonPanelRect.topleft)
+        
 
-        screen.blit(deathsTextPanelSurface, deathsTextPanelRect.topleft)
-        font = pygame.font.SysFont(None, 60)
-        text_surface = font.render("Deaths: " + str(deathCount), True, pygame.Color("#EFEFEF"))
-        screen.blit(text_surface, (50, 50))
+        font = pygame.font.SysFont("Cascadia Code", 40)
+        text_surface = font.render("Deaths - " + str(deathCount), True, pygame.Color("#EFEFEF"))
+        screen.blit(text_surface, (70, 35))
 
     # Live read-out of what the engine decided this frame.
     # state = "on_ground %s   hit_head %s   walls %s%s   squeezed %s   vel_y %6.1f" % (

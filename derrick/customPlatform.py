@@ -185,11 +185,28 @@ class CustomPlatform:
     def draw(self, screen):
         self.update(screen)
 
-class ExitPortal(CustomPlatform):
-    pass
+class EndPortal(CustomPlatform):
+    def __init__(self, posx, posy, width, height, playerStartPosX, playerStartPosY):
+        super().__init__(posx, posy, width, height, color="#FFFFFF")
+
+        self.endPortalImage = pygame.image.load("assets/EndPortal.png").convert_alpha()
+        self.endPortalImage = pygame.transform.scale(self.endPortalImage, (50, 50))
+
+        self.playerStartPosX = playerStartPosX
+        self.playerStartPosY = playerStartPosY
+
+       
+
+    def update(self, screen, player_rect):
+        screen.blit(self.endPortalImage, self.rect)
+
+        if self.rect.colliderect(player_rect.inflate(2,2)):
+
+            return "exit"
+    
 
 class DeathBlock(CustomPlatform):
-    def ___init___(self, posx, posy, width, height):
+    def __init__(self, posx, posy, width, height):
         super().__init__(posx, posy, width, height, color="#FF2B1B")
 
     def update(self, screen, player_rect):

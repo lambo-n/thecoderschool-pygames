@@ -12,8 +12,7 @@ PLAYERBULLET_COOLDOWN = .2
 # Player physics
 PLAYER_SIZE = 40
 HALF = PLAYER_SIZE / 2
-MOVE_SPEED = 375 # 375
-JUMP_SPEED = 575 #575
+
 GRAVITY = 1000
 TERMINAL_VELOCITY = 1600
 HEAD_BUMP_SPEED = 120    # downward speed after hitting a ceiling, so you bounce off instead of sticking
@@ -106,7 +105,16 @@ playerbulletcooldown = PLAYERBULLET_COOLDOWN
 PlayerBulletDamage = 6
 currentPosition = player_pos.copy()
 aim = "left"
-
+speedTimer = 0
+jumpTimer = 0
+invinTimer = 0
+pierceTimer = 0
+currentPower = None
+pierce = False
+move_speed = 375 # 375
+jump_speed = 575 #575
+invincibility = False
+lives = 1
 # testPower1 = PowerUp(400,400, "life")
 # testPower2 = PowerUp(400,500, "speed")
 # testPower3 = PowerUp(400,600, "jumpboost")
@@ -159,10 +167,10 @@ while running:
    
     
     keys = pygame.key.get_pressed()
-    vel_x = (keys[pygame.K_d] - keys[pygame.K_a]) * MOVE_SPEED
+    vel_x = (keys[pygame.K_d] - keys[pygame.K_a]) * move_speed
     
     if keys[pygame.K_w] and canJump:
-        vel_y = -JUMP_SPEED
+        vel_y = -jump_speed
         canJump = False
     if keys[pygame.K_d]:
         aim = "right"
@@ -239,14 +247,56 @@ while running:
 
     for power in powerList:
             power.draw(screen)
+            if player_rect.colliderect(power.rect):
+                powerList.remove(power)
+
+                if power.type == "speed":
+                    move_speed = 600
+                    speedTimer = 600
+                if power.type == "health":
+                    playerHealth = 10  
+                if power.type == "jumpboost":
+                    jump_speed = 700
+                    jumpTimer = 600
+                if power.type == "invincibility":
+                    invincibility = True
+                    invinTimer = 600
+                    print("PICK UP THE INVINCIBILITY")
+                if power.type == "pierce":
+                    pierce = True
+                    pierceTimer = 600
+                if power.type == "life":
+                    lives += 1
 
 
+    if speedTimer <= 0:
+        move_speed = 375
+    else:
+        speedTimer -= 1
+
+    if jumpTimer <= 0:
+        jump_speed_speed = 375
+    else:
+        jumpTimer -= 1
+        
+    if invinTimer <= 0:
+        invincibility = False
+    else:
+        invinTimer -= 1
+
+    if pierceTimer <= 0:
+        pierce = False
+    else:
+        pierceTimer -= 1
 
     for enemy in enemyList:
         enemy.update(dt)
         enemy.draw(screen)
         if player_rect.colliderect(enemy.rect):
-            playerHealth -= 5
+            if invincibility == False:
+                playerHealth -= 5
+            else:
+                print("should be invincible")
             enemyList.remove(enemy)
         if enemy.health <= 0:
             enemyList.remove(enemy)
@@ -267,7 +317,7 @@ while running:
                 playerbulletlist.remove(bullet)
 
         for platform in platformList:
-            if playerbulletrect.colliderect(platform.rect):
+            if playerbulletrect.colliderect(platform.rect) and pierce == False:
                 playerbulletlist.remove(bullet)
 
 
@@ -279,7 +329,9 @@ while running:
         bullet.draw(screen, "red")
         bullet_rect = pygame.Rect( bullet.pos.x - 10, bullet.pos.y - 10 , 20, 20 )
         if bullet_rect.colliderect(player_rect):
-            playerHealth -= 1
+            if invincibility == False:
+                playerHealth -= 1
+
             Enemybulletlist.remove(bullet)
         if bullet.pos.x >= 1280:
             Enemybulletlist.remove(bullet)
@@ -287,16 +339,25 @@ while running:
             Enemybulletlist.remove(bullet)
 
 
-
-
     if playerHealth <= 0:
+        lives -= 1
+        playerHealth = 10
+        invincibility = True
+        invinTimer = 100
+
+
+    if lives <= 0:
         running = False
     
     pygame.draw.rect(screen, "gold", player_rect)
 
 
     pygame.draw.rect(screen,"red", (player_pos.x- 40 , player_pos.y- 60, 80, 10 ))
-    pygame.draw.rect(screen,"green", (player_pos.x- 40 , player_pos.y- 60, 80/10 * playerHealth, 10 ))
+    if invincibility == True:
+        bar_color = "yellow"
+    else:
+        bar_color = "green"
+    pygame.draw.rect(screen, bar_color, (player_pos.x- 40 , player_pos.y- 60, 80/10 * playerHealth, 10 ))
     # flip() the display to put your work on screen
     pygame.display.flip()
 
