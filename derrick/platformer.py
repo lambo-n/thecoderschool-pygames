@@ -7,6 +7,10 @@ from physicsBody import PhysicsBody
 from levels import *
 
 def resetPlayer():
+    global platformList, jumpCount
+    platformList = levels[currentLevel]()
+    playerStartingPos.x = startPositions[currentLevel][0]
+    playerStartingPos.y = startPositions[currentLevel][1]
     player.x = playerStartingPos.x
     player.y = playerStartingPos.y
     player.vel_x = 0
@@ -16,9 +20,6 @@ def resetPlayer():
     player.hit_head = False
     player.hit_wall_left = False
     player.hit_wall_right = False
-    platformList = levels[currentLevel]()
-    playerStartingPos.x = startPositions[currentLevel][0]
-    playerStartingPos.y = startPositions[currentLevel][1]
 
 def transRect(x, y, length, height, color="#666768B0"):
     
@@ -57,27 +58,24 @@ WALL_JUMP_SPEED = 350
 WALL_KICK = 250
 KICK_TIME = 0.05
 
+fontSize = int(SCREEN_AVERAGE_LENGTH / (1080 / 135))
+font = pygame.font.SysFont("Cascadia Code", fontSize)
+
 playerStartingPos = pygame.Vector2(135, 615)
-
-FONT = pygame.font.SysFont(None, int(SCREEN_AVERAGE_LENGTH / (1080 / 135)))
-
+player = PhysicsBody(playerStartingPos.x, playerStartingPos.y, 20, 20, PLAYER_COLOR)
 jumpCount = 2
-
-startButton = pygame.Rect(440, 285, 400, 150)
+kick_timer = 0.0
+jump_held = False
 
 
 
 
 # pygame.draw.rect ignores alpha, so draw the panel onto its own surface that
 # supports transparency (SRCALPHA) and blit that onto the screen instead.
+startButton = pygame.Rect(440, 285, 400, 150)
 levelPanel = pygame.Rect(90, 200, 1100, 452)
 levelPanelSurface = pygame.Surface(levelPanel.size, pygame.SRCALPHA)
 levelPanelSurface.fill(PANEL_COLOR)
-
-# levelSelectTextPanel = pygame.Rect(340, 37, 600, 100)
-
-# levelSelectTextPanelSurface = pygame.Surface(levelSelectTextPanel.size, pygame.SRCALPHA)
-# levelSelectTextPanelSurface.fill(PANEL_COLOR)
 
 levelSelectTextPanelSurface, levelSelectTextPanel = transRect(340, 37, 600, 100)
 
@@ -92,18 +90,14 @@ level8Panel = pygame.Rect(542, 436, 196, 196)
 level9Panel = pygame.Rect(758, 436, 196, 196)
 level10Panel = pygame.Rect(974, 436, 196, 196)
 
-
 platformList = levels[currentLevel]()
 levelLength = len(levels)
 
 # xpos, ypos, xwidth, yheight -- the top-left corner, same as a platform.
 # Any size works; try 12 x 12 or 80 x 140.
-player = PhysicsBody(playerStartingPos.x, playerStartingPos.y, 20, 20, PLAYER_COLOR)
-kick_timer = 0.0
-jump_held = False
 
 
-
+# game loop
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -134,19 +128,17 @@ while running:
                     break
 
     if gameState == "startScreen":
-
         screen.fill(BACKGROUND_COLOR)
         pygame.draw.rect(screen, TEXT_COLOR, startButton)
 
     elif gameState == "levelSelect":
-
         screen.fill(BACKGROUND_COLOR)
-
+        
         screen.blit(levelSelectTextPanelSurface, levelSelectTextPanel.topleft)
-
-        text_surface = FONT.render("Level Select", True, pygame.Color("#EFEFEF"))
-        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 50))
-
+        
+        text_surface = font.render("Level Select", True, pygame.Color("#EFEFEF"))
+        screen.blit(text_surface, (SCREEN_WIDTH / 2 - text_surface.get_width()// 2, 50)
+                    )
         screen.blit(levelPanelSurface, levelPanel.topleft)
 
         pygame.draw.rect(screen, PLATFORM_COLOR, level1Panel)
@@ -205,6 +197,8 @@ while running:
         # screen rect is passed as bounds, so its edges are solid too.
         player.move_and_collide(platformList, dt, bounds=screen.get_rect())
 
+
+        # PRINT HERE
         screen.fill(BACKGROUND_COLOR)
   
         for platform in platformList:
@@ -232,8 +226,8 @@ while running:
         player.draw(screen)
 
         
-
-        font = pygame.font.SysFont("Cascadia Code", 40)
+        fontSize = 40
+        font = pygame.font.SysFont("Cascadia Code", fontSize)
         text_surface = font.render("Deaths - " + str(deathCount), True, pygame.Color("#EFEFEF"))
         screen.blit(text_surface, (70, 35))
 
