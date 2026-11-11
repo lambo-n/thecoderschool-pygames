@@ -43,6 +43,17 @@ jumpCount = 2
 
 startButton = pygame.Rect(440, 285, 400, 150)
 
+def resetPlayer():
+    player.x = playerStartingPos.x
+    player.y = playerStartingPos.y
+    player.vel_x = 0
+    player.vel_y = 0
+    jumpCount = 0
+    player.on_ground = False
+    player.hit_head = False
+    player.hit_wall_left = False
+    player.hit_wall_right = False
+
 def transRect(x, y, length, height, color="#666768B0"):
     
     transparentRect = pygame.Rect(x, y, length, height)
@@ -96,22 +107,6 @@ player = PhysicsBody(playerStartingPos.x, playerStartingPos.y, 20, 20, PLAYER_CO
 kick_timer = 0.0
 jump_held = False
 
-
-def resetPlayer():
-    """Put the player back at the start with no leftover movement."""
-    global kick_timer, jumpCount
-    player.x = playerStartingPos.x
-    player.y = playerStartingPos.y
-    player.vel_x = 0
-    player.vel_y = 0
-    player.on_ground = False
-    player.hit_head = False
-    player.hit_wall_left = False
-    player.hit_wall_right = False
-    kick_timer = 0.0  # a running wall kick would keep overriding vel_x
-    jumpCount = 1
-
-
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -127,17 +122,13 @@ while running:
                 if level1Panel.collidepoint(event.pos):
                     currentLevel = 0
                     gameState = "playing"
-                    playerStartingPos.x = startPositions[currentLevel][0]
-                    playerStartingPos.y = startPositions[currentLevel][1]
-                    resetPlayer()
-                    
                 if level2Panel.collidepoint(event.pos):
                     currentLevel = 1
                     gameState = "playing"
                     playerStartingPos.x = startPositions[currentLevel][0]
                     playerStartingPos.y = startPositions[currentLevel][1]
                     resetPlayer()
-                    
+
     if gameState == "startScreen":
 
         screen.fill(BACKGROUND_COLOR)
@@ -211,7 +202,7 @@ while running:
         player.move_and_collide(platformList, dt, bounds=screen.get_rect())
 
         screen.fill(BACKGROUND_COLOR)
-        platformList = levels[currentLevel]()
+  
         for platform in platformList:
             if isinstance(platform, DeathBlock):
                 outcome = platform.update(screen, player.rect)
@@ -224,12 +215,13 @@ while running:
                 outcome = platform.update(screen, player.rect)
 
                 if outcome == "exit":
-                    if currentLevel + 1 < len(levels):
-                        currentLevel += 1
-                        platformList = levels[currentLevel]()
-                        playerStartingPos.x = platform.playerStartPosX
-                        playerStartingPos.y = platform.playerStartPosY
-                        resetPlayer()
+                    currentLevel += 1
+                    platformList = levels[currentLevel]()
+                    playerStartingPos.x = platform.playerStartPosX
+                    playerStartingPos.y = platform.playerStartPosY
+                    resetPlayer()
+
+                    #print(deathCount)
             else:
                 platform.update(screen)
 

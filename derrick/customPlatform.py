@@ -89,6 +89,7 @@ class CustomPlatform:
         self.h = height
         self.color = color
         self.solid = True
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
     # -- the names the old template used -----------------------------------
     @property
@@ -163,11 +164,7 @@ class CustomPlatform:
     @property
     def centery(self):
         return self.y + self.h / 2.0
-
-    @property
-    def rect(self):
-        """Whole-pixel Rect, rebuilt on demand.  For drawing, not for physics."""
-        return int_rect(self.x, self.y, self.w, self.h)
+    
 
     def move(self, dx, dy):
         """Shift the platform.  The starting point for a moving platform.
@@ -180,29 +177,52 @@ class CustomPlatform:
         self.y += float(dy)
 
     def update(self, screen):
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         pygame.draw.rect(screen, self.color, self.rect)
 
     def draw(self, screen):
         self.update(screen)
 
 class EndPortal(CustomPlatform):
-    def __init__(self, posx, posy, width, height, playerStartPosX, playerStartPosY):
+    def __init__(self, posx, posy, width, height, playerStartPos):
         super().__init__(posx, posy, width, height, color="#FFFFFF")
 
-        self.endPortalImage = pygame.image.load("assets/EndPortal.png").convert_alpha()
+        self.endPortalImage = pygame.image.load("assets/EndPortalFrame0.png").convert_alpha()
         self.endPortalImage = pygame.transform.scale(self.endPortalImage, (50, 50))
 
-        self.playerStartPosX = playerStartPosX
-        self.playerStartPosY = playerStartPosY
+        self.endPortalFrame1 = pygame.image.load("assets/EndPortalFrame1.png").convert_alpha()
+        self.endPortalFrame1 = pygame.transform.scale(self.endPortalFrame1, (50, 50))
 
+        self.endPortalFrame2 = pygame.image.load("assets/EndPortalFrame2.png").convert_alpha()
+        self.endPortalFrame2 = pygame.transform.scale(self.endPortalFrame2, (50, 50))
+
+        self.endPortalFrame3 = pygame.image.load("assets/EndPortalFrame3.png").convert_alpha()
+        self.endPortalFrame3 = pygame.transform.scale(self.endPortalFrame3, (50, 50))
+
+        self.endPortalAnimation = [self.endPortalImage, self.endPortalFrame1, self.endPortalFrame2, self.endPortalFrame3]
+
+        self.playerStartPosX = playerStartPos.x
+        self.playerStartPosY = playerStartPos.y
+
+        self.timer = 0
+        self.timerStart = False
        
 
     def update(self, screen, player_rect):
-        screen.blit(self.endPortalImage, self.rect)
+        screen.blit(self.endPortalAnimation[self.timer], self.rect)
 
         if self.rect.colliderect(player_rect.inflate(2,2)):
+            self.timerStart = True
 
+        if self.timerStart == True:
+            self.timer += 1
+            #print(self.timer)
+        
+
+        if self.timer >= 3:
+            #print("teleport")
             return "exit"
+        
     
 
 class DeathBlock(CustomPlatform):

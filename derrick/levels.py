@@ -4,7 +4,8 @@ import pygame
 PLATFORM_COLOR = pygame.Color("#101010")
 PLATFORM_RED_COLOR = pygame.Color("#FF2B1B")
 
-BOTTOM_LEFT_CORNER_START = (135, 615)
+BOTTOM_LEFT_CORNER_START = pygame.Vector2(135, 615)
+TOP_LEFT_CORNER_START = pygame.Vector2(135, 175)
 
 def level1():
     return [
@@ -23,7 +24,7 @@ def level1():
         DeathBlock(775, 650, 125, 20),
         DeathBlock(370, 220, 450, 20),
         CustomPlatform(500, 170, 200, 20, PLATFORM_COLOR),
-        EndPortal(170, 170, 25, 25, 500, 500),
+        EndPortal(170, 125, 50, 50, TOP_LEFT_CORNER_START),
 
     ]
 
@@ -33,8 +34,24 @@ def level2():
         CustomPlatform(0, 0, 70, 720, PLATFORM_COLOR),
         CustomPlatform(1210, 0, 70, 720, PLATFORM_COLOR),
         CustomPlatform(0, 0, 1280, 70, PLATFORM_COLOR),
+        CustomPlatform(70, 200, 1000, 100, PLATFORM_COLOR),
+        CustomPlatform(220, 425, 1000, 100, PLATFORM_COLOR),
+        DeathBlock(250, 180, 200, 20),
+        DeathBlock(250, 70, 200, 20),
+        DeathBlock(200, 425, 20, 100),
+        DeathBlock(70, 425, 20, 100),
+        EndPortal(1100, 575, 50, 50, TOP_LEFT_CORNER_START),
     ]
 
-levels = [level1, level2]
+def level3():
+    return [
+        CustomPlatform(0, 650, 1280, 70, PLATFORM_COLOR),
+        CustomPlatform(0, 0, 70, 720, PLATFORM_COLOR),
+        CustomPlatform(1210, 0, 70, 720, PLATFORM_COLOR),
+        CustomPlatform(0, 0, 1280, 70, PLATFORM_COLOR),
+        
+    ]
 
-startPositions = [(135, 615), (500, 500)]
+levels = [level1, level2, level3]
+
+startPositions = [BOTTOM_LEFT_CORNER_START, TOP_LEFT_CORNER_START]
