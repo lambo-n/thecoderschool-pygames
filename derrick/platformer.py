@@ -6,6 +6,28 @@ from customPlatform import CustomPlatform, DeathBlock, EndPortal
 from physicsBody import PhysicsBody
 from levels import *
 
+def resetPlayer():
+    player.x = playerStartingPos.x
+    player.y = playerStartingPos.y
+    player.vel_x = 0
+    player.vel_y = 0
+    jumpCount = 0
+    player.on_ground = False
+    player.hit_head = False
+    player.hit_wall_left = False
+    player.hit_wall_right = False
+    platformList = levels[currentLevel]()
+    playerStartingPos.x = startPositions[currentLevel][0]
+    playerStartingPos.y = startPositions[currentLevel][1]
+
+def transRect(x, y, length, height, color="#666768B0"):
+    
+    transparentRect = pygame.Rect(x, y, length, height)
+
+    transparentRectSurface = pygame.Surface(transparentRect.size, pygame.SRCALPHA)
+    transparentRectSurface.fill(color)
+    return transparentRectSurface, transparentRect
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720), pygame.FULLSCREEN)
@@ -43,24 +65,7 @@ jumpCount = 2
 
 startButton = pygame.Rect(440, 285, 400, 150)
 
-def resetPlayer():
-    player.x = playerStartingPos.x
-    player.y = playerStartingPos.y
-    player.vel_x = 0
-    player.vel_y = 0
-    jumpCount = 0
-    player.on_ground = False
-    player.hit_head = False
-    player.hit_wall_left = False
-    player.hit_wall_right = False
 
-def transRect(x, y, length, height, color="#666768B0"):
-    
-    transparentRect = pygame.Rect(x, y, length, height)
-
-    transparentRectSurface = pygame.Surface(transparentRect.size, pygame.SRCALPHA)
-    transparentRectSurface.fill(color)
-    return transparentRectSurface, transparentRect
 
 
 # pygame.draw.rect ignores alpha, so draw the panel onto its own surface that
@@ -88,16 +93,6 @@ level9Panel = pygame.Rect(758, 436, 196, 196)
 level10Panel = pygame.Rect(974, 436, 196, 196)
 
 
-# A tall platform is just a platform.  Side collisions work the same way: walk
-# into it and you stop, jump beside it and you slide up it, land on it and you
-# stand on it.
-wall = CustomPlatform(950, 380, 40, 300, "#101010")
-
-# Two platforms sharing an edge.  Walking across the seam is smooth -- nothing
-# to snag on, because horizontal and vertical collisions are handled separately.
-ledgeA = CustomPlatform(180, 620, 120, 20, "#101010")
-ledgeB = CustomPlatform(300, 620, 120, 20, "#101010")
-
 platformList = levels[currentLevel]()
 levelLength = len(levels)
 
@@ -106,6 +101,8 @@ levelLength = len(levels)
 player = PhysicsBody(playerStartingPos.x, playerStartingPos.y, 20, 20, PLAYER_COLOR)
 kick_timer = 0.0
 jump_held = False
+
+
 
 while running:
     # poll for events
@@ -121,13 +118,20 @@ while running:
             if gameState == "levelSelect":
                 if level1Panel.collidepoint(event.pos):
                     currentLevel = 0
+                    resetPlayer()
                     gameState = "playing"
+                    break
                 if level2Panel.collidepoint(event.pos):
                     currentLevel = 1
-                    gameState = "playing"
-                    playerStartingPos.x = startPositions[currentLevel][0]
-                    playerStartingPos.y = startPositions[currentLevel][1]
                     resetPlayer()
+                    gameState = "playing"
+                    break
+                    
+                if level3Panel.collidepoint(event.pos):
+                    currentLevel = 2
+                    resetPlayer()
+                    gameState = "playing"
+                    break
 
     if gameState == "startScreen":
 
@@ -251,5 +255,7 @@ while running:
     # dt is delta time in seconds since last frame, used for framerate-
     # independent physics.
     dt = clock.tick(60) / 1000
+    
+
 
 pygame.quit()

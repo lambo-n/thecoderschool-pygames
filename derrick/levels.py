@@ -54,4 +54,4 @@ def level3():
 
 levels = [level1, level2, level3]
 
-startPositions = [BOTTOM_LEFT_CORNER_START, TOP_LEFT_CORNER_START]
+startPositions = [TOP_LEFT_CORNER_START, BOTTOM_LEFT_CORNER_START]
