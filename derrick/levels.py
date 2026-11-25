@@ -28,7 +28,7 @@ def level1():
         EndPortal(170, 125, 20, 20, TOP_LEFT_CORNER_START),
         ],
         [
-        Enemy
+        
         ]
 
     ]
