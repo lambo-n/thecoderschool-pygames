@@ -17,7 +17,8 @@ player_pos = pygame.Vector2(640, 360)
 player_rect = pygame.Rect(player_pos.x, player_pos.y, player_width, player_height)
 
 # a block that scrolls across the screen (the level moves, not the player)
-block_rect = pygame.Rect(1280, 505, 70, 70)
+spike_pos = pygame.Vector2(1280, 505)
+spike_rect = pygame.Rect(spike_pos.x, spike_pos.y, 70, 70)
 scroll_speed = 400
 
 geometry_dash_cube_image = pygame.image.load("assets/defaulticon.png").convert_alpha()
@@ -36,11 +37,11 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w] and canJump:
-        gravity = 525
+        gravity = 700
         player_pos.y = 504
         canJump = False
 
-    gravity -= 900 * dt
+    gravity -= 1870 * dt
     player_pos.y -= gravity * dt
 
     if player_pos.y >= 505:
@@ -49,18 +50,27 @@ while running:
         canJump = True
 
     # move the block left; once it's off the left edge, send it back to the right
-    block_rect.x -= scroll_speed * dt
-    if block_rect.right < 0:
-        block_rect.x = 1280
+    spike_pos.x -= scroll_speed * dt
 
+    if spike_pos.x < -100:
+        spike_pos.x = 1350
+
+    spike_rect = pygame.Rect(spike_pos.x, spike_pos.y, 70, 70)
+    spike_hitbox = spike_rect.inflate(-50, -50)
+
+    player_rect = pygame.Rect(player_pos.x, player_pos.y, player_width, player_height)
+
+    # make the player lose if they touch the spike's hitbox
+    if player_rect.colliderect(spike_hitbox):
+        running = False
 
     # fill the screen with a color to wipe away anything from last frame
     screen.blit(stereo_madness_background, (0, 0))
 
-    player_rect = pygame.Rect(player_pos.x, player_pos.y, player_width, player_height)
     screen.blit(geometry_dash_cube_image, player_rect)
 
-    pygame.draw.rect(screen, (0, 0, 0), block_rect)
+    pygame.draw.rect(screen, (0, 0, 0), spike_rect)
+    pygame.draw.rect(screen, (255, 0, 0), spike_hitbox, 2)  # debug: show hitbox outline
     pygame.draw.line(screen, (255, 255, 255), (0, 575), (1280, 575))
 
 
