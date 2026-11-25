@@ -188,16 +188,16 @@ class EndPortal(CustomPlatform):
         super().__init__(posx, posy, width, height, color="#FFFFFF")
 
         self.endPortalImage = pygame.image.load("assets/EndPortalFrame0.png").convert_alpha()
-        self.endPortalImage = pygame.transform.scale(self.endPortalImage, (50, 50))
+        self.endPortalImage = pygame.transform.scale(self.endPortalImage, (20, 20))
 
         self.endPortalFrame1 = pygame.image.load("assets/EndPortalFrame1.png").convert_alpha()
-        self.endPortalFrame1 = pygame.transform.scale(self.endPortalFrame1, (50, 50))
+        self.endPortalFrame1 = pygame.transform.scale(self.endPortalFrame1, (20, 20))
 
         self.endPortalFrame2 = pygame.image.load("assets/EndPortalFrame2.png").convert_alpha()
-        self.endPortalFrame2 = pygame.transform.scale(self.endPortalFrame2, (50, 50))
+        self.endPortalFrame2 = pygame.transform.scale(self.endPortalFrame2, (20, 20))
 
         self.endPortalFrame3 = pygame.image.load("assets/EndPortalFrame3.png").convert_alpha()
-        self.endPortalFrame3 = pygame.transform.scale(self.endPortalFrame3, (50, 50))
+        self.endPortalFrame3 = pygame.transform.scale(self.endPortalFrame3, (20, 20))
 
         self.endPortalAnimation = [self.endPortalImage, self.endPortalFrame1, self.endPortalFrame2, self.endPortalFrame3]
 

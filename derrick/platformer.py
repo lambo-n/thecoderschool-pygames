@@ -6,6 +6,7 @@ from customPlatform import CustomPlatform, DeathBlock, EndPortal
 from physicsBody import PhysicsBody
 from levels import *
 from projectile import Projectile, StandardBullet
+from enemy import *
 
 def resetPlayer():
     global platformList, jumpCount
@@ -41,6 +42,7 @@ gameState = "levelSelect"
 currentLevel = 0
 deathCount = 0
 isPaused = False
+iFrames = 10
 
 BACKGROUND_COLOR = pygame.Color("#202020")
 PANEL_COLOR = pygame.Color("#666768B0")  # #666768B0 # last two digits are alpha: 80 hex = 128 = 50%
@@ -67,13 +69,16 @@ player = PhysicsBody(playerStartingPos.x, playerStartingPos.y, 20, 20, PLAYER_CO
 jumpCount = 2
 kick_timer = 0.0
 jump_held = False
-iframes = 0
 
 bullet_list = []
 
-new_bullet = StandardBullet(0, 0, 100, 100, 315, 200)
+new_bullet = StandardBullet(500, 400, 10, 10, 180, 200)
 bullet_list.append(new_bullet)
 
+enemy_list = []
+
+testCannon = Enemy(800, 400, 20, 20, 0, 10, 10, 0)
+enemy_list.append(testCannon)
 
 # pygame.draw.rect ignores alpha, so draw the panel onto its own surface that
 # supports transparency (SRCALPHA) and blit that onto the screen instead.
@@ -198,29 +203,38 @@ while running:
 
 
 
+
+
+
         # Gravity, movement, substepping and every collision, in one call.  The
         # screen rect is passed as bounds, so its edges are solid too.
         player.move_and_collide(platformList, dt, bounds=screen.get_rect())
-        
-
-
 
 
         # PRINT HERE
         screen.fill(BACKGROUND_COLOR)
-        
+
         for bullet in bullet_list:
             bullet.update(dt)
             bullet.draw(screen)
-  
+        
+        for enemy in enemy_list:
+            outcome = enemy.update(dt)
+            if outcome == "shoot":
+                new_bullet = StandardBullet(enemy.x, enemy.y, 10, 10, 180, 200)
+                bullet_list.append(new_bullet)
+                
+            enemy.draw(screen)
+
         for platform in platformList:
             if isinstance(platform, DeathBlock):
                 outcome = platform.update(screen, player.rect)
 
-                if outcome == "death" and iframes <= 0:
-                    iframes = 10
+                if outcome == "death" and iFrames <= 0:
                     resetPlayer()
                     deathCount += 1
+                    iFrames = 10
+                    #print(iFrames)
                     #print(deathCount)
             elif isinstance(platform, EndPortal):
                 outcome = platform.update(screen, player.rect)
@@ -231,6 +245,7 @@ while running:
                     playerStartingPos.x = platform.playerStartPosX
                     playerStartingPos.y = platform.playerStartPosY
                     resetPlayer()
+                    iFrames = 10
 
                     #print(deathCount)
             else:
@@ -243,8 +258,10 @@ while running:
         font = pygame.font.SysFont("Cascadia Code", fontSize)
         text_surface = font.render("Deaths - " + str(deathCount), True, pygame.Color("#EFEFEF"))
         screen.blit(text_surface, (70, 35))
-        
-        iframes -= 1
+
+        iFrames -= 1
+        #print(iFrames)
+
     # Live read-out of what the engine decided this frame.
     # state = "on_ground %s   hit_head %s   walls %s%s   squeezed %s   vel_y %6.1f" % (
     #     player.on_ground,
@@ -256,7 +273,6 @@ while running:
     # )
     # screen.blit(font.render(state, True, "gray"), (10, 10))
 
-    
     # flip() the display to put your work on screen
     pygame.display.flip()
 

@@ -9,6 +9,7 @@ TOP_LEFT_CORNER_START = pygame.Vector2(135, 175)
 
 def level1():
     return [
+        [
         CustomPlatform(0, 650, 1280, 70, PLATFORM_COLOR),
         CustomPlatform(0, 0, 70, 720, PLATFORM_COLOR),
         CustomPlatform(1210, 0, 70, 720, PLATFORM_COLOR),
@@ -24,7 +25,11 @@ def level1():
         DeathBlock(775, 650, 125, 20),
         DeathBlock(370, 220, 450, 20),
         CustomPlatform(500, 170, 200, 20, PLATFORM_COLOR),
-        EndPortal(170, 125, 50, 50, TOP_LEFT_CORNER_START),
+        EndPortal(170, 125, 20, 20, TOP_LEFT_CORNER_START),
+        ],
+        [
+        Enemy
+        ]
 
     ]
 
@@ -40,7 +45,7 @@ def level2():
         DeathBlock(250, 70, 200, 20),
         DeathBlock(200, 425, 20, 100),
         DeathBlock(70, 425, 20, 100),
-        EndPortal(1100, 575, 50, 50, TOP_LEFT_CORNER_START),
+        EndPortal(1100, 575, 20, 20, TOP_LEFT_CORNER_START),
     ]
 
 def level3():
@@ -52,6 +57,7 @@ def level3():
         
     ]
 
-levels = [level1, level2, level3]
+levels = [level1[0], level2[0], level3[0]]
+enemies = [level1[1], level2[1], level3[1]]
 
 startPositions = [BOTTOM_LEFT_CORNER_START, TOP_LEFT_CORNER_START]
